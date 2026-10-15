@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1520" height="2205" viewBox="0 0 1520 2205"><style>text{font-family:"Yu Gothic",Meiryo,sans-serif}</style><rect width="100%" height="100%" fill="#f8fafc"/><text x="40" y="45" font-family="Meiryo,sans-serif" font-size="28">社内LANのレイヤー別構成例</text><text x="40" y="78" font-family="Meiryo,sans-serif" font-size="15">端末からインターネットゲートウェイのLAN側まで</text><text x="40" y="108" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / lan-example/v1 / インターフェースごとに接続と層間対応を表示</text>
+<rect x="20" y="150" width="1480" height="350" rx="7" fill="#eaf3fc" stroke="#eaf3fc"/>
+<text x="40" y="180" font-size="22" fill="#23344d">L3 / IPインターフェース・サブネット</text>
+<text x="50" y="207" font-size="15" fill="#23344d">HQ-PC-01</text>
+<rect x="45" y="230" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="55" y="249" font-size="14" fill="#23344d">pc-a.ip</text>
+<text x="55" y="268" font-size="12" fill="#23344d">192.168.10.10/24</text>
+<text x="390" y="207" font-size="15" fill="#23344d">HQ-GUEST-PC-01</text>
+<rect x="385" y="230" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="395" y="249" font-size="14" fill="#23344d">pc-b.ip</text>
+<text x="395" y="268" font-size="12" fill="#23344d">192.168.20.10/24</text>
+<text x="730" y="207" font-size="15" fill="#23344d">HQ-SW-01</text>
+<text x="1070" y="207" font-size="15" fill="#23344d">HQ-GW-01</text>
+<rect x="1065" y="230" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="1075" y="249" font-size="14" fill="#23344d">gw01.v10</text>
+<text x="1075" y="268" font-size="12" fill="#23344d">192.168.10.1/24</text>
+<rect x="1065" y="295" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="1075" y="314" font-size="14" fill="#23344d">gw01.v20</text>
+<text x="1075" y="333" font-size="12" fill="#23344d">192.168.20.1/24</text>
+<path d="M335,254 L340,254" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M340,254 L340,385" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="340" cy="385" r="3" fill="#1676b5"/>
+<path d="M1355,254 L1365,254" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M1365,254 L1365,385" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="1365" cy="385" r="3" fill="#1676b5"/>
+<path d="M328,385 L1377,385" fill="none" stroke="#1676b5" stroke-width="2"/>
+<rect x="35" y="364" width="280" height="20" rx="7" fill="#eaf3fc" stroke="#eaf3fc"/>
+<text x="40" y="379" font-size="12" fill="#1676b5">net-office / 192.168.10.0/24</text>
+<path d="M675,254 L680,254" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M680,254 L680,430" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="680" cy="430" r="3" fill="#1676b5"/>
+<path d="M1355,319 L1365,319" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M1365,319 L1365,430" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="1365" cy="430" r="3" fill="#1676b5"/>
+<path d="M668,430 L1377,430" fill="none" stroke="#1676b5" stroke-width="2"/>
+<rect x="35" y="409" width="280" height="20" rx="7" fill="#eaf3fc" stroke="#eaf3fc"/>
+<text x="40" y="424" font-size="12" fill="#1676b5">net-guest / 192.168.20.0/24</text>
+<rect x="20" y="625" width="1480" height="460" rx="7" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="40" y="655" font-size="22" fill="#23344d">L2 / VLAN・ブリッジ</text>
+<text x="50" y="682" font-size="15" fill="#23344d">HQ-PC-01</text>
+<rect x="45" y="705" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="55" y="724" font-size="14" fill="#23344d">pc-a.l2</text>
+<text x="55" y="743" font-size="12" fill="#23344d">access / vlan-office</text>
+<text x="390" y="682" font-size="15" fill="#23344d">HQ-GUEST-PC-01</text>
+<rect x="385" y="705" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="395" y="724" font-size="14" fill="#23344d">pc-b.l2</text>
+<text x="395" y="743" font-size="12" fill="#23344d">access / vlan-guest</text>
+<text x="730" y="682" font-size="15" fill="#23344d">HQ-SW-01</text>
+<rect x="725" y="705" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="724" font-size="14" fill="#23344d">sw01.access1</text>
+<text x="735" y="743" font-size="12" fill="#23344d">access / vlan-office</text>
+<rect x="725" y="770" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="789" font-size="14" fill="#23344d">sw01.access2</text>
+<text x="735" y="808" font-size="12" fill="#23344d">access / vlan-guest</text>
+<rect x="725" y="835" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="854" font-size="14" fill="#23344d">sw01.trunk</text>
+<text x="735" y="873" font-size="12" fill="#23344d">trunk / vlan-office, vlan-guest</text>
+<text x="1070" y="682" font-size="15" fill="#23344d">HQ-GW-01</text>
+<rect x="1065" y="705" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="1075" y="724" font-size="14" fill="#23344d">gw01.trunk</text>
+<text x="1075" y="743" font-size="12" fill="#23344d">trunk / vlan-office, vlan-guest</text>
+<path d="M335,729 L340,729" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M340,729 L340,925" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="340" cy="925" r="3" fill="#1676b5"/>
+<path d="M1015,729 L1025,729" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M1025,729 L1025,925" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="1025" cy="925" r="3" fill="#1676b5"/>
+<path d="M1015,859 L1030,859" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M1030,859 L1030,925" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="1030" cy="925" r="3" fill="#1676b5"/>
+<path d="M1355,729 L1375,729" fill="none" stroke="#1676b5" stroke-width="2"/>
+<path d="M1375,729 L1375,925" fill="none" stroke="#1676b5" stroke-width="2"/>
+<circle cx="1375" cy="925" r="3" fill="#1676b5"/>
+<path d="M328,925 L1387,925" fill="none" stroke="#1676b5" stroke-width="2"/>
+<rect x="35" y="904" width="280" height="20" rx="7" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="40" y="919" font-size="12" fill="#1676b5">vlan-office / tag 10 / 業務LAN</text>
+<path d="M675,729 L680,729" fill="none" stroke="#b56316" stroke-width="2"/>
+<path d="M680,729 L680,970" fill="none" stroke="#b56316" stroke-width="2"/>
+<circle cx="680" cy="970" r="3" fill="#b56316"/>
+<path d="M1015,794 L1025,794" fill="none" stroke="#b56316" stroke-width="2"/>
+<path d="M1025,794 L1025,970" fill="none" stroke="#b56316" stroke-width="2"/>
+<circle cx="1025" cy="970" r="3" fill="#b56316"/>
+<path d="M1015,859 L1030,859" fill="none" stroke="#b56316" stroke-width="2"/>
+<path d="M1030,859 L1030,970" fill="none" stroke="#b56316" stroke-width="2"/>
+<circle cx="1030" cy="970" r="3" fill="#b56316"/>
+<path d="M1355,729 L1375,729" fill="none" stroke="#b56316" stroke-width="2"/>
+<path d="M1375,729 L1375,970" fill="none" stroke="#b56316" stroke-width="2"/>
+<circle cx="1375" cy="970" r="3" fill="#b56316"/>
+<path d="M668,970 L1387,970" fill="none" stroke="#b56316" stroke-width="2"/>
+<rect x="35" y="949" width="280" height="20" rx="7" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="40" y="964" font-size="12" fill="#b56316">vlan-guest / tag 20 / 来客LAN</text>
+<path d="M1015,729 L1020,729" fill="none" stroke="#48794b" stroke-width="2"/>
+<path d="M1020,729 L1020,1015" fill="none" stroke="#48794b" stroke-width="2"/>
+<circle cx="1020" cy="1015" r="3" fill="#48794b"/>
+<path d="M1015,794 L1025,794" fill="none" stroke="#48794b" stroke-width="2"/>
+<path d="M1025,794 L1025,1015" fill="none" stroke="#48794b" stroke-width="2"/>
+<circle cx="1025" cy="1015" r="3" fill="#48794b"/>
+<path d="M1015,859 L1030,859" fill="none" stroke="#48794b" stroke-width="2"/>
+<path d="M1030,859 L1030,1015" fill="none" stroke="#48794b" stroke-width="2"/>
+<circle cx="1030" cy="1015" r="3" fill="#48794b"/>
+<path d="M1008,1015 L1042,1015" fill="none" stroke="#48794b" stroke-width="2"/>
+<rect x="35" y="994" width="280" height="20" rx="7" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="40" y="1009" font-size="12" fill="#48794b">sw01.bridge / VLAN別に転送</text>
+<rect x="20" y="1210" width="1480" height="460" rx="7" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="40" y="1240" font-size="22" fill="#23344d">L1 / 物理ポート・ケーブル</text>
+<text x="50" y="1267" font-size="15" fill="#23344d">HQ-PC-01</text>
+<rect x="45" y="1290" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="55" y="1309" font-size="14" fill="#23344d">pc-a.eth0</text>
+<text x="55" y="1328" font-size="12" fill="#23344d">eth0</text>
+<text x="390" y="1267" font-size="15" fill="#23344d">HQ-GUEST-PC-01</text>
+<rect x="385" y="1290" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="395" y="1309" font-size="14" fill="#23344d">pc-b.eth0</text>
+<text x="395" y="1328" font-size="12" fill="#23344d">eth0</text>
+<text x="730" y="1267" font-size="15" fill="#23344d">HQ-SW-01</text>
+<rect x="725" y="1290" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="1309" font-size="14" fill="#23344d">sw01.p1</text>
+<text x="735" y="1328" font-size="12" fill="#23344d">p1</text>
+<rect x="725" y="1355" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="1374" font-size="14" fill="#23344d">sw01.p2</text>
+<text x="735" y="1393" font-size="12" fill="#23344d">p2</text>
+<rect x="725" y="1420" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="1439" font-size="14" fill="#23344d">sw01.p24</text>
+<text x="735" y="1458" font-size="12" fill="#23344d">p24</text>
+<text x="1070" y="1267" font-size="15" fill="#23344d">HQ-GW-01</text>
+<rect x="1065" y="1290" width="290" height="48" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="1075" y="1309" font-size="14" fill="#23344d">gw01.lan</text>
+<text x="1075" y="1328" font-size="12" fill="#23344d">lan</text>
+<path d="M335,1314 L340,1314" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M340,1314 L340,1510" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="340" cy="1510" r="3" fill="#42556d"/>
+<path d="M1015,1314 L1025,1314" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M1025,1314 L1025,1510" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="1025" cy="1510" r="3" fill="#42556d"/>
+<path d="M328,1510 L1037,1510" fill="none" stroke="#42556d" stroke-width="2"/>
+<rect x="35" y="1489" width="280" height="20" rx="7" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="40" y="1504" font-size="12" fill="#42556d">cable-a / copper / 1Gbps</text>
+<path d="M675,1314 L680,1314" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M680,1314 L680,1555" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="680" cy="1555" r="3" fill="#42556d"/>
+<path d="M1015,1379 L1025,1379" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M1025,1379 L1025,1555" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="1025" cy="1555" r="3" fill="#42556d"/>
+<path d="M668,1555 L1037,1555" fill="none" stroke="#42556d" stroke-width="2"/>
+<rect x="35" y="1534" width="280" height="20" rx="7" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="40" y="1549" font-size="12" fill="#42556d">cable-b / copper / 1Gbps</text>
+<path d="M1015,1444 L1020,1444" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M1020,1444 L1020,1600" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="1020" cy="1600" r="3" fill="#42556d"/>
+<path d="M1355,1314 L1365,1314" fill="none" stroke="#42556d" stroke-width="2"/>
+<path d="M1365,1314 L1365,1600" fill="none" stroke="#42556d" stroke-width="2"/>
+<circle cx="1365" cy="1600" r="3" fill="#42556d"/>
+<path d="M1008,1600 L1377,1600" fill="none" stroke="#42556d" stroke-width="2"/>
+<rect x="35" y="1579" width="280" height="20" rx="7" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="40" y="1594" font-size="12" fill="#42556d">cable-uplink / copper / 1Gbps</text>
+<path d="M330,270 C327,278 327,705 330,713" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M670,270 C681,278 681,705 670,713" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1350,270 C1375,278 1375,705 1350,713" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1350,335 C1389,343 1389,705 1350,713" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<text x="40" y="524" font-size="14" fill="#765194">層間対応（紫破線） / l3_to_l2</text>
+<text x="50" y="545" font-size="10" fill="#765194">pc-a.ip → pc-a.l2 / vlan-office</text>
+<text x="390" y="545" font-size="10" fill="#765194">pc-b.ip → pc-b.l2 / vlan-guest</text>
+<text x="1070" y="545" font-size="10" fill="#765194">gw01.v10 → gw01.trunk / vlan-office</text>
+<text x="1070" y="560" font-size="10" fill="#765194">gw01.v20 → gw01.trunk / vlan-guest</text>
+<path d="M330,745 C327,753 327,1290 330,1298" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M670,745 C681,753 681,1290 670,1298" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1010,745 C1035,753 1035,1290 1010,1298" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1010,810 C1049,818 1049,1355 1010,1363" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1010,875 C1063,883 1063,1420 1010,1428" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<path d="M1350,745 C1347,753 1347,1290 1350,1298" fill="none" stroke="#8665a6" stroke-width="1.5" stroke-dasharray="5 5"/>
+<text x="40" y="1109" font-size="14" fill="#765194">層間対応（紫破線） / l2_to_l1</text>
+<text x="50" y="1130" font-size="10" fill="#765194">pc-a.l2 → pc-a.eth0</text>
+<text x="390" y="1130" font-size="10" fill="#765194">pc-b.l2 → pc-b.eth0</text>
+<text x="730" y="1130" font-size="10" fill="#765194">sw01.access1 → sw01.p1</text>
+<text x="730" y="1145" font-size="10" fill="#765194">sw01.access2 → sw01.p2</text>
+<text x="730" y="1160" font-size="10" fill="#765194">sw01.trunk → sw01.p24</text>
+<text x="1070" y="1130" font-size="10" fill="#765194">gw01.trunk → gw01.lan</text>
+<text x="40" y="1705" font-size="22" fill="#23344d">L1 機器台帳 / 現在の状態</text>
+<rect x="45" y="1720" width="290" height="198" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="55" y="1745" font-size="13" fill="#23344d">HQ-PC-01 / pc-a</text>
+<text x="55" y="1769" font-size="13" fill="#23344d">メーカー：Example Computing</text>
+<text x="55" y="1793" font-size="13" fill="#23344d">型番：EC-Desktop-100</text>
+<text x="55" y="1817" font-size="13" fill="#23344d">S/N：DEMO-PC-0001</text>
+<text x="55" y="1841" font-size="13" fill="#23344d">拠点：本社</text>
+<text x="55" y="1865" font-size="13" fill="#23344d">室：執務室</text>
+<text x="55" y="1889" font-size="13" fill="#23344d">位置：座席A01</text>
+<rect x="385" y="1720" width="290" height="198" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="395" y="1745" font-size="13" fill="#23344d">HQ-GUEST-PC-01 / pc-b</text>
+<text x="395" y="1769" font-size="13" fill="#23344d">メーカー：Example Computing</text>
+<text x="395" y="1793" font-size="13" fill="#23344d">型番：EC-Notebook-200</text>
+<text x="395" y="1817" font-size="13" fill="#23344d">S/N：DEMO-PC-0002</text>
+<text x="395" y="1841" font-size="13" fill="#23344d">拠点：本社</text>
+<text x="395" y="1865" font-size="13" fill="#23344d">室：会議室</text>
+<text x="395" y="1889" font-size="13" fill="#23344d">位置：来客席B01</text>
+<rect x="725" y="1720" width="290" height="222" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="735" y="1745" font-size="13" fill="#23344d">HQ-SW-01 / sw01</text>
+<text x="735" y="1769" font-size="13" fill="#23344d">メーカー：Example Networks</text>
+<text x="735" y="1793" font-size="13" fill="#23344d">型番：EN-SW24</text>
+<text x="735" y="1817" font-size="13" fill="#23344d">S/N：DEMO-SW-0001</text>
+<text x="735" y="1841" font-size="13" fill="#23344d">拠点：本社</text>
+<text x="735" y="1865" font-size="13" fill="#23344d">室：サーバー室</text>
+<text x="735" y="1889" font-size="13" fill="#23344d">ラック：R01</text>
+<text x="735" y="1913" font-size="13" fill="#23344d">U：12</text>
+<rect x="1065" y="1720" width="290" height="222" rx="7" fill="white" stroke="#a8b6c9"/>
+<text x="1075" y="1745" font-size="13" fill="#23344d">HQ-GW-01 / gw01</text>
+<text x="1075" y="1769" font-size="13" fill="#23344d">メーカー：Example Networks</text>
+<text x="1075" y="1793" font-size="13" fill="#23344d">型番：EN-GW100</text>
+<text x="1075" y="1817" font-size="13" fill="#23344d">S/N：DEMO-GW-0001</text>
+<text x="1075" y="1841" font-size="13" fill="#23344d">拠点：本社</text>
+<text x="1075" y="1865" font-size="13" fill="#23344d">室：サーバー室</text>
+<text x="1075" y="1889" font-size="13" fill="#23344d">ラック：R01</text>
+<text x="1075" y="1913" font-size="13" fill="#23344d">U：13</text>
+<text x="40" y="2002" font-size="20" fill="#23344d">L3経路（矢印は次ホップ指定。通信許可を意味しません）</text>
+<text x="40" y="2030" font-size="14" fill="#23344d">pc-a / pc-a.ip : 0.0.0.0/0 → 192.168.10.1</text>
+<text x="40" y="2054" font-size="14" fill="#23344d">pc-b / pc-b.ip : 0.0.0.0/0 → 192.168.20.1</text>
+<text x="40" y="2093" font-size="13" fill="#23344d">注：ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。</text>
+<text x="40" y="2117" font-size="13" fill="#23344d">注：経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。</text>
+<text x="40" y="2141" font-size="13" fill="#23344d">注：VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。</text>
+<text x="40" y="2175" font-size="13" fill="#23344d">実線：各層の関係（L3＝サブネット所属、L2＝VLAN所属・ブリッジ、L1＝ケーブル） / 紫破線：層間対応</text></svg>

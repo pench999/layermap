@@ -1,0 +1,13 @@
+.deps/
+__pycache__/
+.venv/
+artifacts/
+*.ppk
+*.pem
+*.key
+.env
+.env.*
+*.tar
+*.tar.gz
+lan-sample.png
+layermap.md
