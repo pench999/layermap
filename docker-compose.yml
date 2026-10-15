@@ -7,12 +7,11 @@ services:
     volumes:
       - .:/workspace:ro
     read_only: true
-    tmpfs:
-      - /tmp:mode=1777
+    tmpfs: [/tmp:mode=1777]
     network_mode: none
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    command: [python, -m, unittest, -v, test_generate_diagram.py]
+    command: [python, -m, unittest, discover, -v]
   generate:
     build: .
     image: layermap-dev:local
@@ -22,9 +21,44 @@ services:
       - .:/workspace:ro
       - ./artifacts:/output
     read_only: true
-    tmpfs:
-      - /tmp:mode=1777
+    tmpfs: [/tmp:mode=1777]
     network_mode: none
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     command: [python, generate_diagram.py, lan-sample.yaml, -o, /output/lan-sample.svg]
+  web:
+    build: .
+    image: layermap-dev:local
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    ports:
+      - "${LAYERMAP_BIND:-127.0.0.1}:${LAYERMAP_PORT:-18085}:8000"
+    read_only: true
+    tmpfs: [/tmp:mode=1777]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    mem_limit: 512m
+    cpus: 1.0
+  e2e:
+    profiles: [qa]
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    image: layermap-e2e:local
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    init: true
+    shm_size: 512mb
+    environment:
+      BASE_URL: http://web:8000
+      HOME: /tmp
+      QA_ARTIFACTS: /artifacts
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - ./artifacts/browser:/artifacts

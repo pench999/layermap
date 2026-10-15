@@ -9,113 +9,14 @@ import time
 from pathlib import Path
 
 import yaml
+from network_model import ModelError, validate, load_model
 
 
-class ModelError(ValueError):
-    pass
-
-
-def index(items, label):
-    if not isinstance(items, list):
-        raise ModelError(f'{label}: expected a list')
-    result = {}
-    for item in items:
-        if not isinstance(item, dict) or not isinstance(item.get('id'), str):
-            raise ModelError(f'{label}: every entry needs a string id')
-        key = item['id']
-        if key in result:
-            raise ModelError(f'{label}: duplicate id {key}')
-        result[key] = item
-    return result
-
-
-def validate(model):
-    if not isinstance(model, dict) or model.get('schema') != 'lan-example/v1':
-        raise ModelError('schema must be lan-example/v1')
-    groups = {'devices': model['devices']}
-    for layer, names in [('l1', ['ports', 'links']),
-                         ('l2', ['vlans', 'interfaces', 'bridges']),
-                         ('l3', ['subnets', 'interfaces'])]:
-        for name in names:
-            groups[f'{layer}.{name}'] = model[layer][name]
-    ix = {name: index(items, name) for name, items in groups.items()}
-
-    def ref(value, group, context):
-        if value not in ix[group]:
-            raise ModelError(f'{context}: unknown {group} reference {value}')
-
-    for group in ['l1.ports', 'l2.interfaces', 'l2.bridges', 'l3.interfaces']:
-        for item in ix[group].values():
-            ref(item['device'], 'devices', item['id'])
-    for link in model['l1']['links']:
-        ends = link['endpoints']
-        if len(ends) != 2 or ends[0] == ends[1]:
-            raise ModelError(f"{link['id']}: need two distinct endpoints")
-        for end in ends:
-            ref(end, 'l1.ports', link['id'])
-    for item in model['l2']['interfaces']:
-        mode = item['mode']
-        if mode not in ('access', 'trunk'):
-            raise ModelError(f"{item['id']}: unsupported mode {mode}")
-        vlans = ([item['untagged_vlan']] if mode == 'access'
-                 else item['tagged_vlans'])
-        for vlan in vlans:
-            ref(vlan, 'l2.vlans', item['id'])
-    for bridge in model['l2']['bridges']:
-        for member in bridge['members']:
-            ref(member, 'l2.interfaces', bridge['id'])
-            if ix['l2.interfaces'][member]['device'] != bridge['device']:
-                raise ModelError(f"{bridge['id']}: member belongs to another device")
-    import ipaddress
-    for subnet in model['l3']['subnets']:
-        ipaddress.ip_network(subnet['cidr'])
-    for interface in model['l3']['interfaces']:
-        ref(interface['subnet'], 'l3.subnets', interface['id'])
-        address = ipaddress.ip_interface(interface['address'])
-        network = ipaddress.ip_network(ix['l3.subnets'][interface['subnet']]['cidr'])
-        if address.network != network:
-            raise ModelError(f"{interface['id']}: address/prefix does not match subnet")
-    bound_l2, bound_l3 = set(), set()
-    for binding in model['bindings']['l2_to_l1']:
-        a, b = binding['l2_interface'], binding['physical_port']
-        ref(a, 'l2.interfaces', 'l2_to_l1')
-        ref(b, 'l1.ports', 'l2_to_l1')
-        if a in bound_l2:
-            raise ModelError(f'{a}: duplicate physical binding (LAG is not supported)')
-        bound_l2.add(a)
-        if ix['l2.interfaces'][a]['device'] != ix['l1.ports'][b]['device']:
-            raise ModelError(f'{a}: physical binding crosses devices')
-    for binding in model['bindings']['l3_to_l2']:
-        a, b, v = binding['l3_interface'], binding['l2_interface'], binding['vlan']
-        ref(a, 'l3.interfaces', 'l3_to_l2')
-        ref(b, 'l2.interfaces', 'l3_to_l2')
-        ref(v, 'l2.vlans', 'l3_to_l2')
-        if a in bound_l3:
-            raise ModelError(f'{a}: duplicate L2 binding')
-        bound_l3.add(a)
-        lower = ix['l2.interfaces'][b]
-        allowed = ([lower['untagged_vlan']] if lower['mode'] == 'access'
-                   else lower['tagged_vlans'])
-        if v not in allowed or ix['l3.interfaces'][a]['device'] != lower['device']:
-            raise ModelError(f'{a}: incompatible VLAN or device in L2 binding')
-    if bound_l2 != set(ix['l2.interfaces']) or bound_l3 != set(ix['l3.interfaces']):
-        raise ModelError('every L2/L3 interface must have a lower-layer binding')
-    for route in model['l3'].get('routes', []):
-        ref(route['device'], 'devices', 'route')
-        ref(route['interface'], 'l3.interfaces', 'route')
-        iface = ix['l3.interfaces'][route['interface']]
-        if iface['device'] != route['device']:
-            raise ModelError('route interface belongs to another device')
-        dest = ipaddress.ip_network(route['destination'])
-        hop = ipaddress.ip_address(route['next_hop'])
-        network = ipaddress.ip_interface(iface['address']).network
-        if hop.version != dest.version or hop not in network:
-            raise ModelError('route next hop must be on the interface subnet')
-    return ix
-
-
-def render(model):
+def render(model, layers=None, show_bindings=True):
     ix = validate(model)
+    layers = tuple(layers) if layers is not None else ('l3', 'l2', 'l1')
+    if not layers or len(set(layers)) != len(layers) or any(l not in ('l1', 'l2', 'l3') for l in layers):
+        raise ModelError('表示するレイヤーはl1・l2・l3から選択してください')
     devices = list(ix['devices'])
     # Each device has a column; interfaces are real nodes, never inferred from names.
     col = 340
@@ -142,6 +43,9 @@ def render(model):
         ('l3', 'l3.interfaces', 'L3 / IPインターフェース・サブネット', '#eaf3fc'),
         ('l2', 'l2.interfaces', 'L2 / VLAN・ブリッジ', '#edf6ef'),
         ('l1', 'l1.ports', 'L1 / 物理ポート・ケーブル', '#f0eff7')]:
+        if layer not in layers:
+            continue
+        svg.append(f'<g data-layer="{layer}">')
         items = ix[group]
         rows = max([sum(i['device'] == d for i in items.values()) for d in devices] + [1])
         buses = (len(ix['l3.subnets']) if layer == 'l3' else
@@ -159,6 +63,7 @@ def render(model):
             for row, item in enumerate(i for i in items.values() if i['device'] == device):
                 ny = node_top + row * 65
                 nodes[(layer, item['id'])] = (x, ny, ny+48)
+                svg.append(f'<g data-device="{html.escape(device, quote=True)}" data-element-id="{html.escape(item["id"], quote=True)}" tabindex="0" role="button" aria-label="{html.escape(item["id"], quote=True)}">')
                 rect(x-145, ny, 290, 48)
                 text(x-135, ny+19, item['id'])
                 detail = (item['address'] if layer == 'l3' else
@@ -166,6 +71,7 @@ def render(model):
                           'trunk / '+', '.join(item['tagged_vlans']) if layer == 'l2' else
                           item.get('name', item['id'].split('.')[-1]))
                 text(x-135, ny+38, detail, 12)
+                svg.append('</g>')
         # Lower buses are relationship nodes: membership is not a direct cable.
         relations = []
         if layer == 'l3':
@@ -200,11 +106,15 @@ def render(model):
             rect(35, by-21, 280, 20, fill, fill)
             text(40, by-6, label, 12, color)
         gap_rows = max([sum(i['device'] == d for i in items.values()) for d in devices] + [1])
-        y = end + max(125, 65 + gap_rows * 15)
+        svg.append('</g>')
+        y = end + (max(125, 65 + gap_rows * 15) if show_bindings else 35)
     # Dashed curves in dedicated gutters show every cross-layer binding.
     for upper, lower, key, akey, bkey in [
         ('l3','l2','l3_to_l2','l3_interface','l2_interface'),
         ('l2','l1','l2_to_l1','l2_interface','physical_port')]:
+        if not show_bindings or upper not in sections or lower not in sections:
+            continue
+        svg.append('<g data-binding="'+key+'">')
         gutter_top = sections[upper][1]
         for j, binding in enumerate(model['bindings'][key]):
             a, b = binding[akey], binding[bkey]
@@ -223,29 +133,34 @@ def render(model):
                 suffix = ' / '+binding['vlan'] if 'vlan' in binding else ''
                 text(xs[device]-140, gutter_top+45+row*15,
                      binding[akey]+' → '+binding[bkey]+suffix, 10, '#765194')
-    y = sections['l1'][1] + 35
-    text(40, y, 'L1 機器台帳 / 現在の状態', 22)
-    heights = []
-    for device in devices:
-        d = ix['devices'][device]
-        loc = d.get('location', {})
-        lines = [d.get('name', device)+' / '+device,
-                 'メーカー：'+str(d.get('manufacturer', '未設定')),
-                 '型番：'+str(d.get('model', '未設定')),
-                 'S/N：'+str(d.get('serial_number', '未設定'))]
-        loclabels = {'site':'拠点','room':'室','position':'位置','rack':'ラック','rack_unit':'U'}
-        lines += [loclabels.get(k,k)+'：'+str(v) for k,v in loc.items()]
-        h = 30+24*len(lines)
-        heights.append(h)
-        rect(xs[device]-145, y+15, 290, h)
-        for row, label in enumerate(lines):
-            text(xs[device]-135, y+40+24*row, label, 13)
-    y += max(heights, default=0)+75
-    text(40,y,'L3経路（矢印は次ホップ指定。通信許可を意味しません）',20)
-    y += 28
-    for route in model['l3'].get('routes', []):
-        text(40,y,f"{route['device']} / {route['interface']} : {route['destination']} → {route['next_hop']}")
-        y += 24
+        svg.append('</g>')
+    y = max(bottom for _, bottom in sections.values()) + 35
+    if 'l1' in layers:
+        text(40, y, 'L1 機器台帳 / 現在の状態', 22)
+        heights = []
+        for device in devices:
+            d = ix['devices'][device]
+            loc = d.get('location', {})
+            lines = [d.get('name', device)+' / '+device,
+                     'メーカー：'+str(d.get('manufacturer', '未設定')),
+                     '型番：'+str(d.get('model', '未設定')),
+                     'S/N：'+str(d.get('serial_number', '未設定'))]
+            loclabels = {'site':'拠点','room':'室','position':'位置','rack':'ラック','rack_unit':'U'}
+            lines += [loclabels.get(k,k)+'：'+str(v) for k,v in loc.items()]
+            h = 30+24*len(lines)
+            heights.append(h)
+            svg.append(f'<g data-device="{html.escape(device, quote=True)}" tabindex="0" role="button" aria-label="{html.escape(device, quote=True)}">')
+            rect(xs[device]-145, y+15, 290, h)
+            for row, label in enumerate(lines):
+                text(xs[device]-135, y+40+24*row, label, 13)
+            svg.append('</g>')
+        y += max(heights, default=0)+75
+    if 'l3' in layers:
+        text(40,y,'L3経路（矢印は次ホップ指定。通信許可を意味しません）',20)
+        y += 28
+        for route in model['l3'].get('routes', []):
+            text(40,y,f"{route['device']} / {route['interface']} : {route['destination']} → {route['next_hop']}")
+            y += 24
     for note in model.get('notes', []):
         text(40,y+15,'注：'+note,13)
         y += 24
@@ -267,7 +182,7 @@ def main():
             output = args.output or args.input.with_suffix('.svg')
             if output.resolve() == args.input.resolve():
                 raise ModelError('output must differ from input YAML')
-            model = yaml.safe_load(args.input.read_text(encoding='utf-8-sig'))
+            model = load_model(args.input.read_text(encoding='utf-8-sig'))
             drawing = render(model)
             # Validation completes before touching the existing drawing.
             output.write_text(drawing, encoding='utf-8')

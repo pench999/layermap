@@ -42,9 +42,9 @@ python generate_diagram.py lan-sample.yaml --watch
 
 監視中にYAMLが不正な状態になった場合は、最後に正常生成したSVGを保持し、次の保存時に再検証します。
 図はローカルで生成し、外部サービスへ構成情報を送信しません。
-この作業環境ではPyYAMLを `.deps` に入れています。環境内のPythonを使う場合は、実行前に `$env:PYTHONPATH = (Join-Path $PWD '.deps')` を設定してください。
+Web版・DebianのDocker実行方法はREADME.mdを参照してください。ホストのPythonで実行する場合はrequirements.txtの依存をインストールしてください。
 
-検証：`python -m unittest -v test_generate_diagram.py`
+検証：Docker内で `python -m unittest discover -v`（README.mdを参照）
 
 ## 構成
 
@@ -76,6 +76,6 @@ WAN、NAT、DHCP、DNS、管理用アドレス、IPv6、LAG、VRF、冗長構成
 ゲートウェイのVLAN間転送の許可・拒否は未定義なので、来客LANの分離ポリシーまで表現した例ではありません。
 VLAN IDとサブネットの一対一対応はこの構成だけの設計です。
 IDの重複・参照先、機器の所属、層間のVLAN整合性、IPプレフィックスとサブネット、経路の次ホップを検証します。
-検証に失敗した場合はエラー終了し、既存のSVGは更新しません。JSON Schemaによる網羅的な型検証は含みません。
+検証に失敗した場合はエラー終了し、既存のSVGは更新しません。型・必須フィールド・未定義フィールドの検証はnetwork_model.pyでCLIとWebに共通化しています。
 L2のVLAN所属線は所属を示し、物理的な到達性を保証するものではありません。物理的に切断されたVLANの検出は未実装です。
 大規模構成では線が交差するため、この描画方式は小規模LANの仕様検証を想定しています。

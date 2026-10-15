@@ -11,3 +11,9 @@ artifacts/
 *.tar.gz
 lan-sample.png
 layermap.md
+
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+web-work/

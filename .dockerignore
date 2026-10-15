@@ -2,5 +2,14 @@
 !Dockerfile
 !requirements.txt
 !generate_diagram.py
-!test_generate_diagram.py
+!network_model.py
+!web_app.py
+!test_*.py
 !lan-sample.yaml
+!frontend/
+!frontend/**
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/playwright-report/
+!Dockerfile.e2e
