@@ -1,0 +1,251 @@
+# 01のPCをVLAN 30へ移し、既存トランクにVLANを追加した例です。
+schema: lan-example/v1
+name: 追加したPCをVLAN 30へ移した例
+scope: 端末からインターネットゲートウェイのLAN側まで
+devices:
+- id: pc-a
+  role: endpoint
+  label: 業務PC
+  name: HQ-PC-01
+  manufacturer: Example Computing
+  model: EC-Desktop-100
+  serial_number: DEMO-PC-0001
+  location:
+    site: 本社
+    room: 執務室
+    position: 座席A01
+- id: pc-b
+  role: endpoint
+  label: 来客PC
+  name: HQ-GUEST-PC-01
+  manufacturer: Example Computing
+  model: EC-Notebook-200
+  serial_number: DEMO-PC-0002
+  location:
+    site: 本社
+    room: 会議室
+    position: 来客席B01
+- id: sw01
+  role: l2-switch
+  label: 社内スイッチ
+  name: HQ-SW-01
+  manufacturer: Example Networks
+  model: EN-SW24
+  serial_number: DEMO-SW-0001
+  location:
+    site: 本社
+    room: サーバー室
+    rack: R01
+    rack_unit: 12
+- id: gw01
+  role: internet-gateway
+  label: ゲートウェイ
+  name: HQ-GW-01
+  manufacturer: Example Networks
+  model: EN-GW100
+  serial_number: DEMO-GW-0001
+  location:
+    site: 本社
+    room: サーバー室
+    rack: R01
+    rack_unit: 13
+- id: pc-c
+  role: endpoint
+  name: HQ-PC-03
+  manufacturer: Example Computing
+  model: EC-Desktop-100
+  serial_number: DEMO-PC-0003
+  location:
+    site: 本社
+    room: 執務室
+    position: 座席A03
+l1:
+  ports:
+  - id: pc-a.eth0
+    device: pc-a
+  - id: pc-b.eth0
+    device: pc-b
+  - id: sw01.p1
+    device: sw01
+  - id: sw01.p2
+    device: sw01
+  - id: sw01.p24
+    device: sw01
+  - id: gw01.lan
+    device: gw01
+  - id: pc-c.eth0
+    device: pc-c
+    name: Ethernet0
+  - id: sw01.p3
+    device: sw01
+    name: GigabitEthernet1/0/3
+  links:
+  - id: cable-a
+    endpoints:
+    - pc-a.eth0
+    - sw01.p1
+    medium: copper
+    speed: 1Gbps
+  - id: cable-b
+    endpoints:
+    - pc-b.eth0
+    - sw01.p2
+    medium: copper
+    speed: 1Gbps
+  - id: cable-uplink
+    endpoints:
+    - sw01.p24
+    - gw01.lan
+    medium: copper
+    speed: 1Gbps
+  - id: cable-c
+    endpoints:
+    - pc-c.eth0
+    - sw01.p3
+    medium: copper
+    speed: 1Gbps
+l2:
+  vlans:
+  - id: vlan-office
+    tag: 10
+    label: 業務LAN
+  - id: vlan-guest
+    tag: 20
+    label: 来客LAN
+  - id: vlan-lab
+    tag: 30
+    label: 検証LAN
+  interfaces:
+  - id: pc-a.l2
+    device: pc-a
+    mode: access
+    untagged_vlan: vlan-office
+  - id: pc-b.l2
+    device: pc-b
+    mode: access
+    untagged_vlan: vlan-guest
+  - id: sw01.access1
+    device: sw01
+    mode: access
+    untagged_vlan: vlan-office
+  - id: sw01.access2
+    device: sw01
+    mode: access
+    untagged_vlan: vlan-guest
+  - id: sw01.trunk
+    device: sw01
+    mode: trunk
+    tagged_vlans:
+    - vlan-office
+    - vlan-guest
+    - vlan-lab
+  - id: gw01.trunk
+    device: gw01
+    mode: trunk
+    tagged_vlans:
+    - vlan-office
+    - vlan-guest
+    - vlan-lab
+  - id: pc-c.l2
+    device: pc-c
+    mode: access
+    untagged_vlan: vlan-lab
+  - id: sw01.access3
+    device: sw01
+    mode: access
+    untagged_vlan: vlan-lab
+  bridges:
+  - id: sw01.bridge
+    device: sw01
+    members:
+    - sw01.access1
+    - sw01.access2
+    - sw01.trunk
+    - sw01.access3
+l3:
+  subnets:
+  - id: net-office
+    cidr: 192.168.10.0/24
+  - id: net-guest
+    cidr: 192.168.20.0/24
+  - id: net-lab
+    cidr: 192.168.30.0/24
+  interfaces:
+  - id: pc-a.ip
+    device: pc-a
+    address: 192.168.10.10/24
+    subnet: net-office
+  - id: pc-b.ip
+    device: pc-b
+    address: 192.168.20.10/24
+    subnet: net-guest
+  - id: gw01.v10
+    device: gw01
+    address: 192.168.10.1/24
+    subnet: net-office
+  - id: gw01.v20
+    device: gw01
+    address: 192.168.20.1/24
+    subnet: net-guest
+  - id: pc-c.ip
+    device: pc-c
+    address: 192.168.30.30/24
+    subnet: net-lab
+  - id: gw01.v30
+    device: gw01
+    address: 192.168.30.1/24
+    subnet: net-lab
+  routes:
+  - device: pc-a
+    destination: 0.0.0.0/0
+    next_hop: 192.168.10.1
+    interface: pc-a.ip
+  - device: pc-b
+    destination: 0.0.0.0/0
+    next_hop: 192.168.20.1
+    interface: pc-b.ip
+  - device: pc-c
+    destination: 0.0.0.0/0
+    next_hop: 192.168.30.1
+    interface: pc-c.ip
+bindings:
+  l2_to_l1:
+  - l2_interface: pc-a.l2
+    physical_port: pc-a.eth0
+  - l2_interface: pc-b.l2
+    physical_port: pc-b.eth0
+  - l2_interface: sw01.access1
+    physical_port: sw01.p1
+  - l2_interface: sw01.access2
+    physical_port: sw01.p2
+  - l2_interface: sw01.trunk
+    physical_port: sw01.p24
+  - l2_interface: gw01.trunk
+    physical_port: gw01.lan
+  - l2_interface: pc-c.l2
+    physical_port: pc-c.eth0
+  - l2_interface: sw01.access3
+    physical_port: sw01.p3
+  l3_to_l2:
+  - l3_interface: pc-a.ip
+    l2_interface: pc-a.l2
+    vlan: vlan-office
+  - l3_interface: pc-b.ip
+    l2_interface: pc-b.l2
+    vlan: vlan-guest
+  - l3_interface: gw01.v10
+    l2_interface: gw01.trunk
+    vlan: vlan-office
+  - l3_interface: gw01.v20
+    l2_interface: gw01.trunk
+    vlan: vlan-guest
+  - l3_interface: pc-c.ip
+    l2_interface: pc-c.l2
+    vlan: vlan-lab
+  - l3_interface: gw01.v30
+    l2_interface: gw01.trunk
+    vlan: vlan-lab
+notes:
+- ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。
+- 経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。
+- VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。

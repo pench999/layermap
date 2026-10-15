@@ -2,7 +2,7 @@
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -79,6 +79,27 @@ def health():
 @app.get('/api/sample')
 def sample():
     return {'yaml_text': (ROOT/'lan-sample.yaml').read_text(encoding='utf-8')}
+
+
+# Only these bundled files can be read through the sample API.
+SAMPLES = {
+    'base': {'id':'base', 'title':'基本構成', 'description':'業務PCと来客PC。4機器・3ケーブル・2 VLAN。', 'filename':'lan-sample.yaml', 'file':ROOT/'lan-sample.yaml'},
+    'add-pc': {'id':'add-pc', 'title':'機器追加版', 'description':'業務VLAN 10にHQ-PC-03を追加。5機器・4ケーブル・2 VLAN。', 'filename':'01-add-pc-vlan10.yaml', 'file':ROOT/'samples'/'01-add-pc-vlan10.yaml'},
+    'add-vlan': {'id':'add-vlan', 'title':'VLAN追加版', 'description':'HQ-PC-03を新設VLAN 30へ移動。5機器・4ケーブル・3 VLAN。', 'filename':'02-add-vlan30.yaml', 'file':ROOT/'samples'/'02-add-vlan30.yaml'},
+}
+
+
+@app.get('/api/samples')
+def list_samples():
+    return {'samples':[{k:v for k,v in sample.items() if k!='file'} for sample in SAMPLES.values()]}
+
+
+@app.get('/api/samples/{sample_id}')
+def get_sample(sample_id: str):
+    sample = SAMPLES.get(sample_id)
+    if sample is None:
+        raise HTTPException(status_code=404, detail='サンプルが見つかりません')
+    return {'id':sample_id,'filename':sample['filename'],'yaml_text':sample['file'].read_text(encoding='utf-8')}
 
 
 @app.post('/api/render')

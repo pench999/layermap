@@ -96,6 +96,26 @@ class WebTests(unittest.TestCase):
         self.assertFalse(any('onclick' in element.attrib for element in root.iter()))
         self.assertTrue(any(e.attrib.get('data-device')==evil for e in root.iter()))
 
+    def test_bundled_sample_catalog_and_rendering(self):
+        catalog = self.client.get('/api/samples').json()['samples']
+        self.assertEqual([s['id'] for s in catalog], ['base','add-pc','add-vlan'])
+        expected = {'base':(4,3,2), 'add-pc':(5,4,2), 'add-vlan':(5,4,3)}
+        for item in catalog:
+            self.assertNotIn('file',item)
+            response = self.client.get('/api/samples/'+item['id'])
+            self.assertEqual(response.status_code,200)
+            sample = response.json()
+            self.assertEqual(sample['filename'],item['filename'])
+            rendered = self.request(sample['yaml_text'])
+            self.assertEqual(rendered.status_code,200,rendered.text)
+            counts = rendered.json()['counts']
+            self.assertEqual((counts['devices'],counts['links'],counts['vlans']),expected[item['id']])
+            ET.fromstring(rendered.json()['svg'])
+
+    def test_sample_id_is_allowlisted(self):
+        for sample_id in ['missing','.env','web_app.py']:
+            self.assertEqual(self.client.get('/api/samples/'+sample_id).status_code,404)
+
 
 if __name__ == '__main__':
     unittest.main()

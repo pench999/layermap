@@ -96,3 +96,91 @@ test('mobile layout, zoom and fit controls',async({page})=>{
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
   await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/workspace-mobile.png',fullPage:true});
 });
+
+
+test('help opens without replacing edits and supports navigation and Escape',async({page})=>{
+  await page.getByRole('button',{name:'ヘルプ',exact:true}).click();
+  const help=page.getByRole('dialog',{name:'YAMLの書き方と構成の追加'});
+  await expect(help).toBeVisible();
+  await expect(help).toContainText('bindings.l2_to_l1');
+  await expect(help).toContainText('serial_number');
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/help-desktop.png',fullPage:true});
+  await help.getByRole('button',{name:'VLANを追加',exact:true}).click();
+  await expect(help.getByRole('heading',{name:'新しいVLAN 30を追加する'})).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(help).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'ヘルプ',exact:true})).toBeFocused();
+  await expect(page.getByLabel('検証結果')).toContainText('4 機器');
+});
+
+test('three samples load from selector including repeat loading and download name',async({page})=>{
+  await page.getByLabel('サンプル構成').selectOption('base');
+  const redraw=page.waitForResponse(r=>r.url().endsWith('/api/render')&&r.status()===200);
+  await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();
+  await redraw;
+  await expect(page.locator('.toast')).toContainText('サンプルを読み込みました');
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  for(const [id,vlans] of [['add-pc','2 VLAN'],['add-vlan','3 VLAN']]){
+    await page.getByLabel('サンプル構成').selectOption(id);
+    await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();
+    await expect(page.getByLabel('検証結果')).toContainText('5 機器');
+    await expect(page.getByLabel('検証結果')).toContainText(vlans);
+    await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+    await expect(page.getByTestId('diagram')).toContainText('HQ-PC-03');
+  }
+  await expect(page.getByTestId('diagram')).toContainText('192.168.30.30/24');
+  const download=page.waitForEvent('download');
+  await page.getByRole('button',{name:'YAMLを保存'}).click();
+  expect((await download).suggestedFilename()).toBe('02-add-vlan30.yaml');
+});
+
+test('help sample loading respects cancel and acceptance of unsaved changes',async({page})=>{
+  await page.getByRole('textbox',{name:'YAMLエディター'}).fill('name: MY-UNSAVED-DRAFT');
+  await page.getByRole('button',{name:'ヘルプ',exact:true}).click();
+  const help=page.getByRole('dialog');
+  page.once('dialog',dialog=>dialog.dismiss());
+  await help.getByRole('button',{name:'機器追加版を読み込む',exact:true}).click();
+  await expect(help).toBeVisible();
+  page.once('dialog',dialog=>dialog.accept());
+  await help.getByRole('button',{name:'機器追加版を読み込む',exact:true}).click();
+  await expect(help).toHaveCount(0);
+  await expect(page.getByLabel('検証結果')).toContainText('5 機器');
+  await expect(page.getByTestId('diagram')).toContainText('HQ-PC-03');
+});
+
+test('sample network failure keeps the editable document',async({page})=>{
+  await page.route('**/api/samples/add-vlan',route=>route.fulfill({status:500,body:'failed'}));
+  const before=await page.getByTestId('diagram').innerHTML();
+  await page.getByLabel('サンプル構成').selectOption('add-vlan');
+  await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();
+  await expect(page.getByRole('alert')).toContainText('編集内容は保持されています');
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  expect(await page.getByTestId('diagram').innerHTML()).toBe(before);
+});
+
+test('editing during sample download requires another confirmation',async({page})=>{
+  await page.route('**/api/samples/add-pc',async route=>{
+    const response=await route.fetch();
+    await new Promise(resolve=>setTimeout(resolve,900));
+    await route.fulfill({response});
+  });
+  await page.getByLabel('サンプル構成').selectOption('add-pc');
+  const request=page.waitForRequest(r=>r.url().endsWith('/api/samples/add-pc'));
+  await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();await request;
+  page.once('dialog',dialog=>dialog.dismiss());
+  await page.getByRole('textbox',{name:'YAMLエディター'}).fill('name: KEEP-LATEST-EDIT');
+  await expect(page.getByRole('button',{name:'サンプルを読み込む',exact:true})).toBeEnabled();
+  await expect(page.getByRole('textbox',{name:'YAMLエディター'})).toContainText('KEEP-LATEST-EDIT');
+  await expect(page.getByLabel('検証結果')).toContainText('入力を確認');
+});
+
+test('help fits a mobile viewport',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole('button',{name:'ヘルプ',exact:true}).click();
+  const help=page.getByRole('dialog');
+  await expect(help).toBeVisible();
+  expect(await help.evaluate(el=>el.scrollWidth<=window.innerWidth)).toBeTruthy();
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/help-mobile.png',fullPage:false});
+  await page.getByRole('button',{name:'ヘルプを閉じる'}).click();
+  await expect(help).toHaveCount(0);
+});

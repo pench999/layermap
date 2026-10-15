@@ -11,6 +11,7 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY generate_diagram.py network_model.py web_app.py test_*.py lan-sample.yaml ./
+COPY samples/ ./samples/
 COPY --from=frontend /frontend/dist ./frontend/dist
 USER 1000:1000
 EXPOSE 8000
