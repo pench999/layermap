@@ -42,7 +42,7 @@ test('single layers, binding toggle and device highlight',async({page})=>{
   await page.getByRole('tab',{name:'全レイヤー'}).click();
   await expect(page.locator('[data-layer]')).toHaveCount(3);
   await page.getByLabel('機器の強調表示').selectOption('pc-a');
-  await expect(page.locator('.selected-device')).toHaveCount(4);
+  await expect(page.locator('.selected-device')).toHaveCount(3);
   await expect(page.locator('.other-device').first()).toBeVisible();
   await page.getByLabel('機器の強調表示').selectOption('');
   await expect(page.locator('.selected-device')).toHaveCount(0);
@@ -183,4 +183,33 @@ test('help fits a mobile viewport',async({page})=>{
   await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/help-mobile.png',fullPage:false});
   await page.getByRole('button',{name:'ヘルプを閉じる'}).click();
   await expect(help).toHaveCount(0);
+});
+
+
+test('equipment frames contain distinct interfaces and support port clicks',async({page})=>{
+  for(const layer of ['l1','l2','l3']){
+    const group=page.locator('[data-layer="'+layer+'"]');
+    await expect(group.locator('g.device-card')).toHaveCount(4);
+    await expect(group.locator('g.device-card[data-device="sw01"]')).toHaveCount(1);
+    await expect(group.locator('g.device-card[data-device="sw01"] > rect.device-frame')).toHaveCount(1);
+  }
+  const switchL1=page.locator('[data-layer="l1"] g.device-card[data-device="sw01"]');
+  await expect(switchL1.locator('[data-element-id]')).toHaveCount(3);
+  await expect(switchL1).toContainText('DEMO-SW-0001');
+  await expect(page.locator('[data-layer="l3"] g.device-card[data-device="sw01"]')).toContainText('L3インターフェースなし');
+  await page.getByRole('tab',{name:'L1 物理'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  await page.locator('[data-element-id="sw01.p2"]').click();
+  await expect(page.getByLabel('機器の強調表示')).toHaveValue('sw01');
+  await expect(page.locator('.selected-device')).toHaveCount(1);
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/grouped-l1.png',fullPage:true});
+  await page.getByRole('tab',{name:'L2 VLAN'}).click();
+  await expect(page.locator('[data-layer="l2"]')).toHaveCount(1);
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/grouped-l2.png',fullPage:true});
+  await page.getByRole('tab',{name:'L3 IP'}).click();
+  await expect(page.locator('[data-layer="l3"]')).toHaveCount(1);
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/grouped-l3.png',fullPage:true});
 });

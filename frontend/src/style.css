@@ -53,3 +53,8 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 @media(min-width:761px) { .workspace { height:calc(100vh - 395px); } }
 @media(max-width:1100px) { .sample-bar { margin-left:20px; margin-right:20px; } .sample-bar>p { min-width:180px; } }
 @media(max-width:760px) { .sample-bar { margin:0 16px 15px; padding:12px; gap:8px; } .sample-controls { width:100%; gap:7px; flex-wrap:wrap; } .sample-controls label { font-size:10px; } .sample-controls select { flex:1; min-width:90px; font-size:11px; padding:7px; } .sample-controls button { padding:8px; font-size:10px; } .sample-bar>p { font-size:10px; min-width:100%; } .guide-link { margin:0; padding:0; } .help-dialog { border-radius:0; } .help-header { padding:20px 16px 16px; } .help-header h2 { font-size:18px; } .help-nav { padding:10px 16px; gap:5px; } .help-nav button { padding:7px 10px; font-size:10px; } .help-body { padding:20px 16px 35px; } .help-body h3 { font-size:18px; } .help-samples { padding:13px; } .help-sample-grid { grid-template-columns:1fr; } .help-sample-grid article { padding:12px; } .help-sample-grid button { align-self:flex-start; } .help-table td,.help-table th { padding:9px; } .help-table td:first-child { width:33%; min-width:105px; } .help-table { font-size:11px; } }
+
+/* Interface rows belong to a single selectable equipment card. */
+.diagram .selected-device > rect.device-frame { stroke:#05987b; stroke-width:3; }
+.diagram .interface-row:hover text { fill:#177b69; }
+.diagram .interface-row:hover .interface-anchor { fill:#b7eadb; stroke:#177b69; }

@@ -91,6 +91,61 @@ class DiagramTests(unittest.TestCase):
                 process.terminate()
                 process.wait(timeout=5)
 
+    def test_one_frame_per_device_per_layer_and_interfaces_remain_distinct(self):
+        root = ET.fromstring(render(self.model))
+        for layer, key in [('l1','ports'),('l2','interfaces'),('l3','interfaces')]:
+            panel = next(e for e in root.iter() if e.attrib.get('data-layer') == layer)
+            cards = [e for e in panel.iter() if e.attrib.get('class') == 'device-card']
+            self.assertEqual(len(cards), len(self.model['devices']))
+            for device in self.model['devices']:
+                matches = [e for e in cards if e.attrib['data-device'] == device['id']]
+                self.assertEqual(len(matches),1)
+                card = matches[0]
+                self.assertEqual(len([e for e in card.iter() if e.tag.endswith('rect')]),1)
+                expected = {i['id'] for i in self.model[layer][key] if i['device']==device['id']}
+                self.assertEqual({e.attrib['data-element-id'] for e in card.iter() if 'data-element-id' in e.attrib}, expected)
+        l1 = next(e for e in root.iter() if e.attrib.get('data-device-layer')=='l1' and e.attrib.get('data-device')=='sw01')
+        self.assertIn('DEMO-SW-0001',''.join(l1.itertext()))
+        self.assertNotIn('L1 機器台帳',''.join(root.itertext()))
+
+    def test_cables_and_cross_layer_bindings_use_individual_row_anchors(self):
+        root = ET.fromstring(render(self.model))
+        nodes = {}
+        for layer in [e for e in root.iter() if 'data-layer' in e.attrib]:
+            for row in layer.iter():
+                if 'data-element-id' in row.attrib:
+                    nodes[(layer.attrib['data-layer'],row.attrib['data-element-id'])] = float(row.attrib['data-anchor-y'])
+            for branch in layer.iter():
+                if 'data-endpoint' in branch.attrib:
+                    first = branch.attrib['d'].split(' L')[0][1:]
+                    self.assertEqual(float(first.split(',')[1]), nodes[(layer.attrib['data-layer'],branch.attrib['data-endpoint'])])
+        switch_ports = [nodes[('l1',p)] for p in ['sw01.p1','sw01.p2','sw01.p24']]
+        self.assertEqual(len(set(switch_ports)),3)
+        for binding in [e for e in root.iter() if 'data-binding' in e.attrib]:
+            upper, lower = ('l3','l2') if binding.attrib['data-binding']=='l3_to_l2' else ('l2','l1')
+            for edge in [e for e in binding.iter() if 'data-from' in e.attrib]:
+                points = edge.attrib['d'][1:].split(' L')
+                self.assertEqual(float(points[0].split(',')[1]),nodes[(upper,edge.attrib['data-from'])])
+                self.assertEqual(float(points[-1].split(',')[1]),nodes[(lower,edge.attrib['data-to'])])
+
+    def test_frame_grows_for_many_ports_and_wrapped_metadata(self):
+        baseline = ET.fromstring(render(self.model,layers=['l1']))
+        previous_height = float(baseline.attrib['height'])
+        for n in range(12):
+            self.model['l1']['ports'].append({'id':'sw01.extra'+str(n),'device':'sw01','name':'長いインターフェース名'*8})
+        self.model['devices'][2]['serial_number'] = 'LONG-SERIAL-'*12
+        root = ET.fromstring(render(self.model,layers=['l1']))
+        self.assertGreater(float(root.attrib['height']),previous_height)
+        card = next(e for e in root.iter() if e.attrib.get('data-device')=='sw01')
+        frame = next(e for e in card if e.attrib.get('class')=='device-frame')
+        bottom = float(frame.attrib['y'])+float(frame.attrib['height'])
+        rows = [e for e in card.iter() if 'data-anchor-y' in e.attrib]
+        self.assertEqual(len(rows),15)
+        for row in rows:
+            self.assertLess(float(row.attrib['data-anchor-y']),bottom)
+            for label in [e for e in row.iter() if e.tag.endswith('text')]:
+                self.assertLess(float(label.attrib['y']),bottom)
+
 
 if __name__ == '__main__':
     unittest.main()
