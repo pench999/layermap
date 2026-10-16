@@ -1,5 +1,6 @@
 """Shared, bounded YAML model validation for CLI and HTTP requests."""
 import ipaddress
+from datetime import datetime
 import re
 from typing import Annotated, Literal
 
@@ -38,6 +39,7 @@ class Device(Record):
 
 
 class Port(Record):
+    kind: Literal['wired','wifi'] = 'wired'
     id: Id
     device: Id
     name: Text | None = None
@@ -51,9 +53,28 @@ class Link(Record):
     speed: Text | None = None
 
 
+class ConnectionEndpoint(Record):
+    port: Id | None = None
+    device: Id | None = None
+    unknown: Literal[True] | None = None
+
+
+class Connection(Record):
+    id: Id
+    kind: Literal['wired','wifi']
+    status: Literal['confirmed','port_unknown','peer_unknown']
+    endpoints: list[ConnectionEndpoint] = Field(min_length=2, max_length=2)
+    ssid: Text | None = None
+    observed_at: Text | None = None
+    note: Text | None = None
+    medium: Text | None = None
+    speed: Text | None = None
+
+
 class L1(Record):
     ports: list[Port]
     links: list[Link]
+    connections: list[Connection] = Field(default_factory=list)
 
 
 class Vlan(Record):
@@ -149,7 +170,7 @@ def validate(data):
         error = exc.errors(include_input=False)[0]
         raise ModelError(error['msg'], model_path(error['loc'])) from None
     groups = {'devices': data['devices']}
-    for layer, names in [('l1', ['ports', 'links']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces'])]:
+    for layer, names in [('l1', ['ports', 'links', 'connections']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces'])]:
         groups.update({f'{layer}.{n}': data[layer][n] for n in names})
     count = sum(len(v) for v in groups.values()) + len(data['l3']['routes']) + sum(len(v) for v in data['bindings'].values())
     if count > MAX_ELEMENTS:
@@ -177,9 +198,43 @@ def validate(data):
         for j, port in enumerate(link['endpoints']):
             p = f'l1.links[{n}].endpoints[{j}]'
             ref(port, 'l1.ports', p)
+            if ix['l1.ports'][port]['kind']!='wired':
+                raise ModelError('l1.linksは有線用です。Wi-Fiはl1.connectionsに定義してください',p)
             if port in used_ports:
                 raise ModelError('同じ物理ポートを複数のケーブル端点には指定できません', p)
             used_ports.add(port)
+    for n, connection in enumerate(data['l1']['connections']):
+        p=f'l1.connections[{n}]'
+        if connection['id'] in ix['l1.links']:
+            raise ModelError('接続IDがl1.linksと重複しています',p+'.id')
+        forms=[]
+        for j, endpoint in enumerate(connection['endpoints']):
+            ep=p+f'.endpoints[{j}]'
+            if len(endpoint)!=1:
+                raise ModelError('端点はport・device・unknownのどれか一つだけを指定してください',ep)
+            form=next(iter(endpoint));forms.append(form)
+            if form=='port':
+                port=ref(endpoint['port'],'l1.ports',ep+'.port')
+                if port['kind']!=connection['kind']:
+                    raise ModelError('接続方式とポートのkindが一致しません',ep+'.port')
+                if connection['kind']=='wired':
+                    if endpoint['port'] in used_ports:
+                        raise ModelError('同じ物理ポートを複数の有線接続端点には指定できません',ep+'.port')
+                    used_ports.add(endpoint['port'])
+            elif form=='device':ref(endpoint['device'],'devices',ep+'.device')
+        expected={'confirmed':['port','port'],'port_unknown':['device','port'],'peer_unknown':['port','unknown']}[connection['status']]
+        if sorted(forms)!=expected:
+            raise ModelError('statusと端点の確認範囲が一致しません（confirmed=port+port、port_unknown=port+device、peer_unknown=port+unknown）',p+'.status')
+        if forms==['port','port'] and connection['endpoints'][0]['port']==connection['endpoints'][1]['port']:
+            raise ModelError('同じポート自身へは接続できません',p+'.endpoints')
+        if connection['kind']=='wired' and connection.get('ssid'):
+            raise ModelError('SSIDはWi-Fi接続だけに指定できます',p+'.ssid')
+        if connection.get('observed_at'):
+            try:
+                stamp=datetime.fromisoformat(connection['observed_at'].replace('Z','+00:00'))
+                if stamp.tzinfo is None:raise ValueError()
+            except ValueError:
+                raise ModelError('確認日時はタイムゾーン付きISO 8601形式にしてください',p+'.observed_at') from None
     for n, item in enumerate(data['l2']['interfaces']):
         p = f'l2.interfaces[{n}]'
         if item['mode'] == 'access':
@@ -320,3 +375,21 @@ def load_model(source, with_index=False):
         mark = getattr(exc, 'problem_mark', None)
         raise ModelError('YAML構文: '+str(getattr(exc, 'problem', None) or str(exc).splitlines()[0]),
                          line=mark.line+1 if mark else None, column=mark.column+1 if mark else None) from None
+
+
+def all_l1_connections(ix):
+    legacy=[dict(link,kind='wired',status='confirmed',endpoints=[{'port':p} for p in link['endpoints']]) for link in ix['l1.links'].values()]
+    return legacy+list(ix['l1.connections'].values())
+
+
+def endpoint_owner(endpoint,ix):
+    return ix['l1.ports'][endpoint['port']]['device'] if 'port' in endpoint else endpoint.get('device')
+
+
+def endpoint_label(endpoint):
+    return endpoint['port'] if 'port' in endpoint else endpoint['device']+'（ポート／無線IF未確認）' if 'device' in endpoint else '接続先未確認'
+
+
+def connection_label(connection):
+    status={'confirmed':'両端確認済み','port_unknown':'ポート／無線IF未確認','peer_unknown':'接続先未確認'}[connection['status']]
+    return ('Wi-Fi' if connection['kind']=='wifi' else '有線')+' / '+status+' / '+' ↔ '.join(endpoint_label(e) for e in connection['endpoints'])+(' / SSID: '+connection['ssid'] if connection.get('ssid') else '')+(' / 確認: '+connection['observed_at'] if connection.get('observed_at') else '')+(' / '+connection['medium'] if connection.get('medium') else '')+(' / '+connection['speed'] if connection.get('speed') else '')+(' / '+connection['note'] if connection.get('note') else '')

@@ -1,0 +1,192 @@
+# 現在の確認内容の架空サンプルです。すべての日時・機器情報は架空です。
+# kindとstatusは独立。SSIDだけでAPやVLANを推定しません。
+schema: "lan-example/v1"
+name: "有線・Wi-Fiと接続先の確認状況"
+scope: "現在の確認内容の架空サンプル。WAN側・通信許可は範囲外。"
+
+devices:
+  - id: "pc-a"
+    role: "endpoint"
+    name: "HQ-PC-01"
+    groups: ["有線端末"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-PC-A"
+    location: {"site":"本社","room":"執務室"}
+  - id: "pc-b"
+    role: "endpoint"
+    name: "HQ-GUEST-PC-01"
+    groups: ["有線端末"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-PC-B"
+    location: {"site":"本社","room":"執務室"}
+  - id: "sw01"
+    role: "l2-switch"
+    name: "HQ-SW-01"
+    groups: ["ネットワーク機器"]
+    manufacturer: "Example Devices"
+    model: "DEMO-NET100"
+    serial_number: "FAKE-SW01"
+    location: {"site":"本社","room":"サーバー室"}
+  - id: "gw01"
+    role: "internet-gateway"
+    name: "HQ-GW-01"
+    groups: ["ネットワーク機器"]
+    manufacturer: "Example Devices"
+    model: "DEMO-NET100"
+    serial_number: "FAKE-GW01"
+    location: {"site":"本社","room":"サーバー室"}
+  - id: "ap01"
+    role: "access-point"
+    name: "HQ-AP-01"
+    groups: ["ネットワーク機器","無線LAN","共有APの確認例"]
+    manufacturer: "Example Devices"
+    model: "DEMO-AP100"
+    serial_number: "FAKE-AP01"
+    location: {"site":"本社","room":"サーバー室"}
+  - id: "pc-c"
+    role: "endpoint"
+    name: "HQ-PC-03"
+    groups: ["有線端末"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-PC-C"
+    location: {"site":"本社","room":"執務室"}
+  - id: "wifi1"
+    role: "endpoint"
+    name: "HQ-WIFI-PC-01"
+    groups: ["Wi-Fi端末","無線LAN","共有APの確認例"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-WIFI1"
+    location: {"site":"本社","room":"執務室"}
+  - id: "wifi2"
+    role: "endpoint"
+    name: "HQ-WIFI-PC-02"
+    groups: ["Wi-Fi端末","無線LAN","共有APの確認例"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-WIFI2"
+    location: {"site":"本社","room":"執務室"}
+  - id: "wifi3"
+    role: "endpoint"
+    name: "HQ-WIFI-PC-03"
+    groups: ["Wi-Fi端末","無線LAN"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-WIFI3"
+    location: {"site":"本社","room":"執務室"}
+  - id: "wifi4"
+    role: "endpoint"
+    name: "HQ-WIFI-PC-04"
+    groups: ["Wi-Fi端末","無線LAN"]
+    manufacturer: "Example Devices"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-WIFI4"
+    location: {"site":"本社","room":"執務室"}
+
+l1:
+  ports:
+    - {"id":"pc-a.eth0","device":"pc-a","name":"Ethernet0","kind":"wired","connector":"RJ45"}
+    - {"id":"pc-b.eth0","device":"pc-b","name":"Ethernet0","kind":"wired","connector":"RJ45"}
+    - {"id":"pc-c.eth0","device":"pc-c","name":"Ethernet0","kind":"wired","connector":"RJ45"}
+    - {"id":"sw01.p2","device":"sw01","name":"Gi1/0/2","kind":"wired","connector":"RJ45"}
+    - {"id":"sw01.p24","device":"sw01","name":"Gi1/0/24","kind":"wired","connector":"RJ45"}
+    - {"id":"sw01.p3","device":"sw01","name":"Gi1/0/3","kind":"wired","connector":"RJ45"}
+    - {"id":"gw01.lan","device":"gw01","name":"LAN1","kind":"wired","connector":"RJ45"}
+    - {"id":"ap01.eth0","device":"ap01","name":"LAN1","kind":"wired","connector":"RJ45"}
+    - {"id":"ap01.wlan0","device":"ap01","name":"Radio0","kind":"wifi"}
+    - {"id":"wifi1.wlan0","device":"wifi1","name":"Wi-Fi","kind":"wifi"}
+    - {"id":"wifi2.wlan0","device":"wifi2","name":"Wi-Fi","kind":"wifi"}
+    - {"id":"wifi3.wlan0","device":"wifi3","name":"Wi-Fi","kind":"wifi"}
+    - {"id":"wifi4.wlan0","device":"wifi4","name":"Wi-Fi","kind":"wifi"}
+  links:
+    - {"id":"cable-b","endpoints":["pc-b.eth0","sw01.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"cable-gw","endpoints":["gw01.lan","sw01.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"cable-ap","endpoints":["ap01.eth0","sw01.p3"],"medium":"copper","speed":"1Gbps"}
+  connections:
+    - {"id":"wired-port-unknown","kind":"wired","status":"port_unknown","endpoints":[{"port":"pc-a.eth0"},{"device":"sw01"}],"observed_at":"2026-10-16T10:00:00+09:00"}
+    - {"id":"wired-peer-unknown","kind":"wired","status":"peer_unknown","endpoints":[{"port":"pc-c.eth0"},{"unknown":true}],"observed_at":"2026-10-16T10:00:00+09:00"}
+    - {"id":"wifi-confirmed-1","kind":"wifi","status":"confirmed","endpoints":[{"port":"wifi1.wlan0"},{"port":"ap01.wlan0"}],"ssid":"LayerMap-Office","observed_at":"2026-10-16T10:00:00+09:00"}
+    - {"id":"wifi-confirmed-2","kind":"wifi","status":"confirmed","endpoints":[{"port":"wifi2.wlan0"},{"port":"ap01.wlan0"}],"ssid":"LayerMap-Office","observed_at":"2026-10-16T10:00:00+09:00"}
+    - {"id":"wifi-radio-unknown","kind":"wifi","status":"port_unknown","endpoints":[{"port":"wifi3.wlan0"},{"device":"ap01"}],"ssid":"LayerMap-Office","observed_at":"2026-10-16T10:00:00+09:00"}
+    - {"id":"wifi-ap-unknown","kind":"wifi","status":"peer_unknown","endpoints":[{"port":"wifi4.wlan0"},{"unknown":true}],"ssid":"LayerMap-Office","observed_at":"2026-10-16T10:00:00+09:00"}
+
+l2:
+  vlans:
+    - {"id":"vlan-office","tag":10,"label":"業務LAN"}
+    - {"id":"vlan-guest","tag":20,"label":"来客LAN"}
+  interfaces:
+    - {"id":"pc-a.eth0.l2","device":"pc-a","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"pc-b.eth0.l2","device":"pc-b","mode":"access","untagged_vlan":"vlan-guest"}
+    - {"id":"pc-c.eth0.l2","device":"pc-c","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"sw01.p2.l2","device":"sw01","mode":"access","untagged_vlan":"vlan-guest"}
+    - {"id":"sw01.p24.l2","device":"sw01","mode":"trunk","tagged_vlans":["vlan-office","vlan-guest"]}
+    - {"id":"sw01.p3.l2","device":"sw01","mode":"trunk","tagged_vlans":["vlan-office","vlan-guest"]}
+    - {"id":"gw01.lan.l2","device":"gw01","mode":"trunk","tagged_vlans":["vlan-office","vlan-guest"]}
+    - {"id":"ap01.eth0.l2","device":"ap01","mode":"trunk","tagged_vlans":["vlan-office","vlan-guest"]}
+    - {"id":"ap01.wlan0.l2","device":"ap01","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"wifi1.wlan0.l2","device":"wifi1","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"wifi2.wlan0.l2","device":"wifi2","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"wifi3.wlan0.l2","device":"wifi3","mode":"access","untagged_vlan":"vlan-office"}
+    - {"id":"wifi4.wlan0.l2","device":"wifi4","mode":"access","untagged_vlan":"vlan-office"}
+  bridges:
+    - {"id":"sw01.bridge","device":"sw01","members":["sw01.p2.l2","sw01.p24.l2","sw01.p3.l2"]}
+    - {"id":"ap01.bridge","device":"ap01","members":["ap01.eth0.l2","ap01.wlan0.l2"]}
+
+l3:
+  subnets:
+    - {"id":"net-office","cidr":"192.168.10.0/24"}
+    - {"id":"net-guest","cidr":"192.168.20.0/24"}
+  interfaces:
+    - {"id":"gw01.office.ip","device":"gw01","address":"192.168.10.1/24","subnet":"net-office"}
+    - {"id":"gw01.guest.ip","device":"gw01","address":"192.168.20.1/24","subnet":"net-guest"}
+    - {"id":"pc-a.office.ip","device":"pc-a","address":"192.168.10.10/24","subnet":"net-office"}
+    - {"id":"pc-b.guest.ip","device":"pc-b","address":"192.168.20.10/24","subnet":"net-guest"}
+    - {"id":"pc-c.office.ip","device":"pc-c","address":"192.168.10.60/24","subnet":"net-office"}
+    - {"id":"wifi1.office.ip","device":"wifi1","address":"192.168.10.71/24","subnet":"net-office"}
+    - {"id":"wifi2.office.ip","device":"wifi2","address":"192.168.10.72/24","subnet":"net-office"}
+    - {"id":"wifi3.office.ip","device":"wifi3","address":"192.168.10.73/24","subnet":"net-office"}
+    - {"id":"wifi4.office.ip","device":"wifi4","address":"192.168.10.74/24","subnet":"net-office"}
+  routes:
+    - {"device":"pc-a","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"pc-a.office.ip"}
+    - {"device":"pc-b","destination":"0.0.0.0/0","next_hop":"192.168.20.1","interface":"pc-b.guest.ip"}
+    - {"device":"pc-c","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"pc-c.office.ip"}
+    - {"device":"wifi1","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"wifi1.office.ip"}
+    - {"device":"wifi2","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"wifi2.office.ip"}
+    - {"device":"wifi3","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"wifi3.office.ip"}
+    - {"device":"wifi4","destination":"0.0.0.0/0","next_hop":"192.168.10.1","interface":"wifi4.office.ip"}
+
+bindings:
+  l2_to_l1:
+    - {"l2_interface":"pc-a.eth0.l2","physical_port":"pc-a.eth0"}
+    - {"l2_interface":"pc-b.eth0.l2","physical_port":"pc-b.eth0"}
+    - {"l2_interface":"pc-c.eth0.l2","physical_port":"pc-c.eth0"}
+    - {"l2_interface":"sw01.p2.l2","physical_port":"sw01.p2"}
+    - {"l2_interface":"sw01.p24.l2","physical_port":"sw01.p24"}
+    - {"l2_interface":"sw01.p3.l2","physical_port":"sw01.p3"}
+    - {"l2_interface":"gw01.lan.l2","physical_port":"gw01.lan"}
+    - {"l2_interface":"ap01.eth0.l2","physical_port":"ap01.eth0"}
+    - {"l2_interface":"ap01.wlan0.l2","physical_port":"ap01.wlan0"}
+    - {"l2_interface":"wifi1.wlan0.l2","physical_port":"wifi1.wlan0"}
+    - {"l2_interface":"wifi2.wlan0.l2","physical_port":"wifi2.wlan0"}
+    - {"l2_interface":"wifi3.wlan0.l2","physical_port":"wifi3.wlan0"}
+    - {"l2_interface":"wifi4.wlan0.l2","physical_port":"wifi4.wlan0"}
+  l3_to_l2:
+    - {"l3_interface":"gw01.office.ip","l2_interface":"gw01.lan.l2","vlan":"vlan-office"}
+    - {"l3_interface":"gw01.guest.ip","l2_interface":"gw01.lan.l2","vlan":"vlan-guest"}
+    - {"l3_interface":"pc-a.office.ip","l2_interface":"pc-a.eth0.l2","vlan":"vlan-office"}
+    - {"l3_interface":"pc-b.guest.ip","l2_interface":"pc-b.eth0.l2","vlan":"vlan-guest"}
+    - {"l3_interface":"pc-c.office.ip","l2_interface":"pc-c.eth0.l2","vlan":"vlan-office"}
+    - {"l3_interface":"wifi1.office.ip","l2_interface":"wifi1.wlan0.l2","vlan":"vlan-office"}
+    - {"l3_interface":"wifi2.office.ip","l2_interface":"wifi2.wlan0.l2","vlan":"vlan-office"}
+    - {"l3_interface":"wifi3.office.ip","l2_interface":"wifi3.wlan0.l2","vlan":"vlan-office"}
+    - {"l3_interface":"wifi4.office.ip","l2_interface":"wifi4.wlan0.l2","vlan":"vlan-office"}
+
+notes:
+  - "すべて架空の機器情報・確認日時です。自動検出や履歴管理は行いません。YAMLを現在の確認内容に更新してください。"
+  - "pc-aはsw01への有線接続まで確認済みですが、スイッチ側ポートは未確認です。架空のポートIDは作りません。"
+  - "wifi1・wifi2はap01.wlan0を共有します。wifi3はAPのみ確認済み、wifi4はSSIDのみ分かりAP未確認です。"
+  - "L2・L3は設定上の所属です。L1の未確認接続を確定させる根拠や通信可否の判定には使いません。"
+  - "機器群「共有APの確認例」でAP1台とWi-Fi端末2台を表示し、L1タブで無線IFの共有を確認できます。"

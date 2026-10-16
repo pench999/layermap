@@ -8,7 +8,7 @@ from collections import Counter
 from pathlib import Path
 
 import yaml
-from network_model import ModelError, validate, load_model
+from network_model import ModelError, validate, load_model, endpoint_owner, endpoint_label, connection_label
 from view_model import require_display_budget, prepare_view, ViewScope, TraceRoot
 
 
@@ -118,6 +118,24 @@ def route_cables(links,nodes,boxes,card_top,bottom):
     return routes
 
 
+def ghost_height(connection):
+    return 20+16*(1+len(wrap_label(connection['id'],44)))
+
+
+def wave_path(points):
+    # One continuous path, with bounded detail even for very long routed segments.
+    import math
+    parts=[f'M{points[0][0]},{points[0][1]}']
+    for a,b in segments(points):
+        dx,dy=b[0]-a[0],b[1]-a[1];length=math.hypot(dx,dy)
+        steps=max(1,min(128,int(length/12)))
+        for n in range(steps):
+            t=(n+1)/steps;mid=(n+.5)/steps;sign=1 if n%2==0 else -1
+            cx=a[0]+dx*mid-dy/length*3*sign;cy=a[1]+dy*mid+dx/length*3*sign
+            parts.append(f'Q{cx:.2f},{cy:.2f} {a[0]+dx*t:.2f},{a[1]+dy*t:.2f}')
+    return ' '.join(parts)
+
+
 def render(model, layers=None, show_bindings=True, context_notes=None):
     ix = validate(model)
     wanted = tuple(layers) if layers is not None else ('l3', 'l2', 'l1')
@@ -159,7 +177,13 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             for member in members:
                 memberships.setdefault((layer,member),[]).append(network)
     physical_links=list(ix['l1.links'].values())
+    extra_connections=list(ix['l1.connections'].values())
+    ghosts={device:[] for device in ix['devices']}
+    for index,c in enumerate(extra_connections):
+        for j,e in enumerate(c['endpoints']):
+            if 'device' in e:ghosts[e['device']].append((index,j,c))
     physical_degree=Counter(ix['l1.ports'][p]['device'] for link in physical_links for p in link['endpoints'])
+    physical_degree.update(endpoint_owner(e,ix) for c in extra_connections for e in c['endpoints'] if endpoint_owner(e,ix) is not None)
     max_edges = max([max(Counter(ix[group][m]['device'] for _,members,_ in relations[layer] for m in members).values(),default=0) for layer,group,_,_ in specs]+[max(physical_degree.values(),default=1) if 'l1' in wanted else 1])
     binding_specs = [('l3','l2','l3_to_l2','l3_interface','l2_interface'),('l2','l1','l2_to_l1','l2_interface','physical_port')]
     binding_records, row_bindings = [], {}
@@ -197,6 +221,13 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         port_sides[b]=1 if da==db or lefts[db]<lefts[da] else -1
         color=['#1779a5','#b5681c','#287c58','#a04a92','#6a64b0','#ad574d'][i%6]
         port_colors[a]=port_colors[b]=color
+    for c in extra_connections:
+        a,b=c['endpoints']
+        for endpoint,other in [(a,b),(b,a)]:
+            if 'port' in endpoint:
+                owner=endpoint_owner(endpoint,ix);remote=endpoint_owner(other,ix)
+                port_sides.setdefault(endpoint['port'],1 if remote is None or lefts[owner]<=lefts[remote] else -1)
+    new_anchors={}
     svg, nodes, sections = [], {}, {}
     membership_anchors, network_styles = {}, []
     binding_anchors, binding_labels, binding_styles = {}, {}, []
@@ -239,7 +270,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 # Lead with the operational value, retaining stable reference IDs below.
                 if layer=='l1':
                     primary=item.get('name') or item['id'].split('.')[-1]
-                    details=[item['id']]
+                    details=[item['id']]+(['Wi-Fi 無線インターフェース'] if item.get('kind')=='wifi' else [])
                 elif layer=='l2':
                     vlan_refs=[item['untagged_vlan']] if item['mode']=='access' else item['tagged_vlans']
                     primary='VLAN '+(', '.join(str(ix['l2.vlans'][v]['tag']) for v in vlan_refs) or 'なし')
@@ -253,11 +284,11 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 detail_lines=[part for detail in details for part in wrap_label(detail,46)]
                 height=24*len(title_lines)+18*(len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[]))+sum(len(wrap_label(binding_badge(b,layer),46)) for b in row_bindings.get((layer,item['id']),[])))+18
                 rows.append((item,title_lines,detail_lines,height))
-            height=header+sum(row[3] for row in rows)+12
+            height=header+sum(row[3] for row in rows)+12+(sum(ghost_height(c) for i,j,c in ghosts[device]) if layer=='l1' else 0)
             if not rows:
                 height+=44
             cards[device]=(title,identity,metadata,header,rows,height)
-        card_top=top+62+(20*len(physical_links) if layer=='l1' else 0)
+        card_top=top+62+(20*(len(physical_links)+len(extra_connections)) if layer=='l1' else 0)
         bottom=max(card_top+c[-1] for c in cards.values())
         bus_top=bottom+45
         bus_layout=[]
@@ -267,20 +298,32 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             by=cursor+18*len(labels)+10
             bus_layout.append((by,labels,network))
             cursor=by+38
+        unknown_connections=[(i,c,j) for i,c in enumerate(extra_connections) for j,e in enumerate(c['endpoints']) if 'unknown' in e] if layer=='l1' else []
+        unknown_layout=[];unknown_cursor=bottom+32
+        for i,c,j in unknown_connections:
+            labels=[('AP未確認' if c['kind']=='wifi' else '接続先機器未確認')+' / N'+str(i+1)]+wrap_label('SSID: '+c['ssid'] if c.get('ssid') else '相手機器・ポートを特定していません',40)
+            h=20+16*len(labels)
+            unknown_layout.append((i,c,j,unknown_cursor,h,labels));unknown_cursor+=h+24
+        route_bottom=unknown_cursor if unknown_layout else bottom
         cable_rows=[]
+        extra_rows=[]
         if layer=='l1':
-            cursor=bottom+58+24*len(physical_links)
+            cursor=route_bottom+58+24*(len(physical_links)+len(extra_connections))
             for i,link in enumerate(physical_links):
                 label=f'C{i+1}  '+link['id']+'  |  '+link['endpoints'][0]+' ↔ '+link['endpoints'][1]+'  |  '+link.get('medium','')+' / '+link.get('speed','')
                 labels=wrap_label(label,min(180,int((width-80)/7)))
                 cable_rows.append((cursor,labels,link))
                 cursor+=len(labels)*18+13
-        end=max(cursor,bottom+35)+16
+            for i,c in enumerate(extra_connections):
+                labels=wrap_label(f'N{i+1} / '+c['id']+' / '+connection_label(c),min(180,int((width-80)/7)))
+                extra_rows.append((cursor,labels,c));cursor+=len(labels)*18+13
+        end=max(cursor,route_bottom+35)+16
         sections[layer]=(top,end)
         svg.append(f'<g data-layer="{layer}">')
         rect(20,top,width-40,end-top,fill,fill,'layer-panel')
         heading_x=left_space+16 if binding_records else 40
-        text(heading_x,top+32,heading,22)
+        text(heading_x,top+32,heading.replace('ケーブル','有線・Wi-Fi接続') if layer=='l1' and extra_connections else heading,22)
+        if layer=='l1' and extra_connections:text(heading_x,top+51,'有線＝実線 / Wi-Fi＝波線 / 橙色・?＝未確認（有線は一点鎖線）/ 紫破線＝層間対応',11,'#60788e')
         for device,(title,identity,metadata,header,rows,height) in cards.items():
             left=lefts[device]
             right=left+card_width
@@ -333,11 +376,41 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             if not rows:
                 label={'l1':'物理ポートなし','l2':'L2インターフェースなし','l3':'L3インターフェースなし'}[layer]
                 text(left+16,row_top+25,label,12,'#8192a5')
+            if layer=='l1':
+                ghost_top=row_top+(44 if not rows else 0)
+                for ghost_no,(i,j,c) in enumerate(ghosts[device]):
+                    other=c['endpoints'][1-j];remote=endpoint_owner(other,ix)
+                    side=1 if remote is None or lefts[device]<=lefts[remote] else -1
+                    ax=right if side==1 else left;ay=ghost_top+30
+                    labels=['ポート／無線IF未確認 / N'+str(i+1)]+wrap_label(c['id'],44)
+                    svg.append(f'<g class="unresolved-endpoint" data-connection-id="{escape(c["id"])}" role="img" aria-label="{escape(device+" / ポート／無線IF未確認")}">')
+                    rect(left+8,ghost_top+3,card_width-16,ghost_height(c)-6,'#fff7e8','#c2822b')
+                    lines_at(left+16,ghost_top+23,labels,12,'#915a15',16)
+                    svg.append(f'<circle cx="{ax}" cy="{ay}" r="6" fill="#fff7e8" stroke="#c2822b"/>')
+                    svg.append('</g>')
+                    new_anchors[(c['id'],j)]={'left':left,'right':right,'anchor_x':ax,'y':ay,'device':device,'side':side,'slot':len(rows)+ghost_no}
+                    ghost_top+=ghost_height(c)
             svg.append('</g>')
         if layer=='l1':
             layer_nodes={key:n for (l,key),n in nodes.items() if l=='l1'}
             boxes=[(lefts[d],card_top,lefts[d]+card_width,card_top+cards[d][-1]) for d in devices]
-            routes=route_cables(physical_links,layer_nodes,boxes,card_top,bottom)
+            for i,c,j,uy,unknown_height,unknown_labels in unknown_layout:
+                known=c['endpoints'][1-j];owner=endpoint_owner(known,ix)
+                x=lefts[owner]+16
+                label=('AP未確認' if c['kind']=='wifi' else '接続先機器未確認')+' / N'+str(i+1)
+                svg.append(f'<g class="unknown-peer" data-connection-id="{escape(c["id"])}" role="img" aria-label="{escape(label)}">')
+                rect(x,uy,300,unknown_height,'#fff7e8','#c2822b')
+                lines_at(x+12,uy+23,unknown_labels,12,'#915a15',16)
+                svg.append('</g>');boxes.append((x,uy,x+300,uy+unknown_height))
+                new_anchors[(c['id'],j)]={'left':x,'right':x+300,'anchor_x':x,'y':uy+unknown_height/2,'device':('unknown',c['id']),'side':-1,'slot':0}
+            routed_extra=[]
+            for c in extra_connections:
+                keys=[]
+                for j,e in enumerate(c['endpoints']):
+                    key=('connection',c['id'],j);keys.append(key)
+                    layer_nodes[key]=dict(layer_nodes[e['port']]) if 'port' in e else new_anchors[(c['id'],j)]
+                routed_extra.append({'id':c['id'],'endpoints':keys})
+            routes=route_cables(physical_links+routed_extra,layer_nodes,boxes,card_top,route_bottom)
             for list_y,labels,link in cable_rows:
                 routed=routes[link['id']]
                 a,b=link['endpoints']
@@ -353,6 +426,21 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     svg.append(f'<text class="cable-number" x="{label_x}" y="{p[1]-7}" text-anchor="middle" font-size="11" fill="{routed["color"]}" paint-order="stroke" stroke="{fill}" stroke-width="4">{routed["number"]}</text>')
                 lines_at(40,list_y,labels,12,routed['color'])
                 svg.append('</g>')
+            for i,(list_y,labels,c) in enumerate(extra_rows):
+                routed=routes[c['id']];uncertain=c['status']!='confirmed'
+                color='#b47720' if uncertain else '#147d78' if c['kind']=='wifi' else routed['color']
+                description=c['id']+' / '+connection_label(c)
+                svg.append(f'<g class="l1-connection kind-{c["kind"]} status-{c["status"]}" data-connection-id="{escape(c["id"])}" data-connection-kind="{c["kind"]}" data-connection-status="{c["status"]}" tabindex="0" role="img" aria-label="{escape(description)}">')
+                svg.append(f'<title>{escape(description)}</title>')
+                attrs='stroke-linecap="round" stroke-linejoin="round"'+(' stroke-dasharray="10 3 2 3"' if uncertain and c['kind']=='wired' else '')
+                if c['kind']=='wifi':
+                    svg.append(f'<path class="connection-path wifi-wave" d="{wave_path(routed["points"])}" fill="none" stroke="{color}" stroke-width="1.9" {attrs}/>')
+                else:edge(routed['points'],color,'connection-path wired-path',attrs)
+                horizontal=[(a,b) for a,b in segments(routed['points']) if a[1]==b[1]]
+                if horizontal:
+                    a,b=max(horizontal,key=lambda pair:abs(pair[1][0]-pair[0][0]));x=(a[0]+b[0])/2
+                    svg.append(f'<text class="connection-number" x="{x}" y="{a[1]-8}" text-anchor="middle" font-size="11" fill="{color}" paint-order="stroke" stroke="{fill}" stroke-width="4">N{i+1} / {"Wi-Fi" if c["kind"]=="wifi" else "有線"}{" / ? 未確認" if uncertain else ""}</text>')
+                lines_at(40,list_y,labels,12,color);svg.append('</g>')
         else:
             # Lower rows leave nearest the card; upper rows use outer tracks.
             # This avoids the staircase crossings of relation-by-relation lanes.
@@ -457,7 +545,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             binding_styles.append(f'{trigger} .binding-group.binding-{key}'+'{opacity:1}')
             binding_styles.append(f'{trigger} .binding-group.binding-{key} .binding-edge'+'{stroke-width:3.5;stroke:#6f359e}')
             binding_styles.append(f'{trigger} .binding-badge.binding-{key} text'+'{font-weight:bold}')
-            binding_styles.append(f'{trigger} :is(.network-group,.physical-cable-group)'+'{opacity:.12!important}')
+            binding_styles.append(f'{trigger} :is(.network-group,.physical-cable-group,.l1-connection)'+'{opacity:.12!important}')
         svg.append('</g>')
     y=max(end for top,end in sections.values())+42
     if 'l3' in wanted:
@@ -475,7 +563,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
     height=y+55
     network_css=''.join(network_styles)
     binding_css=''.join(binding_styles)
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}.interface-hit{{pointer-events:all}}.interface-row{{cursor:pointer;outline:none}}.interface-row:focus>.binding-row-highlight{{display:block;stroke:#177b69;stroke-width:2}}svg.trace-active .interface-row{{opacity:.18!important}}svg.trace-active .interface-row.trace-row{{opacity:1!important}}svg.trace-active .trace-row .binding-row-highlight{{display:block;stroke-width:2;stroke:#8665a6}}svg.trace-active .trace-root .binding-row-highlight{{fill:#e4f5ee;stroke:#177b69;stroke-width:3}}svg.trace-active .binding-group{{opacity:.12!important}}svg.trace-active .binding-group.trace-edge{{opacity:1!important}}svg.trace-active .trace-edge .binding-edge{{stroke:#6f359e;stroke-width:3.5}}svg.trace-active .binding-badge.trace-edge text{{font-weight:bold}}svg.trace-active :is(.network-group,.physical-cable-group){{opacity:.12!important}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.l1-connection{{cursor:crosshair;outline:none}}.l1-connection:is(:hover,:focus) .connection-path{{stroke-width:3.5}}svg:has(.l1-connection:is(:hover,:focus)) .l1-connection:not(:hover):not(:focus){{opacity:.22}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}.interface-hit{{pointer-events:all}}.interface-row{{cursor:pointer;outline:none}}.interface-row:focus>.binding-row-highlight{{display:block;stroke:#177b69;stroke-width:2}}svg.trace-active .interface-row{{opacity:.18!important}}svg.trace-active .interface-row.trace-row{{opacity:1!important}}svg.trace-active .trace-row .binding-row-highlight{{display:block;stroke-width:2;stroke:#8665a6}}svg.trace-active .trace-root .binding-row-highlight{{fill:#e4f5ee;stroke:#177b69;stroke-width:3}}svg.trace-active .binding-group{{opacity:.12!important}}svg.trace-active .binding-group.trace-edge{{opacity:1!important}}svg.trace-active .trace-edge .binding-edge{{stroke:#6f359e;stroke-width:3.5}}svg.trace-active .binding-badge.trace-edge text{{font-weight:bold}}svg.trace-active :is(.network-group,.physical-cable-group){{opacity:.12!important}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 

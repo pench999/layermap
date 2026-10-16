@@ -2,7 +2,7 @@
 from collections import Counter, defaultdict, deque
 from typing import Literal
 from pydantic import Field
-from network_model import Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS
+from network_model import Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS, all_l1_connections, endpoint_owner, endpoint_label
 
 MAX_VIEW_DEVICES = 24
 MAX_VIEW_ROWS = 200
@@ -38,7 +38,7 @@ def limits():
 def element_count(model):
     return (len(model['devices'])+sum(len(model[layer][key]) for layer,keys in
             [('l1',['ports','links']),('l2',['vlans','interfaces','bridges']),('l3',['subnets','interfaces'])] for key in keys)
-            +len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
+            +len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
 
 
 def display_stats(model, layers=None, show_bindings=True):
@@ -47,8 +47,9 @@ def display_stats(model, layers=None, show_bindings=True):
     groups=connections=0
     elements=len(model['devices'])
     if 'l1' in wanted:
-        connections+=len(model['l1']['links'])
-        elements+=len(model['l1']['ports'])+len(model['l1']['links'])
+        connections+=len(model['l1']['links'])+len(model['l1'].get('connections',[]))
+        rows+=sum(sum('port' not in e for e in c['endpoints']) for c in model['l1'].get('connections',[]))
+        elements+=len(model['l1']['ports'])+len(model['l1']['links'])+len(model['l1'].get('connections',[]))
     if 'l2' in wanted:
         groups+=len(model['l2']['vlans'])+len(model['l2']['bridges'])
         elements+=len(model['l2']['interfaces'])+len(model['l2']['vlans'])+len(model['l2']['bridges'])
@@ -129,12 +130,19 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
     ports=items('l1','ports');l2=items('l2','interfaces');l3=items('l3','interfaces')
     port_ids={i['id'] for i in ports};l2_ids={i['id'] for i in l2};l3_ids={i['id'] for i in l3}
     links=[dict(l) for l in ix['l1.links'].values() if all(p in port_ids for p in l['endpoints'])]
+    extra=[]
     boundary=[]
-    for link in ix['l1.links'].values():
-        if sum(p in port_ids for p in link['endpoints'])==1:
-            local=next(p for p in link['endpoints'] if p in port_ids)
-            remote=next(p for p in link['endpoints'] if p not in port_ids)
-            boundary.append(dict(id=link['id'],local=local,remote=remote,remote_device=ix['l1.ports'][remote]['device']))
+    for connection in all_l1_connections(ix):
+        def visible(e):
+            return e['port'] in port_ids if 'port' in e else e['device'] in owners and nodes is None if 'device' in e else False
+        seen=[visible(e) for e in connection['endpoints']]
+        # An explicitly unknown peer is part of the visible observation, never a hidden known device.
+        unknown=any('unknown' in e for e in connection['endpoints'])
+        if all(seen) or (unknown and any(seen)):
+            if connection['id'] in ix['l1.connections']:extra.append(dict(connection))
+        elif any(seen):
+            local,remote=(connection['endpoints'][seen.index(True)],connection['endpoints'][seen.index(False)])
+            boundary.append(dict(id=connection['id'],local=endpoint_label(local),remote=endpoint_label(remote),remote_device=endpoint_owner(remote,ix),kind=connection['kind'],status=connection['status'],ssid=connection.get('ssid'),observed_at=connection.get('observed_at')))
     vlan_ids={v for i in l2 for v in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])}
     subnet_ids={i['subnet'] for i in l3}
     bridges=[]
@@ -145,9 +153,9 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
     notes=[]
     if scoped:
         notes.insert(0,'表示範囲を絞り込んでいます。構成全体のYAMLは保持されています。')
-        if boundary:notes.insert(1,f'範囲外に接続するケーブル{len(boundary)}本は図から省略しています。接続先は画面の範囲外接続一覧で確認してください。')
+        if boundary:notes.insert(1,f'範囲外に接続する{"L1接続" if ix["l1.connections"] else "ケーブル"}{len(boundary)}本は図から省略しています。接続先は画面の範囲外接続一覧で確認してください。')
     projected={'schema':model['schema'],'name':model.get('name','LAN'),'scope':model.get('scope','社内LAN'),
-       'devices':chosen,'l1':{'ports':ports,'links':links},
+       'devices':chosen,'l1':{'ports':ports,'links':links,'connections':extra},
        'l2':{'interfaces':l2,'vlans':[dict(v) for v in ix['l2.vlans'].values() if not scoped or v['id'] in vlan_ids],'bridges':bridges},
        'l3':{'interfaces':l3,'subnets':[dict(s) for s in ix['l3.subnets'].values() if not scoped or s['id'] in subnet_ids],
              'routes':[r for r in model['l3'].get('routes',[]) if r['interface'] in l3_ids]},
@@ -160,5 +168,5 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
     message=('該当する機器・対応関係がありません。表示条件を変更してください。' if status=='empty' else
              '描画上限を超えています（'+', '.join(problems)+'）。拠点・機器群・機器・対応関係で絞り込んでください。' if problems else '')
     metadata={'status':status,'counts':stats,'message':message,'filtered':scoped,
-              'context_notes':notes,'boundary_links':{'total':len(boundary),'items':boundary[:100],'has_more':len(boundary)>100}}
+              'context_notes':notes,'boundary_links':{'noun':'L1接続' if ix['l1.connections'] else 'ケーブル','total':len(boundary),'items':boundary[:100],'has_more':len(boundary)>100}}
     return projected,metadata,catalog

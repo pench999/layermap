@@ -90,3 +90,5 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 
 /* A multi-line inventory must scroll inside CodeMirror, not grow the grid. */
 @media(min-width:761px){.editor-panel{height:900px}}
+
+.legend{flex-wrap:wrap}
