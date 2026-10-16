@@ -1,44 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2270" height="2827" viewBox="0 0 2270 2827"><style>text{font-family:"Yu Gothic",Meiryo,sans-serif}.physical-cable-group{cursor:crosshair;outline:none}.physical-cable-group:is(:hover,:focus) .physical-cable{stroke-width:3.5}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){opacity:.22}.network-group,.membership-label{cursor:crosshair;outline:none}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-group:not(.network-l3-0){opacity:.15}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .interface-row:not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .membership-label.member-l3-0{font-weight:bold}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-l3-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-group:not(.network-l3-1){opacity:.15}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .interface-row:not(.member-l3-1){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .membership-label.member-l3-1{font-weight:bold}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-l3-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-1){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-group:not(.network-l2-0){opacity:.15}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .interface-row:not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .membership-label.member-l2-0{font-weight:bold}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-l2-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-group:not(.network-l2-1){opacity:.15}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .interface-row:not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .membership-label.member-l2-1{font-weight:bold}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-l2-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-group:not(.network-l2-2){opacity:.15}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .interface-row:not(.member-l2-2){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .membership-label.member-l2-2{font-weight:bold}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-l2-2 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-2){opacity:.22}.binding-row-highlight{display:none}.binding-group,.binding-badge{cursor:pointer;outline:none}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-row-map-0{opacity:1!important}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-row-map-0 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group:not(.binding-map-0){opacity:.12}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group.binding-map-0{opacity:1}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group.binding-map-0 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-badge.binding-map-0 text{font-weight:bold}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-row-map-1{opacity:1!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-row-map-1 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group:not(.binding-map-1){opacity:.12}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group.binding-map-1{opacity:1}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group.binding-map-1 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-badge.binding-map-1 text{font-weight:bold}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-row-map-2{opacity:1!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-row-map-2 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group:not(.binding-map-2){opacity:.12}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group.binding-map-2{opacity:1}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group.binding-map-2 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-badge.binding-map-2 text{font-weight:bold}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-row-map-3{opacity:1!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-row-map-3 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group:not(.binding-map-3){opacity:.12}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group.binding-map-3{opacity:1}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group.binding-map-3 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-badge.binding-map-3 text{font-weight:bold}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-row-map-4{opacity:1!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-row-map-4 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group:not(.binding-map-4){opacity:.12}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group.binding-map-4{opacity:1}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group.binding-map-4 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-badge.binding-map-4 text{font-weight:bold}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-row-map-5{opacity:1!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-row-map-5 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group:not(.binding-map-5){opacity:.12}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group.binding-map-5{opacity:1}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group.binding-map-5 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-badge.binding-map-5 text{font-weight:bold}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-row-map-6{opacity:1!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-row-map-6 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group:not(.binding-map-6){opacity:.12}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group.binding-map-6{opacity:1}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group.binding-map-6 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-badge.binding-map-6 text{font-weight:bold}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-row-map-7{opacity:1!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-row-map-7 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group:not(.binding-map-7){opacity:.12}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group.binding-map-7{opacity:1}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group.binding-map-7 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-badge.binding-map-7 text{font-weight:bold}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-row-map-8{opacity:1!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-row-map-8 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group:not(.binding-map-8){opacity:.12}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group.binding-map-8{opacity:1}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group.binding-map-8 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-badge.binding-map-8 text{font-weight:bold}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-row-map-9{opacity:1!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-row-map-9 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group:not(.binding-map-9){opacity:.12}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group.binding-map-9{opacity:1}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group.binding-map-9 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-badge.binding-map-9 text{font-weight:bold}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) :is(.network-group,.physical-cable-group){opacity:.12!important}.interface-hit{pointer-events:all}.interface-row{cursor:pointer;outline:none}.interface-row:focus>.binding-row-highlight{display:block;stroke:#177b69;stroke-width:2}svg.trace-active .interface-row{opacity:.18!important}svg.trace-active .interface-row.trace-row{opacity:1!important}svg.trace-active .trace-row .binding-row-highlight{display:block;stroke-width:2;stroke:#8665a6}svg.trace-active .trace-root .binding-row-highlight{fill:#e4f5ee;stroke:#177b69;stroke-width:3}svg.trace-active .binding-group{opacity:.12!important}svg.trace-active .binding-group.trace-edge{opacity:1!important}svg.trace-active .trace-edge .binding-edge{stroke:#6f359e;stroke-width:3.5}svg.trace-active .binding-badge.trace-edge text{font-weight:bold}svg.trace-active :is(.network-group,.physical-cable-group){opacity:.12!important}</style><rect width="100%" height="100%" fill="#f8fafc"/><text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">社内LANのレイヤー別構成例</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">端末からインターネットゲートウェイのLAN側まで</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="2270" height="2929" viewBox="0 0 2270 2929"><style>text{font-family:"Yu Gothic",Meiryo,sans-serif}.physical-cable-group{cursor:crosshair;outline:none}.physical-cable-group:is(:hover,:focus) .physical-cable{stroke-width:3.5}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){opacity:.22}.network-group,.membership-label{cursor:crosshair;outline:none}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-group:not(.network-l3-0){opacity:.15}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .interface-row:not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .membership-label.member-l3-0{font-weight:bold}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-l3-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-group:not(.network-l3-1){opacity:.15}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .interface-row:not(.member-l3-1){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .membership-label.member-l3-1{font-weight:bold}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-l3-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-1){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-group:not(.network-l2-0){opacity:.15}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .interface-row:not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .membership-label.member-l2-0{font-weight:bold}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-l2-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-group:not(.network-l2-1){opacity:.15}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .interface-row:not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .membership-label.member-l2-1{font-weight:bold}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-l2-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-group:not(.network-l2-2){opacity:.15}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .interface-row:not(.member-l2-2){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .membership-label.member-l2-2{font-weight:bold}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-l2-2 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-2){opacity:.22}.binding-row-highlight{display:none}.binding-group,.binding-badge{cursor:pointer;outline:none}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-row-map-0{opacity:1!important}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-row-map-0 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group:not(.binding-map-0){opacity:.12}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group.binding-map-0{opacity:1}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-group.binding-map-0 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) .binding-badge.binding-map-0 text{font-weight:bold}:is(svg:has(.binding-map-0.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-0:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-0)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-row-map-1{opacity:1!important}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-row-map-1 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group:not(.binding-map-1){opacity:.12}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group.binding-map-1{opacity:1}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-group.binding-map-1 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) .binding-badge.binding-map-1 text{font-weight:bold}:is(svg:has(.binding-map-1.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-1:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-1)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-row-map-2{opacity:1!important}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-row-map-2 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group:not(.binding-map-2){opacity:.12}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group.binding-map-2{opacity:1}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-group.binding-map-2 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) .binding-badge.binding-map-2 text{font-weight:bold}:is(svg:has(.binding-map-2.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-2:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-2)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-row-map-3{opacity:1!important}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-row-map-3 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group:not(.binding-map-3){opacity:.12}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group.binding-map-3{opacity:1}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-group.binding-map-3 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) .binding-badge.binding-map-3 text{font-weight:bold}:is(svg:has(.binding-map-3.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-3:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-3)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-row-map-4{opacity:1!important}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-row-map-4 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group:not(.binding-map-4){opacity:.12}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group.binding-map-4{opacity:1}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-group.binding-map-4 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) .binding-badge.binding-map-4 text{font-weight:bold}:is(svg:has(.binding-map-4.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-4:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-4)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-row-map-5{opacity:1!important}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-row-map-5 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group:not(.binding-map-5){opacity:.12}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group.binding-map-5{opacity:1}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-group.binding-map-5 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) .binding-badge.binding-map-5 text{font-weight:bold}:is(svg:has(.binding-map-5.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-5:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-5)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-row-map-6{opacity:1!important}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-row-map-6 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group:not(.binding-map-6){opacity:.12}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group.binding-map-6{opacity:1}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-group.binding-map-6 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) .binding-badge.binding-map-6 text{font-weight:bold}:is(svg:has(.binding-map-6.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-6:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-6)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-row-map-7{opacity:1!important}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-row-map-7 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group:not(.binding-map-7){opacity:.12}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group.binding-map-7{opacity:1}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-group.binding-map-7 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) .binding-badge.binding-map-7 text{font-weight:bold}:is(svg:has(.binding-map-7.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-7:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-7)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-row-map-8{opacity:1!important}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-row-map-8 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group:not(.binding-map-8){opacity:.12}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group.binding-map-8{opacity:1}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-group.binding-map-8 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) .binding-badge.binding-map-8 text{font-weight:bold}:is(svg:has(.binding-map-8.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-8:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-8)))) :is(.network-group,.physical-cable-group){opacity:.12!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .interface-row{opacity:.18!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-row-map-9{opacity:1!important}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-row-map-9 .binding-row-highlight{display:block;stroke-width:2}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group:not(.binding-map-9){opacity:.12}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group.binding-map-9{opacity:1}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-group.binding-map-9 .binding-edge{stroke-width:3.5;stroke:#6f359e}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) .binding-badge.binding-map-9 text{font-weight:bold}:is(svg:has(.binding-map-9.selected-binding),svg:not(.trace-active):not(:has(.selected-binding)):has(.binding-map-9:is(:hover,:focus)):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-map-9)))) :is(.network-group,.physical-cable-group){opacity:.12!important}.interface-hit{pointer-events:all}.interface-row{cursor:pointer;outline:none}.interface-row:focus>.binding-row-highlight{display:block;stroke:#177b69;stroke-width:2}svg.trace-active .interface-row{opacity:.18!important}svg.trace-active .interface-row.trace-row{opacity:1!important}svg.trace-active .trace-row .binding-row-highlight{display:block;stroke-width:2;stroke:#8665a6}svg.trace-active .trace-root .binding-row-highlight{fill:#e4f5ee;stroke:#177b69;stroke-width:3}svg.trace-active .binding-group{opacity:.12!important}svg.trace-active .binding-group.trace-edge{opacity:1!important}svg.trace-active .trace-edge .binding-edge{stroke:#6f359e;stroke-width:3.5}svg.trace-active .binding-badge.trace-edge text{font-weight:bold}svg.trace-active :is(.network-group,.physical-cable-group){opacity:.12!important}</style><rect width="100%" height="100%" fill="#f8fafc"/><text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">社内LANのレイヤー別構成例</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">端末からインターネットゲートウェイのLAN側まで</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>
 <g data-layer="l3">
-<rect class="layer-panel" x="20" y="145" width="2230" height="557" rx="8" fill="#eaf3fc" stroke="#eaf3fc"/>
+<rect class="layer-panel" x="20" y="145" width="2230" height="569" rx="8" fill="#eaf3fc" stroke="#eaf3fc"/>
 <text x="110" y="177" font-size="22" fill="#23344d">L3 / IPインターフェース・サブネット</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-PC-01 / L3">
-<rect class="device-frame" x="94" y="207" width="340" height="194" rx="8" fill="white" stroke="#9fb0c4"/>
+<rect class="device-frame" x="94" y="207" width="340" height="200" rx="8" fill="white" stroke="#9fb0c4"/>
 <text x="110" y="233" font-size="16" fill="#23344d">HQ-PC-01</text>
 <text x="110" y="254" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<g class="interface-row member-l3-0 binding-row-map-0" data-element-id="pc-a.ip" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / pc-a.ip / 層間対応を追跡" data-anchor-y="335.0" data-anchor-x="434">
-<rect class="interface-hit" x="99" y="284" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="99" y="284" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l3-0 binding-row-map-0" data-element-id="pc-a.ip" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / pc-a.ip / 192.168.10.10/24 / 層間対応を追跡" data-anchor-y="338.0" data-anchor-x="434">
+<rect class="interface-hit" x="99" y="284" width="330" height="108" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="99" y="284" width="330" height="108" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-a.ip</title>
 <path class="row-separator" d="M106,281 L422,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="110" y="302" font-size="13" fill="#23344d">pc-a.ip</text>
-<text x="110" y="320" font-size="12" fill="#60788e">192.168.10.10/24</text>
-<text x="110" y="338" font-size="12" fill="#60788e">subnet / net-office</text>
-<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="110" y="356" font-size="12" fill="#1676b5">S1 / net-office</text>
-<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="pc-a.ip" cx="434" cy="352" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="interface-primary" x="110" y="305" font-size="18" font-weight="700" fill="#23344d">192.168.10.10/24</text>
+<text x="110" y="329" font-size="11" fill="#60788e">pc-a.ip</text>
+<text x="110" y="347" font-size="11" fill="#60788e">subnet / net-office</text>
+<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="110" y="365" font-size="12" fill="#1676b5">S1 / net-office</text>
+<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="pc-a.ip" cx="434" cy="361" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 <g class="binding-badge binding-map-0" data-binding-key="map-0" tabindex="0" role="button" aria-pressed="false" aria-label="M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-office">
-<text x="110" y="374" font-size="11" fill="#765194">M1 ↓ L2 / pc-a.l2 / vlan-office</text>
-<circle class="binding-anchor" data-binding-key="map-0" data-binding-layer="l3" data-binding-element="pc-a.ip" cx="94" cy="370" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="110" y="383" font-size="11" fill="#765194">M1 ↓ L2 / pc-a.l2 / vlan-office</text>
+<circle class="binding-anchor" data-binding-key="map-0" data-binding-layer="l3" data-binding-element="pc-a.ip" cx="94" cy="379" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L3">
-<rect class="device-frame" x="638" y="207" width="340" height="194" rx="8" fill="white" stroke="#9fb0c4"/>
+<rect class="device-frame" x="638" y="207" width="340" height="200" rx="8" fill="white" stroke="#9fb0c4"/>
 <text x="654" y="233" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
 <text x="654" y="254" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<g class="interface-row member-l3-1 binding-row-map-1" data-element-id="pc-b.ip" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / pc-b.ip / 層間対応を追跡" data-anchor-y="335.0" data-anchor-x="978">
-<rect class="interface-hit" x="643" y="284" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="643" y="284" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l3-1 binding-row-map-1" data-element-id="pc-b.ip" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / pc-b.ip / 192.168.20.10/24 / 層間対応を追跡" data-anchor-y="338.0" data-anchor-x="978">
+<rect class="interface-hit" x="643" y="284" width="330" height="108" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="643" y="284" width="330" height="108" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-b.ip</title>
 <path class="row-separator" d="M650,281 L966,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="654" y="302" font-size="13" fill="#23344d">pc-b.ip</text>
-<text x="654" y="320" font-size="12" fill="#60788e">192.168.20.10/24</text>
-<text x="654" y="338" font-size="12" fill="#60788e">subnet / net-guest</text>
-<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="654" y="356" font-size="12" fill="#b56316">S2 / net-guest</text>
-<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="pc-b.ip" cx="978" cy="352" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<text class="interface-primary" x="654" y="305" font-size="18" font-weight="700" fill="#23344d">192.168.20.10/24</text>
+<text x="654" y="329" font-size="11" fill="#60788e">pc-b.ip</text>
+<text x="654" y="347" font-size="11" fill="#60788e">subnet / net-guest</text>
+<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="654" y="365" font-size="12" fill="#b56316">S2 / net-guest</text>
+<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="pc-b.ip" cx="978" cy="361" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 <g class="binding-badge binding-map-1" data-binding-key="map-1" tabindex="0" role="button" aria-pressed="false" aria-label="M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-guest">
-<text x="654" y="374" font-size="11" fill="#765194">M2 ↓ L2 / pc-b.l2 / vlan-guest</text>
-<circle class="binding-anchor" data-binding-key="map-1" data-binding-layer="l3" data-binding-element="pc-b.ip" cx="638" cy="370" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="654" y="383" font-size="11" fill="#765194">M2 ↓ L2 / pc-b.l2 / vlan-guest</text>
+<circle class="binding-anchor" data-binding-key="map-1" data-binding-layer="l3" data-binding-element="pc-b.ip" cx="638" cy="379" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
@@ -49,482 +49,488 @@
 <text x="1198" y="306" font-size="12" fill="#8192a5">L3インターフェースなし</text>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-GW-01 / L3">
-<rect class="device-frame" x="1726" y="207" width="340" height="302" rx="8" fill="white" stroke="#9fb0c4"/>
+<rect class="device-frame" x="1726" y="207" width="340" height="314" rx="8" fill="white" stroke="#9fb0c4"/>
 <text x="1742" y="233" font-size="16" fill="#23344d">HQ-GW-01</text>
 <text x="1742" y="254" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<g class="interface-row member-l3-0 binding-row-map-2" data-element-id="gw01.v10" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / gw01.v10 / 層間対応を追跡" data-anchor-y="335.0" data-anchor-x="2066">
-<rect class="interface-hit" x="1731" y="284" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1731" y="284" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l3-0 binding-row-map-2" data-element-id="gw01.v10" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / gw01.v10 / 192.168.10.1/24 / 層間対応を追跡" data-anchor-y="338.0" data-anchor-x="2066">
+<rect class="interface-hit" x="1731" y="284" width="330" height="108" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1731" y="284" width="330" height="108" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>gw01.v10</title>
 <path class="row-separator" d="M1738,281 L2054,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1742" y="302" font-size="13" fill="#23344d">gw01.v10</text>
-<text x="1742" y="320" font-size="12" fill="#60788e">192.168.10.1/24</text>
-<text x="1742" y="338" font-size="12" fill="#60788e">subnet / net-office</text>
-<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="1742" y="356" font-size="12" fill="#1676b5">S1 / net-office</text>
-<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="gw01.v10" cx="2066" cy="352" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="interface-primary" x="1742" y="305" font-size="18" font-weight="700" fill="#23344d">192.168.10.1/24</text>
+<text x="1742" y="329" font-size="11" fill="#60788e">gw01.v10</text>
+<text x="1742" y="347" font-size="11" fill="#60788e">subnet / net-office</text>
+<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="1742" y="365" font-size="12" fill="#1676b5">S1 / net-office</text>
+<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="gw01.v10" cx="2066" cy="361" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 <g class="binding-badge binding-map-2" data-binding-key="map-2" tabindex="0" role="button" aria-pressed="false" aria-label="M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan-office">
-<text x="1742" y="374" font-size="11" fill="#765194">M3 ↓ L2 / gw01.trunk / vlan-office</text>
-<circle class="binding-anchor" data-binding-key="map-2" data-binding-layer="l3" data-binding-element="gw01.v10" cx="1726" cy="370" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="383" font-size="11" fill="#765194">M3 ↓ L2 / gw01.trunk / vlan-office</text>
+<circle class="binding-anchor" data-binding-key="map-2" data-binding-layer="l3" data-binding-element="gw01.v10" cx="1726" cy="379" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
-<g class="interface-row member-l3-1 binding-row-map-3" data-element-id="gw01.v20" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / gw01.v20 / 層間対応を追跡" data-anchor-y="443.0" data-anchor-x="2066">
-<rect class="interface-hit" x="1731" y="392" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1731" y="392" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l3-1 binding-row-map-3" data-element-id="gw01.v20" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L3 / gw01.v20 / 192.168.20.1/24 / 層間対応を追跡" data-anchor-y="452.0" data-anchor-x="2066">
+<rect class="interface-hit" x="1731" y="398" width="330" height="108" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1731" y="398" width="330" height="108" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>gw01.v20</title>
-<path class="row-separator" d="M1738,389 L2054,389" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1742" y="410" font-size="13" fill="#23344d">gw01.v20</text>
-<text x="1742" y="428" font-size="12" fill="#60788e">192.168.20.1/24</text>
-<text x="1742" y="446" font-size="12" fill="#60788e">subnet / net-guest</text>
-<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="1742" y="464" font-size="12" fill="#b56316">S2 / net-guest</text>
-<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="gw01.v20" cx="2066" cy="460" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<path class="row-separator" d="M1738,395 L2054,395" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1742" y="419" font-size="18" font-weight="700" fill="#23344d">192.168.20.1/24</text>
+<text x="1742" y="443" font-size="11" fill="#60788e">gw01.v20</text>
+<text x="1742" y="461" font-size="11" fill="#60788e">subnet / net-guest</text>
+<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="1742" y="479" font-size="12" fill="#b56316">S2 / net-guest</text>
+<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="gw01.v20" cx="2066" cy="475" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 <g class="binding-badge binding-map-3" data-binding-key="map-3" tabindex="0" role="button" aria-pressed="false" aria-label="M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan-guest">
-<text x="1742" y="482" font-size="11" fill="#765194">M4 ↓ L2 / gw01.trunk / vlan-guest</text>
-<circle class="binding-anchor" data-binding-key="map-3" data-binding-layer="l3" data-binding-element="gw01.v20" cx="1726" cy="478" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="497" font-size="11" fill="#765194">M4 ↓ L2 / gw01.trunk / vlan-guest</text>
+<circle class="binding-anchor" data-binding-key="map-3" data-binding-layer="l3" data-binding-element="gw01.v20" cx="1726" cy="493" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
 <text x="110" y="196" font-size="10" fill="#60788e">V＝VLAN / S＝サブネット / B＝機器内ブリッジ（VLAN別に転送）</text>
 <g class="network-group network-l3-0" data-network-id="net-office" data-network-kind="subnet" tabindex="0" role="img" aria-label="S1 / net-office / 192.168.10.0/24 / 所属：pc-a.ip, gw01.v10">
 <title>S1 / net-office / 192.168.10.0/24 / 所属：pc-a.ip, gw01.v10</title>
-<path class="relation-casing" d="M445,582 L2101,582" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-bus" d="M445,582 L2101,582" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
-<path class="relation-casing" d="M434,352 L452,352 L452,582" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M434,352 L452,352 L452,582" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.ip" data-network="net-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="452" cy="582" r="2.8" fill="#1676b5"/>
-<path class="relation-casing" d="M2066,352 L2094,352 L2094,582" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M2066,352 L2094,352 L2094,582" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.v10" data-network="net-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="2094" cy="582" r="2.8" fill="#1676b5"/>
-<text x="40" y="572" font-size="12" fill="#1676b5">S1 / net-office / 192.168.10.0/24</text>
+<path class="relation-casing" d="M445,594 L2101,594" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M445,594 L2101,594" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M434,361 L452,361 L452,594" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M434,361 L452,361 L452,594" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.ip" data-network="net-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="452" cy="594" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M2066,361 L2094,361 L2094,594" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M2066,361 L2094,361 L2094,594" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.v10" data-network="net-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="2094" cy="594" r="2.8" fill="#1676b5"/>
+<text x="40" y="584" font-size="12" fill="#1676b5">S1 / net-office / 192.168.10.0/24</text>
 </g>
 <g class="network-group network-l3-1" data-network-id="net-guest" data-network-kind="subnet" tabindex="0" role="img" aria-label="S2 / net-guest / 192.168.20.0/24 / 所属：pc-b.ip, gw01.v20">
 <title>S2 / net-guest / 192.168.20.0/24 / 所属：pc-b.ip, gw01.v20</title>
-<path class="relation-casing" d="M989,648 L2091,648" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-bus" d="M989,648 L2091,648" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
-<path class="relation-casing" d="M978,352 L996,352 L996,648" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M978,352 L996,352 L996,648" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.ip" data-network="net-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="996" cy="648" r="2.8" fill="#b56316"/>
-<path class="relation-casing" d="M2066,460 L2084,460 L2084,648" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M2066,460 L2084,460 L2084,648" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.v20" data-network="net-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="2084" cy="648" r="2.8" fill="#b56316"/>
-<text x="40" y="638" font-size="12" fill="#b56316">S2 / net-guest / 192.168.20.0/24</text>
+<path class="relation-casing" d="M989,660 L2091,660" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M989,660 L2091,660" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M978,361 L996,361 L996,660" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M978,361 L996,361 L996,660" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.ip" data-network="net-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="996" cy="660" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M2066,475 L2084,475 L2084,660" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M2066,475 L2084,475 L2084,660" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.v20" data-network="net-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="2084" cy="660" r="2.8" fill="#b56316"/>
+<text x="40" y="650" font-size="12" fill="#b56316">S2 / net-guest / 192.168.20.0/24</text>
 </g>
 </g>
 <g data-layer="l2">
-<rect class="layer-panel" x="20" y="862" width="2230" height="749" rx="8" fill="#edf6ef" stroke="#edf6ef"/>
-<text x="110" y="894" font-size="22" fill="#23344d">L2 / VLAN・ブリッジ</text>
+<rect class="layer-panel" x="20" y="874" width="2230" height="821" rx="8" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="110" y="906" font-size="22" fill="#23344d">L2 / VLAN・ブリッジ</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-PC-01 / L2">
-<rect class="device-frame" x="94" y="924" width="340" height="194" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="110" y="950" font-size="16" fill="#23344d">HQ-PC-01</text>
-<text x="110" y="971" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<g class="interface-row member-l2-0 binding-row-map-0 binding-row-map-4" data-element-id="pc-a.l2" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / pc-a.l2 / 層間対応を追跡" data-anchor-y="1052.0" data-anchor-x="434">
-<rect class="interface-hit" x="99" y="1001" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="99" y="1001" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="94" y="936" width="340" height="218" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="110" y="962" font-size="16" fill="#23344d">HQ-PC-01</text>
+<text x="110" y="983" font-size="11" fill="#72869b">pc-a / endpoint</text>
+<g class="interface-row member-l2-0 binding-row-map-0 binding-row-map-4" data-element-id="pc-a.l2" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / pc-a.l2 / VLAN 10 / 層間対応を追跡" data-anchor-y="1076.0" data-anchor-x="434">
+<rect class="interface-hit" x="99" y="1013" width="330" height="126" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="99" y="1013" width="330" height="126" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-a.l2</title>
-<path class="row-separator" d="M106,998 L422,998" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="110" y="1019" font-size="13" fill="#23344d">pc-a.l2</text>
-<text x="110" y="1037" font-size="12" fill="#60788e">access / vlan-office</text>
-<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="110" y="1055" font-size="12" fill="#1676b5">V1 / vlan-office</text>
-<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="pc-a.l2" cx="434" cy="1051" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<path class="row-separator" d="M106,1010 L422,1010" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="110" y="1034" font-size="18" font-weight="700" fill="#23344d">VLAN 10</text>
+<text x="110" y="1058" font-size="11" fill="#60788e">pc-a.l2</text>
+<text x="110" y="1076" font-size="11" fill="#60788e">access / untagged</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="110" y="1094" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="pc-a.l2" cx="434" cy="1090" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 <g class="binding-badge binding-map-0" data-binding-key="map-0" tabindex="0" role="button" aria-pressed="false" aria-label="M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-office">
-<text x="110" y="1073" font-size="11" fill="#765194">M1 ↑ L3 / pc-a.ip / vlan-office</text>
-<circle class="binding-anchor" data-binding-key="map-0" data-binding-layer="l2" data-binding-element="pc-a.l2" cx="94" cy="1069" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="110" y="1112" font-size="11" fill="#765194">M1 ↑ L3 / pc-a.ip / vlan-office</text>
+<circle class="binding-anchor" data-binding-key="map-0" data-binding-layer="l2" data-binding-element="pc-a.l2" cx="94" cy="1108" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 <g class="binding-badge binding-map-4" data-binding-key="map-4" tabindex="0" role="button" aria-pressed="false" aria-label="M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0">
-<text x="110" y="1091" font-size="11" fill="#765194">M5 ↓ L1 / pc-a.eth0</text>
-<circle class="binding-anchor" data-binding-key="map-4" data-binding-layer="l2" data-binding-element="pc-a.l2" cx="94" cy="1087" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="110" y="1130" font-size="11" fill="#765194">M5 ↓ L1 / pc-a.eth0</text>
+<circle class="binding-anchor" data-binding-key="map-4" data-binding-layer="l2" data-binding-element="pc-a.l2" cx="94" cy="1126" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L2">
-<rect class="device-frame" x="638" y="924" width="340" height="194" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="654" y="950" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
-<text x="654" y="971" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<g class="interface-row member-l2-1 binding-row-map-1 binding-row-map-5" data-element-id="pc-b.l2" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / pc-b.l2 / 層間対応を追跡" data-anchor-y="1052.0" data-anchor-x="978">
-<rect class="interface-hit" x="643" y="1001" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="643" y="1001" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="638" y="936" width="340" height="218" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="654" y="962" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
+<text x="654" y="983" font-size="11" fill="#72869b">pc-b / endpoint</text>
+<g class="interface-row member-l2-1 binding-row-map-1 binding-row-map-5" data-element-id="pc-b.l2" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / pc-b.l2 / VLAN 20 / 層間対応を追跡" data-anchor-y="1076.0" data-anchor-x="978">
+<rect class="interface-hit" x="643" y="1013" width="330" height="126" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="643" y="1013" width="330" height="126" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-b.l2</title>
-<path class="row-separator" d="M650,998 L966,998" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="654" y="1019" font-size="13" fill="#23344d">pc-b.l2</text>
-<text x="654" y="1037" font-size="12" fill="#60788e">access / vlan-guest</text>
-<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="654" y="1055" font-size="12" fill="#b56316">V2 / vlan-guest</text>
-<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="pc-b.l2" cx="978" cy="1051" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<path class="row-separator" d="M650,1010 L966,1010" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="654" y="1034" font-size="18" font-weight="700" fill="#23344d">VLAN 20</text>
+<text x="654" y="1058" font-size="11" fill="#60788e">pc-b.l2</text>
+<text x="654" y="1076" font-size="11" fill="#60788e">access / untagged</text>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="654" y="1094" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="pc-b.l2" cx="978" cy="1090" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 <g class="binding-badge binding-map-1" data-binding-key="map-1" tabindex="0" role="button" aria-pressed="false" aria-label="M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-guest">
-<text x="654" y="1073" font-size="11" fill="#765194">M2 ↑ L3 / pc-b.ip / vlan-guest</text>
-<circle class="binding-anchor" data-binding-key="map-1" data-binding-layer="l2" data-binding-element="pc-b.l2" cx="638" cy="1069" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="654" y="1112" font-size="11" fill="#765194">M2 ↑ L3 / pc-b.ip / vlan-guest</text>
+<circle class="binding-anchor" data-binding-key="map-1" data-binding-layer="l2" data-binding-element="pc-b.l2" cx="638" cy="1108" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 <g class="binding-badge binding-map-5" data-binding-key="map-5" tabindex="0" role="button" aria-pressed="false" aria-label="M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0">
-<text x="654" y="1091" font-size="11" fill="#765194">M6 ↓ L1 / pc-b.eth0</text>
-<circle class="binding-anchor" data-binding-key="map-5" data-binding-layer="l2" data-binding-element="pc-b.l2" cx="638" cy="1087" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="654" y="1130" font-size="11" fill="#765194">M6 ↓ L1 / pc-b.eth0</text>
+<circle class="binding-anchor" data-binding-key="map-5" data-binding-layer="l2" data-binding-element="pc-b.l2" cx="638" cy="1126" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
 <g class="device-card" data-device="sw01" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-SW-01 / L2">
-<rect class="device-frame" x="1182" y="924" width="340" height="428" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1198" y="950" font-size="16" fill="#23344d">HQ-SW-01</text>
-<text x="1198" y="971" font-size="11" fill="#72869b">sw01 / l2-switch</text>
-<g class="interface-row member-l2-0 member-l2-2 binding-row-map-6" data-element-id="sw01.access1" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.access1 / 層間対応を追跡" data-anchor-y="1052.0" data-anchor-x="1522">
-<rect class="interface-hit" x="1187" y="1001" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="1001" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="1182" y="936" width="340" height="500" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1198" y="962" font-size="16" fill="#23344d">HQ-SW-01</text>
+<text x="1198" y="983" font-size="11" fill="#72869b">sw01 / l2-switch</text>
+<g class="interface-row member-l2-0 member-l2-2 binding-row-map-6" data-element-id="sw01.access1" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.access1 / VLAN 10 / 層間対応を追跡" data-anchor-y="1076.0" data-anchor-x="1522">
+<rect class="interface-hit" x="1187" y="1013" width="330" height="126" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="1013" width="330" height="126" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.access1</title>
-<path class="row-separator" d="M1194,998 L1510,998" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="1019" font-size="13" fill="#23344d">sw01.access1</text>
-<text x="1198" y="1037" font-size="12" fill="#60788e">access / vlan-office</text>
-<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1198" y="1055" font-size="12" fill="#1676b5">V1 / vlan-office</text>
-<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.access1" cx="1522" cy="1051" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
-<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1073" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
-<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access1" cx="1522" cy="1069" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
+<path class="row-separator" d="M1194,1010 L1510,1010" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="1034" font-size="18" font-weight="700" fill="#23344d">VLAN 10</text>
+<text x="1198" y="1058" font-size="11" fill="#60788e">sw01.access1</text>
+<text x="1198" y="1076" font-size="11" fill="#60788e">access / untagged</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1198" y="1094" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.access1" cx="1522" cy="1090" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1112" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access1" cx="1522" cy="1108" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 <g class="binding-badge binding-map-6" data-binding-key="map-6" tabindex="0" role="button" aria-pressed="false" aria-label="M7 / L2: sw01.access1 ↔ L1: sw01.p1">
-<text x="1198" y="1091" font-size="11" fill="#765194">M7 ↓ L1 / sw01.p1</text>
-<circle class="binding-anchor" data-binding-key="map-6" data-binding-layer="l2" data-binding-element="sw01.access1" cx="1182" cy="1087" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="1130" font-size="11" fill="#765194">M7 ↓ L1 / sw01.p1</text>
+<circle class="binding-anchor" data-binding-key="map-6" data-binding-layer="l2" data-binding-element="sw01.access1" cx="1182" cy="1126" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
-<g class="interface-row member-l2-1 member-l2-2 binding-row-map-7" data-element-id="sw01.access2" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.access2 / 層間対応を追跡" data-anchor-y="1160.0" data-anchor-x="1522">
-<rect class="interface-hit" x="1187" y="1109" width="330" height="102" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="1109" width="330" height="102" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l2-1 member-l2-2 binding-row-map-7" data-element-id="sw01.access2" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.access2 / VLAN 20 / 層間対応を追跡" data-anchor-y="1208.0" data-anchor-x="1522">
+<rect class="interface-hit" x="1187" y="1145" width="330" height="126" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="1145" width="330" height="126" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.access2</title>
-<path class="row-separator" d="M1194,1106 L1510,1106" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="1127" font-size="13" fill="#23344d">sw01.access2</text>
-<text x="1198" y="1145" font-size="12" fill="#60788e">access / vlan-guest</text>
-<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1198" y="1163" font-size="12" fill="#b56316">V2 / vlan-guest</text>
-<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.access2" cx="1522" cy="1159" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
-<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1181" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
-<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access2" cx="1522" cy="1177" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
+<path class="row-separator" d="M1194,1142 L1510,1142" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="1166" font-size="18" font-weight="700" fill="#23344d">VLAN 20</text>
+<text x="1198" y="1190" font-size="11" fill="#60788e">sw01.access2</text>
+<text x="1198" y="1208" font-size="11" fill="#60788e">access / untagged</text>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1198" y="1226" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.access2" cx="1522" cy="1222" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1244" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access2" cx="1522" cy="1240" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 <g class="binding-badge binding-map-7" data-binding-key="map-7" tabindex="0" role="button" aria-pressed="false" aria-label="M8 / L2: sw01.access2 ↔ L1: sw01.p2">
-<text x="1198" y="1199" font-size="11" fill="#765194">M8 ↓ L1 / sw01.p2</text>
-<circle class="binding-anchor" data-binding-key="map-7" data-binding-layer="l2" data-binding-element="sw01.access2" cx="1182" cy="1195" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="1262" font-size="11" fill="#765194">M8 ↓ L1 / sw01.p2</text>
+<circle class="binding-anchor" data-binding-key="map-7" data-binding-layer="l2" data-binding-element="sw01.access2" cx="1182" cy="1258" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
-<g class="interface-row member-l2-0 member-l2-1 member-l2-2 binding-row-map-8" data-element-id="sw01.trunk" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.trunk / 層間対応を追跡" data-anchor-y="1277.0" data-anchor-x="1522">
-<rect class="interface-hit" x="1187" y="1217" width="330" height="120" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="1217" width="330" height="120" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row member-l2-0 member-l2-1 member-l2-2 binding-row-map-8" data-element-id="sw01.trunk" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / sw01.trunk / VLAN 10, 20 / 層間対応を追跡" data-anchor-y="1349.0" data-anchor-x="1522">
+<rect class="interface-hit" x="1187" y="1277" width="330" height="144" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="1277" width="330" height="144" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.trunk</title>
-<path class="row-separator" d="M1194,1214 L1510,1214" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="1235" font-size="13" fill="#23344d">sw01.trunk</text>
-<text x="1198" y="1253" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
-<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1198" y="1271" font-size="12" fill="#1676b5">V1 / vlan-office</text>
-<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.trunk" cx="1522" cy="1267" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
-<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1198" y="1289" font-size="12" fill="#b56316">V2 / vlan-guest</text>
-<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.trunk" cx="1522" cy="1285" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
-<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1307" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
-<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.trunk" cx="1522" cy="1303" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
+<path class="row-separator" d="M1194,1274 L1510,1274" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="1298" font-size="18" font-weight="700" fill="#23344d">VLAN 10, 20</text>
+<text x="1198" y="1322" font-size="11" fill="#60788e">sw01.trunk</text>
+<text x="1198" y="1340" font-size="11" fill="#60788e">trunk / tagged</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1198" y="1358" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.trunk" cx="1522" cy="1354" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1198" y="1376" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.trunk" cx="1522" cy="1372" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1198" y="1394" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.trunk" cx="1522" cy="1390" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 <g class="binding-badge binding-map-8" data-binding-key="map-8" tabindex="0" role="button" aria-pressed="false" aria-label="M9 / L2: sw01.trunk ↔ L1: sw01.p24">
-<text x="1198" y="1325" font-size="11" fill="#765194">M9 ↓ L1 / sw01.p24</text>
-<circle class="binding-anchor" data-binding-key="map-8" data-binding-layer="l2" data-binding-element="sw01.trunk" cx="1182" cy="1321" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="1412" font-size="11" fill="#765194">M9 ↓ L1 / sw01.p24</text>
+<circle class="binding-anchor" data-binding-key="map-8" data-binding-layer="l2" data-binding-element="sw01.trunk" cx="1182" cy="1408" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-GW-01 / L2">
-<rect class="device-frame" x="1726" y="924" width="340" height="230" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1742" y="950" font-size="16" fill="#23344d">HQ-GW-01</text>
-<text x="1742" y="971" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<g class="interface-row member-l2-0 member-l2-1 binding-row-map-2 binding-row-map-3 binding-row-map-9" data-element-id="gw01.trunk" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / gw01.trunk / 層間対応を追跡" data-anchor-y="1070.0" data-anchor-x="2066">
-<rect class="interface-hit" x="1731" y="1001" width="330" height="138" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1731" y="1001" width="330" height="138" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="1726" y="936" width="340" height="254" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1742" y="962" font-size="16" fill="#23344d">HQ-GW-01</text>
+<text x="1742" y="983" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
+<g class="interface-row member-l2-0 member-l2-1 binding-row-map-2 binding-row-map-3 binding-row-map-9" data-element-id="gw01.trunk" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L2 / gw01.trunk / VLAN 10, 20 / 層間対応を追跡" data-anchor-y="1094.0" data-anchor-x="2066">
+<rect class="interface-hit" x="1731" y="1013" width="330" height="162" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1731" y="1013" width="330" height="162" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>gw01.trunk</title>
-<path class="row-separator" d="M1738,998 L2054,998" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1742" y="1019" font-size="13" fill="#23344d">gw01.trunk</text>
-<text x="1742" y="1037" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
-<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1742" y="1055" font-size="12" fill="#1676b5">V1 / vlan-office</text>
-<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="gw01.trunk" cx="2066" cy="1051" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
-<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1742" y="1073" font-size="12" fill="#b56316">V2 / vlan-guest</text>
-<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="gw01.trunk" cx="2066" cy="1069" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<path class="row-separator" d="M1738,1010 L2054,1010" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1742" y="1034" font-size="18" font-weight="700" fill="#23344d">VLAN 10, 20</text>
+<text x="1742" y="1058" font-size="11" fill="#60788e">gw01.trunk</text>
+<text x="1742" y="1076" font-size="11" fill="#60788e">trunk / tagged</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1742" y="1094" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="gw01.trunk" cx="2066" cy="1090" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1742" y="1112" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="gw01.trunk" cx="2066" cy="1108" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 <g class="binding-badge binding-map-2" data-binding-key="map-2" tabindex="0" role="button" aria-pressed="false" aria-label="M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan-office">
-<text x="1742" y="1091" font-size="11" fill="#765194">M3 ↑ L3 / gw01.v10 / vlan-office</text>
-<circle class="binding-anchor" data-binding-key="map-2" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1087" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="1130" font-size="11" fill="#765194">M3 ↑ L3 / gw01.v10 / vlan-office</text>
+<circle class="binding-anchor" data-binding-key="map-2" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1126" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 <g class="binding-badge binding-map-3" data-binding-key="map-3" tabindex="0" role="button" aria-pressed="false" aria-label="M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan-guest">
-<text x="1742" y="1109" font-size="11" fill="#765194">M4 ↑ L3 / gw01.v20 / vlan-guest</text>
-<circle class="binding-anchor" data-binding-key="map-3" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1105" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="1148" font-size="11" fill="#765194">M4 ↑ L3 / gw01.v20 / vlan-guest</text>
+<circle class="binding-anchor" data-binding-key="map-3" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1144" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 <g class="binding-badge binding-map-9" data-binding-key="map-9" tabindex="0" role="button" aria-pressed="false" aria-label="M10 / L2: gw01.trunk ↔ L1: gw01.lan">
-<text x="1742" y="1127" font-size="11" fill="#765194">M10 ↓ L1 / gw01.lan</text>
-<circle class="binding-anchor" data-binding-key="map-9" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1123" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="1166" font-size="11" fill="#765194">M10 ↓ L1 / gw01.lan</text>
+<circle class="binding-anchor" data-binding-key="map-9" data-binding-layer="l2" data-binding-element="gw01.trunk" cx="1726" cy="1162" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
 </g>
 </g>
-<text x="110" y="913" font-size="10" fill="#60788e">V＝VLAN / S＝サブネット / B＝機器内ブリッジ（VLAN別に転送）</text>
+<text x="110" y="925" font-size="10" fill="#60788e">V＝VLAN / S＝サブネット / B＝機器内ブリッジ（VLAN別に転送）</text>
 <g class="network-group network-l2-0" data-network-id="vlan-office" data-network-kind="vlan" tabindex="0" role="img" aria-label="V1 / vlan-office / VLAN 10 / 業務LAN / 所属：pc-a.l2, sw01.access1, sw01.trunk, gw01.trunk">
 <title>V1 / vlan-office / VLAN 10 / 業務LAN / 所属：pc-a.l2, sw01.access1, sw01.trunk, gw01.trunk</title>
-<path class="relation-casing" d="M445,1425 L2101,1425" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-bus" d="M445,1425 L2101,1425" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
-<path class="relation-casing" d="M434,1051 L452,1051 L452,1425" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M434,1051 L452,1051 L452,1425" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.l2" data-network="vlan-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="452" cy="1425" r="2.8" fill="#1676b5"/>
-<path class="relation-casing" d="M1522,1051 L1600,1051 L1600,1425" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1051 L1600,1051 L1600,1425" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.access1" data-network="vlan-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1600" cy="1425" r="2.8" fill="#1676b5"/>
-<path class="relation-casing" d="M1522,1267 L1560,1267 L1560,1425" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1267 L1560,1267 L1560,1425" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1560" cy="1425" r="2.8" fill="#1676b5"/>
-<path class="relation-casing" d="M2066,1051 L2094,1051 L2094,1425" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M2066,1051 L2094,1051 L2094,1425" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
-<circle class="network-junction" cx="2094" cy="1425" r="2.8" fill="#1676b5"/>
-<text x="40" y="1415" font-size="12" fill="#1676b5">V1 / vlan-office / VLAN 10 / 業務LAN</text>
+<path class="relation-casing" d="M445,1509 L2101,1509" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M445,1509 L2101,1509" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M434,1090 L452,1090 L452,1509" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M434,1090 L452,1090 L452,1509" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.l2" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="452" cy="1509" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1522,1090 L1600,1090 L1600,1509" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1090 L1600,1090 L1600,1509" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.access1" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1600" cy="1509" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1522,1354 L1560,1354 L1560,1509" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1354 L1560,1354 L1560,1509" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1560" cy="1509" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M2066,1090 L2094,1090 L2094,1509" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M2066,1090 L2094,1090 L2094,1509" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="2094" cy="1509" r="2.8" fill="#1676b5"/>
+<text x="40" y="1499" font-size="12" fill="#1676b5">V1 / vlan-office / VLAN 10 / 業務LAN</text>
 </g>
 <g class="network-group network-l2-1" data-network-id="vlan-guest" data-network-kind="vlan" tabindex="0" role="img" aria-label="V2 / vlan-guest / VLAN 20 / 来客LAN / 所属：pc-b.l2, sw01.access2, sw01.trunk, gw01.trunk">
 <title>V2 / vlan-guest / VLAN 20 / 来客LAN / 所属：pc-b.l2, sw01.access2, sw01.trunk, gw01.trunk</title>
-<path class="relation-casing" d="M989,1491 L2091,1491" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-bus" d="M989,1491 L2091,1491" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
-<path class="relation-casing" d="M978,1051 L996,1051 L996,1491" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M978,1051 L996,1051 L996,1491" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.l2" data-network="vlan-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="996" cy="1491" r="2.8" fill="#b56316"/>
-<path class="relation-casing" d="M1522,1159 L1580,1159 L1580,1491" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1159 L1580,1159 L1580,1491" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.access2" data-network="vlan-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1580" cy="1491" r="2.8" fill="#b56316"/>
-<path class="relation-casing" d="M1522,1285 L1550,1285 L1550,1491" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1285 L1550,1285 L1550,1491" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1550" cy="1491" r="2.8" fill="#b56316"/>
-<path class="relation-casing" d="M2066,1069 L2084,1069 L2084,1491" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M2066,1069 L2084,1069 L2084,1491" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
-<circle class="network-junction" cx="2084" cy="1491" r="2.8" fill="#b56316"/>
-<text x="40" y="1481" font-size="12" fill="#b56316">V2 / vlan-guest / VLAN 20 / 来客LAN</text>
+<path class="relation-casing" d="M989,1575 L2091,1575" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M989,1575 L2091,1575" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M978,1090 L996,1090 L996,1575" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M978,1090 L996,1090 L996,1575" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.l2" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="996" cy="1575" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1522,1222 L1580,1222 L1580,1575" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1222 L1580,1222 L1580,1575" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.access2" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1580" cy="1575" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1522,1372 L1550,1372 L1550,1575" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1372 L1550,1372 L1550,1575" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1550" cy="1575" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M2066,1108 L2084,1108 L2084,1575" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M2066,1108 L2084,1108 L2084,1575" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="2084" cy="1575" r="2.8" fill="#b56316"/>
+<text x="40" y="1565" font-size="12" fill="#b56316">V2 / vlan-guest / VLAN 20 / 来客LAN</text>
 </g>
 <g class="network-group network-l2-2" data-network-id="sw01.bridge" data-network-kind="bridge" tabindex="0" role="img" aria-label="B1 / sw01.bridge / VLAN別に転送 / 所属：sw01.access1, sw01.access2, sw01.trunk">
 <title>B1 / sw01.bridge / VLAN別に転送 / 所属：sw01.access1, sw01.access2, sw01.trunk</title>
-<path class="relation-casing" d="M1533,1557 L1597,1557" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-bus" d="M1533,1557 L1597,1557" fill="none" stroke="#48794b" stroke-width="1.7"  stroke-linejoin="round"/>
-<path class="relation-casing" d="M1522,1069 L1590,1069 L1590,1557" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1069 L1590,1069 L1590,1557" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access1" data-network="sw01.bridge" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1590" cy="1557" r="2.8" fill="#48794b"/>
-<path class="relation-casing" d="M1522,1177 L1570,1177 L1570,1557" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1177 L1570,1177 L1570,1557" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access2" data-network="sw01.bridge" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1570" cy="1557" r="2.8" fill="#48794b"/>
-<path class="relation-casing" d="M1522,1303 L1540,1303 L1540,1557" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
-<path class="relation-branch" d="M1522,1303 L1540,1303 L1540,1557" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="sw01.bridge" stroke-linejoin="round"/>
-<circle class="network-junction" cx="1540" cy="1557" r="2.8" fill="#48794b"/>
-<text x="40" y="1547" font-size="12" fill="#48794b">B1 / sw01.bridge / VLAN別に転送</text>
+<path class="relation-casing" d="M1533,1641 L1597,1641" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M1533,1641 L1597,1641" fill="none" stroke="#48794b" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M1522,1108 L1590,1108 L1590,1641" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1108 L1590,1108 L1590,1641" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access1" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1590" cy="1641" r="2.8" fill="#48794b"/>
+<path class="relation-casing" d="M1522,1240 L1570,1240 L1570,1641" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1240 L1570,1240 L1570,1641" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access2" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1570" cy="1641" r="2.8" fill="#48794b"/>
+<path class="relation-casing" d="M1522,1390 L1540,1390 L1540,1641" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1522,1390 L1540,1390 L1540,1641" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1540" cy="1641" r="2.8" fill="#48794b"/>
+<text x="40" y="1631" font-size="12" fill="#48794b">B1 / sw01.bridge / VLAN別に転送</text>
 </g>
 </g>
 <g data-layer="l1">
-<rect class="layer-panel" x="20" y="1771" width="2230" height="801" rx="8" fill="#f0eff7" stroke="#f0eff7"/>
-<text x="110" y="1803" font-size="22" fill="#23344d">L1 / 物理ポート・ケーブル</text>
+<rect class="layer-panel" x="20" y="1855" width="2230" height="819" rx="8" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="110" y="1887" font-size="22" fill="#23344d">L1 / 物理ポート・ケーブル</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-PC-01 / L1">
-<rect class="device-frame" x="94" y="1893" width="340" height="278" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="110" y="1919" font-size="16" fill="#23344d">HQ-PC-01</text>
-<text x="110" y="1940" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<text x="110" y="1965" font-size="12" fill="#526980">メーカー：Example Computing</text>
-<text x="110" y="1983" font-size="12" fill="#526980">型番：EC-Desktop-100</text>
-<text x="110" y="2001" font-size="12" fill="#526980">S/N：DEMO-PC-0001</text>
-<text x="110" y="2019" font-size="12" fill="#526980">拠点：本社</text>
-<text x="110" y="2037" font-size="12" fill="#526980">部屋：執務室</text>
-<text x="110" y="2055" font-size="12" fill="#526980">位置：座席A01</text>
-<g class="interface-row binding-row-map-4" data-element-id="pc-a.eth0" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / pc-a.eth0 / 層間対応を追跡" data-anchor-y="2123.0" data-anchor-x="434">
-<rect class="interface-hit" x="99" y="2090" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="99" y="2090" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="94" y="1977" width="340" height="284" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="110" y="2003" font-size="16" fill="#23344d">HQ-PC-01</text>
+<text x="110" y="2024" font-size="11" fill="#72869b">pc-a / endpoint</text>
+<text x="110" y="2049" font-size="12" fill="#526980">メーカー：Example Computing</text>
+<text x="110" y="2067" font-size="12" fill="#526980">型番：EC-Desktop-100</text>
+<text x="110" y="2085" font-size="12" fill="#526980">S/N：DEMO-PC-0001</text>
+<text x="110" y="2103" font-size="12" fill="#526980">拠点：本社</text>
+<text x="110" y="2121" font-size="12" fill="#526980">部屋：執務室</text>
+<text x="110" y="2139" font-size="12" fill="#526980">位置：座席A01</text>
+<g class="interface-row binding-row-map-4" data-element-id="pc-a.eth0" data-owner="pc-a" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / pc-a.eth0 / eth0 / 層間対応を追跡" data-anchor-y="2210.0" data-anchor-x="434">
+<rect class="interface-hit" x="99" y="2174" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="99" y="2174" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-a.eth0</title>
-<path class="row-separator" d="M106,2087 L422,2087" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="110" y="2108" font-size="13" fill="#23344d">pc-a.eth0</text>
-<text x="110" y="2126" font-size="12" fill="#60788e">eth0</text>
+<path class="row-separator" d="M106,2171 L422,2171" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="110" y="2195" font-size="18" font-weight="700" fill="#23344d">eth0</text>
+<text x="110" y="2219" font-size="11" fill="#60788e">pc-a.eth0</text>
 <g class="binding-badge binding-map-4" data-binding-key="map-4" tabindex="0" role="button" aria-pressed="false" aria-label="M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0">
-<text x="110" y="2144" font-size="11" fill="#765194">M5 ↑ L2 / pc-a.l2</text>
-<circle class="binding-anchor" data-binding-key="map-4" data-binding-layer="l1" data-binding-element="pc-a.eth0" cx="94" cy="2140" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="110" y="2237" font-size="11" fill="#765194">M5 ↑ L2 / pc-a.l2</text>
+<circle class="binding-anchor" data-binding-key="map-4" data-binding-layer="l1" data-binding-element="pc-a.eth0" cx="94" cy="2233" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="pc-a.eth0" cx="434" cy="2123.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="pc-a.eth0" cx="434" cy="2210.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L1">
-<rect class="device-frame" x="638" y="1893" width="340" height="278" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="654" y="1919" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
-<text x="654" y="1940" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<text x="654" y="1965" font-size="12" fill="#526980">メーカー：Example Computing</text>
-<text x="654" y="1983" font-size="12" fill="#526980">型番：EC-Notebook-200</text>
-<text x="654" y="2001" font-size="12" fill="#526980">S/N：DEMO-PC-0002</text>
-<text x="654" y="2019" font-size="12" fill="#526980">拠点：本社</text>
-<text x="654" y="2037" font-size="12" fill="#526980">部屋：会議室</text>
-<text x="654" y="2055" font-size="12" fill="#526980">位置：来客席B01</text>
-<g class="interface-row binding-row-map-5" data-element-id="pc-b.eth0" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / pc-b.eth0 / 層間対応を追跡" data-anchor-y="2123.0" data-anchor-x="978">
-<rect class="interface-hit" x="643" y="2090" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="643" y="2090" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="638" y="1977" width="340" height="284" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="654" y="2003" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
+<text x="654" y="2024" font-size="11" fill="#72869b">pc-b / endpoint</text>
+<text x="654" y="2049" font-size="12" fill="#526980">メーカー：Example Computing</text>
+<text x="654" y="2067" font-size="12" fill="#526980">型番：EC-Notebook-200</text>
+<text x="654" y="2085" font-size="12" fill="#526980">S/N：DEMO-PC-0002</text>
+<text x="654" y="2103" font-size="12" fill="#526980">拠点：本社</text>
+<text x="654" y="2121" font-size="12" fill="#526980">部屋：会議室</text>
+<text x="654" y="2139" font-size="12" fill="#526980">位置：来客席B01</text>
+<g class="interface-row binding-row-map-5" data-element-id="pc-b.eth0" data-owner="pc-b" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / pc-b.eth0 / eth0 / 層間対応を追跡" data-anchor-y="2210.0" data-anchor-x="978">
+<rect class="interface-hit" x="643" y="2174" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="643" y="2174" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>pc-b.eth0</title>
-<path class="row-separator" d="M650,2087 L966,2087" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="654" y="2108" font-size="13" fill="#23344d">pc-b.eth0</text>
-<text x="654" y="2126" font-size="12" fill="#60788e">eth0</text>
+<path class="row-separator" d="M650,2171 L966,2171" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="654" y="2195" font-size="18" font-weight="700" fill="#23344d">eth0</text>
+<text x="654" y="2219" font-size="11" fill="#60788e">pc-b.eth0</text>
 <g class="binding-badge binding-map-5" data-binding-key="map-5" tabindex="0" role="button" aria-pressed="false" aria-label="M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0">
-<text x="654" y="2144" font-size="11" fill="#765194">M6 ↑ L2 / pc-b.l2</text>
-<circle class="binding-anchor" data-binding-key="map-5" data-binding-layer="l1" data-binding-element="pc-b.eth0" cx="638" cy="2140" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="654" y="2237" font-size="11" fill="#765194">M6 ↑ L2 / pc-b.l2</text>
+<circle class="binding-anchor" data-binding-key="map-5" data-binding-layer="l1" data-binding-element="pc-b.eth0" cx="638" cy="2233" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="pc-b.eth0" cx="978" cy="2123.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="pc-b.eth0" cx="978" cy="2210.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="sw01" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-SW-01 / L1">
-<rect class="device-frame" x="1182" y="1893" width="340" height="440" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1198" y="1919" font-size="16" fill="#23344d">HQ-SW-01</text>
-<text x="1198" y="1940" font-size="11" fill="#72869b">sw01 / l2-switch</text>
-<text x="1198" y="1965" font-size="12" fill="#526980">メーカー：Example Networks</text>
-<text x="1198" y="1983" font-size="12" fill="#526980">型番：EN-SW24</text>
-<text x="1198" y="2001" font-size="12" fill="#526980">S/N：DEMO-SW-0001</text>
-<text x="1198" y="2019" font-size="12" fill="#526980">拠点：本社</text>
-<text x="1198" y="2037" font-size="12" fill="#526980">部屋：サーバー室</text>
-<text x="1198" y="2055" font-size="12" fill="#526980">ラック：R01</text>
-<text x="1198" y="2073" font-size="12" fill="#526980">U：12</text>
-<g class="interface-row binding-row-map-6" data-element-id="sw01.p1" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p1 / 層間対応を追跡" data-anchor-y="2141.0" data-anchor-x="1182">
-<rect class="interface-hit" x="1187" y="2108" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="2108" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="1182" y="1977" width="340" height="458" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1198" y="2003" font-size="16" fill="#23344d">HQ-SW-01</text>
+<text x="1198" y="2024" font-size="11" fill="#72869b">sw01 / l2-switch</text>
+<text x="1198" y="2049" font-size="12" fill="#526980">メーカー：Example Networks</text>
+<text x="1198" y="2067" font-size="12" fill="#526980">型番：EN-SW24</text>
+<text x="1198" y="2085" font-size="12" fill="#526980">S/N：DEMO-SW-0001</text>
+<text x="1198" y="2103" font-size="12" fill="#526980">拠点：本社</text>
+<text x="1198" y="2121" font-size="12" fill="#526980">部屋：サーバー室</text>
+<text x="1198" y="2139" font-size="12" fill="#526980">ラック：R01</text>
+<text x="1198" y="2157" font-size="12" fill="#526980">U：12</text>
+<g class="interface-row binding-row-map-6" data-element-id="sw01.p1" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p1 / p1 / 層間対応を追跡" data-anchor-y="2228.0" data-anchor-x="1182">
+<rect class="interface-hit" x="1187" y="2192" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="2192" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.p1</title>
-<path class="row-separator" d="M1194,2105 L1510,2105" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="2126" font-size="13" fill="#23344d">sw01.p1</text>
-<text x="1198" y="2144" font-size="12" fill="#60788e">p1</text>
+<path class="row-separator" d="M1194,2189 L1510,2189" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="2213" font-size="18" font-weight="700" fill="#23344d">p1</text>
+<text x="1198" y="2237" font-size="11" fill="#60788e">sw01.p1</text>
 <g class="binding-badge binding-map-6" data-binding-key="map-6" tabindex="0" role="button" aria-pressed="false" aria-label="M7 / L2: sw01.access1 ↔ L1: sw01.p1">
-<text x="1198" y="2162" font-size="11" fill="#765194">M7 ↑ L2 / sw01.access1</text>
-<circle class="binding-anchor" data-binding-key="map-6" data-binding-layer="l1" data-binding-element="sw01.p1" cx="1182" cy="2158" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="2255" font-size="11" fill="#765194">M7 ↑ L2 / sw01.access1</text>
+<circle class="binding-anchor" data-binding-key="map-6" data-binding-layer="l1" data-binding-element="sw01.p1" cx="1182" cy="2251" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="sw01.p1" cx="1182" cy="2141.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="sw01.p1" cx="1182" cy="2228.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
 </g>
-<g class="interface-row binding-row-map-7" data-element-id="sw01.p2" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p2 / 層間対応を追跡" data-anchor-y="2213.0" data-anchor-x="1182">
-<rect class="interface-hit" x="1187" y="2180" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="2180" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row binding-row-map-7" data-element-id="sw01.p2" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p2 / p2 / 層間対応を追跡" data-anchor-y="2306.0" data-anchor-x="1182">
+<rect class="interface-hit" x="1187" y="2270" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="2270" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.p2</title>
-<path class="row-separator" d="M1194,2177 L1510,2177" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="2198" font-size="13" fill="#23344d">sw01.p2</text>
-<text x="1198" y="2216" font-size="12" fill="#60788e">p2</text>
+<path class="row-separator" d="M1194,2267 L1510,2267" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="2291" font-size="18" font-weight="700" fill="#23344d">p2</text>
+<text x="1198" y="2315" font-size="11" fill="#60788e">sw01.p2</text>
 <g class="binding-badge binding-map-7" data-binding-key="map-7" tabindex="0" role="button" aria-pressed="false" aria-label="M8 / L2: sw01.access2 ↔ L1: sw01.p2">
-<text x="1198" y="2234" font-size="11" fill="#765194">M8 ↑ L2 / sw01.access2</text>
-<circle class="binding-anchor" data-binding-key="map-7" data-binding-layer="l1" data-binding-element="sw01.p2" cx="1182" cy="2230" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="2333" font-size="11" fill="#765194">M8 ↑ L2 / sw01.access2</text>
+<circle class="binding-anchor" data-binding-key="map-7" data-binding-layer="l1" data-binding-element="sw01.p2" cx="1182" cy="2329" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="sw01.p2" cx="1182" cy="2213.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="sw01.p2" cx="1182" cy="2306.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
 </g>
-<g class="interface-row binding-row-map-8" data-element-id="sw01.p24" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p24 / 層間対応を追跡" data-anchor-y="2285.0" data-anchor-x="1522">
-<rect class="interface-hit" x="1187" y="2252" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1187" y="2252" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<g class="interface-row binding-row-map-8" data-element-id="sw01.p24" data-owner="sw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / sw01.p24 / p24 / 層間対応を追跡" data-anchor-y="2384.0" data-anchor-x="1522">
+<rect class="interface-hit" x="1187" y="2348" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1187" y="2348" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>sw01.p24</title>
-<path class="row-separator" d="M1194,2249 L1510,2249" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1198" y="2270" font-size="13" fill="#23344d">sw01.p24</text>
-<text x="1198" y="2288" font-size="12" fill="#60788e">p24</text>
+<path class="row-separator" d="M1194,2345 L1510,2345" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1198" y="2369" font-size="18" font-weight="700" fill="#23344d">p24</text>
+<text x="1198" y="2393" font-size="11" fill="#60788e">sw01.p24</text>
 <g class="binding-badge binding-map-8" data-binding-key="map-8" tabindex="0" role="button" aria-pressed="false" aria-label="M9 / L2: sw01.trunk ↔ L1: sw01.p24">
-<text x="1198" y="2306" font-size="11" fill="#765194">M9 ↑ L2 / sw01.trunk</text>
-<circle class="binding-anchor" data-binding-key="map-8" data-binding-layer="l1" data-binding-element="sw01.p24" cx="1182" cy="2302" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1198" y="2411" font-size="11" fill="#765194">M9 ↑ L2 / sw01.trunk</text>
+<circle class="binding-anchor" data-binding-key="map-8" data-binding-layer="l1" data-binding-element="sw01.p24" cx="1182" cy="2407" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="sw01.p24" cx="1522" cy="2285.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="sw01.p24" cx="1522" cy="2384.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-GW-01 / L1">
-<rect class="device-frame" x="1726" y="1893" width="340" height="296" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1742" y="1919" font-size="16" fill="#23344d">HQ-GW-01</text>
-<text x="1742" y="1940" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<text x="1742" y="1965" font-size="12" fill="#526980">メーカー：Example Networks</text>
-<text x="1742" y="1983" font-size="12" fill="#526980">型番：EN-GW100</text>
-<text x="1742" y="2001" font-size="12" fill="#526980">S/N：DEMO-GW-0001</text>
-<text x="1742" y="2019" font-size="12" fill="#526980">拠点：本社</text>
-<text x="1742" y="2037" font-size="12" fill="#526980">部屋：サーバー室</text>
-<text x="1742" y="2055" font-size="12" fill="#526980">ラック：R01</text>
-<text x="1742" y="2073" font-size="12" fill="#526980">U：13</text>
-<g class="interface-row binding-row-map-9" data-element-id="gw01.lan" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / gw01.lan / 層間対応を追跡" data-anchor-y="2141.0" data-anchor-x="1726">
-<rect class="interface-hit" x="1731" y="2108" width="330" height="66" rx="8" fill="transparent" stroke="none"/>
-<rect class="binding-row-highlight" x="1731" y="2108" width="330" height="66" rx="8" fill="#f1eafa" stroke="#8665a6"/>
+<rect class="device-frame" x="1726" y="1977" width="340" height="302" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1742" y="2003" font-size="16" fill="#23344d">HQ-GW-01</text>
+<text x="1742" y="2024" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
+<text x="1742" y="2049" font-size="12" fill="#526980">メーカー：Example Networks</text>
+<text x="1742" y="2067" font-size="12" fill="#526980">型番：EN-GW100</text>
+<text x="1742" y="2085" font-size="12" fill="#526980">S/N：DEMO-GW-0001</text>
+<text x="1742" y="2103" font-size="12" fill="#526980">拠点：本社</text>
+<text x="1742" y="2121" font-size="12" fill="#526980">部屋：サーバー室</text>
+<text x="1742" y="2139" font-size="12" fill="#526980">ラック：R01</text>
+<text x="1742" y="2157" font-size="12" fill="#526980">U：13</text>
+<g class="interface-row binding-row-map-9" data-element-id="gw01.lan" data-owner="gw01" tabindex="0" role="button" aria-pressed="false" aria-label="L1 / gw01.lan / lan / 層間対応を追跡" data-anchor-y="2228.0" data-anchor-x="1726">
+<rect class="interface-hit" x="1731" y="2192" width="330" height="72" rx="8" fill="transparent" stroke="none"/>
+<rect class="binding-row-highlight" x="1731" y="2192" width="330" height="72" rx="8" fill="#f1eafa" stroke="#8665a6"/>
 <title>gw01.lan</title>
-<path class="row-separator" d="M1738,2105 L2054,2105" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1742" y="2126" font-size="13" fill="#23344d">gw01.lan</text>
-<text x="1742" y="2144" font-size="12" fill="#60788e">lan</text>
+<path class="row-separator" d="M1738,2189 L2054,2189" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text class="interface-primary" x="1742" y="2213" font-size="18" font-weight="700" fill="#23344d">lan</text>
+<text x="1742" y="2237" font-size="11" fill="#60788e">gw01.lan</text>
 <g class="binding-badge binding-map-9" data-binding-key="map-9" tabindex="0" role="button" aria-pressed="false" aria-label="M10 / L2: gw01.trunk ↔ L1: gw01.lan">
-<text x="1742" y="2162" font-size="11" fill="#765194">M10 ↑ L2 / gw01.trunk</text>
-<circle class="binding-anchor" data-binding-key="map-9" data-binding-layer="l1" data-binding-element="gw01.lan" cx="1726" cy="2158" r="3.5" fill="white" stroke="#8665a6"/>
+<text x="1742" y="2255" font-size="11" fill="#765194">M10 ↑ L2 / gw01.trunk</text>
+<circle class="binding-anchor" data-binding-key="map-9" data-binding-layer="l1" data-binding-element="gw01.lan" cx="1726" cy="2251" r="3.5" fill="white" stroke="#8665a6"/>
 </g>
-<circle class="interface-anchor" data-port-id="gw01.lan" cx="1726" cy="2141.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
+<circle class="interface-anchor" data-port-id="gw01.lan" cx="1726" cy="2228.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
 </g>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-a" tabindex="0" role="img" aria-label="cable-a / pc-a.eth0 ↔ sw01.p1 / copper / 1Gbps">
 <title>cable-a / pc-a.eth0 ↔ sw01.p1 / copper / 1Gbps</title>
-<path class="physical-cable" d="M434,2123.0 L452,2123.0 L452,1829 L1164,1829 L1164,2141.0 L1182,2141.0" fill="none" stroke="#1779a5" stroke-width="1.7" data-from="pc-a.eth0" data-to="sw01.p1" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="808.0" y="1822" text-anchor="middle" font-size="11" fill="#1779a5" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C1</text>
-<text x="40" y="2463" font-size="12" fill="#1779a5">C1  cable-a  |  pc-a.eth0 ↔ sw01.p1  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M434,2210.0 L452,2210.0 L452,1913 L1164,1913 L1164,2228.0 L1182,2228.0" fill="none" stroke="#1779a5" stroke-width="1.7" data-from="pc-a.eth0" data-to="sw01.p1" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="808.0" y="1906" text-anchor="middle" font-size="11" fill="#1779a5" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C1</text>
+<text x="40" y="2565" font-size="12" fill="#1779a5">C1  cable-a  |  pc-a.eth0 ↔ sw01.p1  |  copper / 1Gbps</text>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-b" tabindex="0" role="img" aria-label="cable-b / pc-b.eth0 ↔ sw01.p2 / copper / 1Gbps">
 <title>cable-b / pc-b.eth0 ↔ sw01.p2 / copper / 1Gbps</title>
-<path class="physical-cable" d="M978,2123.0 L1080.0,2123.0 L1080.0,2213.0 L1182,2213.0" fill="none" stroke="#b5681c" stroke-width="1.7" data-from="pc-b.eth0" data-to="sw01.p2" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="1029.0" y="2116.0" text-anchor="middle" font-size="11" fill="#b5681c" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C2</text>
-<text x="40" y="2494" font-size="12" fill="#b5681c">C2  cable-b  |  pc-b.eth0 ↔ sw01.p2  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M978,2210.0 L1080.0,2210.0 L1080.0,2306.0 L1182,2306.0" fill="none" stroke="#b5681c" stroke-width="1.7" data-from="pc-b.eth0" data-to="sw01.p2" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="1029.0" y="2203.0" text-anchor="middle" font-size="11" fill="#b5681c" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C2</text>
+<text x="40" y="2596" font-size="12" fill="#b5681c">C2  cable-b  |  pc-b.eth0 ↔ sw01.p2  |  copper / 1Gbps</text>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-uplink" tabindex="0" role="img" aria-label="cable-uplink / sw01.p24 ↔ gw01.lan / copper / 1Gbps">
 <title>cable-uplink / sw01.p24 ↔ gw01.lan / copper / 1Gbps</title>
-<path class="physical-cable" d="M1522,2285.0 L1624.0,2285.0 L1624.0,2141.0 L1726,2141.0" fill="none" stroke="#287c58" stroke-width="1.7" data-from="sw01.p24" data-to="gw01.lan" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="1573.0" y="2278.0" text-anchor="middle" font-size="11" fill="#287c58" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C3</text>
-<text x="40" y="2525" font-size="12" fill="#287c58">C3  cable-uplink  |  sw01.p24 ↔ gw01.lan  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M1522,2384.0 L1624.0,2384.0 L1624.0,2228.0 L1726,2228.0" fill="none" stroke="#287c58" stroke-width="1.7" data-from="sw01.p24" data-to="gw01.lan" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="1573.0" y="2377.0" text-anchor="middle" font-size="11" fill="#287c58" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C3</text>
+<text x="40" y="2627" font-size="12" fill="#287c58">C3  cable-uplink  |  sw01.p24 ↔ gw01.lan  |  copper / 1Gbps</text>
 </g>
 </g>
 <g data-binding="l3_to_l2">
-<text x="102" y="726" font-size="12" fill="#765194">層間対応 / l3_to_l2 / M番号・線を選択して両端を強調</text>
+<text x="102" y="738" font-size="12" fill="#765194">層間対応 / l3_to_l2 / M番号・線を選択して両端を強調</text>
 <g class="binding-group binding-map-0" data-binding-key="map-0" data-binding-kind="l3_to_l2" tabindex="0" role="button" aria-pressed="false" aria-label="M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-office">
 <title>M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-office</title>
-<path class="binding-casing" d="M94,370 L74,370 L74,756 L64,756 L64,1069 L94,1069" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M94,370 L74,370 L74,756 L64,756 L64,1069 L94,1069" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M94,370 L74,370 L74,756 L64,756 L64,1069 L94,1069" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-0" data-from="pc-a.ip" data-to="pc-a.l2" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="102" y="754" font-size="10" fill="#765194">M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-off</text>
-<text x="102" y="769" font-size="10" fill="#765194">ice</text>
+<path class="binding-casing" d="M94,379 L74,379 L74,768 L64,768 L64,1108 L94,1108" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M94,379 L74,379 L74,768 L64,768 L64,1108 L94,1108" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M94,379 L74,379 L74,768 L64,768 L64,1108 L94,1108" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-0" data-from="pc-a.ip" data-to="pc-a.l2" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="102" y="766" font-size="10" fill="#765194">M1 / L3: pc-a.ip ↔ L2: pc-a.l2 / VLAN vlan-off</text>
+<text x="102" y="781" font-size="10" fill="#765194">ice</text>
 </g>
 <g class="binding-group binding-map-1" data-binding-key="map-1" data-binding-kind="l3_to_l2" tabindex="0" role="button" aria-pressed="false" aria-label="M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-guest">
 <title>M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-guest</title>
-<path class="binding-casing" d="M638,370 L618,370 L618,756 L608,756 L608,1069 L638,1069" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M638,370 L618,370 L618,756 L608,756 L608,1069 L638,1069" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M638,370 L618,370 L618,756 L608,756 L608,1069 L638,1069" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-1" data-from="pc-b.ip" data-to="pc-b.l2" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="646" y="754" font-size="10" fill="#765194">M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-gue</text>
-<text x="646" y="769" font-size="10" fill="#765194">st</text>
+<path class="binding-casing" d="M638,379 L618,379 L618,768 L608,768 L608,1108 L638,1108" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M638,379 L618,379 L618,768 L608,768 L608,1108 L638,1108" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M638,379 L618,379 L618,768 L608,768 L608,1108 L638,1108" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-1" data-from="pc-b.ip" data-to="pc-b.l2" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="646" y="766" font-size="10" fill="#765194">M2 / L3: pc-b.ip ↔ L2: pc-b.l2 / VLAN vlan-gue</text>
+<text x="646" y="781" font-size="10" fill="#765194">st</text>
 </g>
 <g class="binding-group binding-map-2" data-binding-key="map-2" data-binding-kind="l3_to_l2" tabindex="0" role="button" aria-pressed="false" aria-label="M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan-office">
 <title>M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan-office</title>
-<path class="binding-casing" d="M1726,370 L1696,370 L1696,756 L1686,756 L1686,1087 L1726,1087" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1726,370 L1696,370 L1696,756 L1686,756 L1686,1087 L1726,1087" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1726,370 L1696,370 L1696,756 L1686,756 L1686,1087 L1726,1087" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-2" data-from="gw01.v10" data-to="gw01.trunk" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1734" y="754" font-size="10" fill="#765194">M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan</text>
-<text x="1734" y="769" font-size="10" fill="#765194">-office</text>
+<path class="binding-casing" d="M1726,379 L1696,379 L1696,768 L1686,768 L1686,1126 L1726,1126" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1726,379 L1696,379 L1696,768 L1686,768 L1686,1126 L1726,1126" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1726,379 L1696,379 L1696,768 L1686,768 L1686,1126 L1726,1126" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-2" data-from="gw01.v10" data-to="gw01.trunk" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1734" y="766" font-size="10" fill="#765194">M3 / L3: gw01.v10 ↔ L2: gw01.trunk / VLAN vlan</text>
+<text x="1734" y="781" font-size="10" fill="#765194">-office</text>
 </g>
 <g class="binding-group binding-map-3" data-binding-key="map-3" data-binding-kind="l3_to_l2" tabindex="0" role="button" aria-pressed="false" aria-label="M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan-guest">
 <title>M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan-guest</title>
-<path class="binding-casing" d="M1726,478 L1706,478 L1706,768 L1676,768 L1676,1105 L1726,1105" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1726,478 L1706,478 L1706,768 L1676,768 L1676,1105 L1726,1105" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1726,478 L1706,478 L1706,768 L1676,768 L1676,1105 L1726,1105" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-3" data-from="gw01.v20" data-to="gw01.trunk" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1734" y="799" font-size="10" fill="#765194">M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan</text>
-<text x="1734" y="814" font-size="10" fill="#765194">-guest</text>
+<path class="binding-casing" d="M1726,493 L1706,493 L1706,780 L1676,780 L1676,1144 L1726,1144" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1726,493 L1706,493 L1706,780 L1676,780 L1676,1144 L1726,1144" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1726,493 L1706,493 L1706,780 L1676,780 L1676,1144 L1726,1144" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-3" data-from="gw01.v20" data-to="gw01.trunk" data-from-layer="l3" data-to-layer="l2" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1734" y="811" font-size="10" fill="#765194">M4 / L3: gw01.v20 ↔ L2: gw01.trunk / VLAN vlan</text>
+<text x="1734" y="826" font-size="10" fill="#765194">-guest</text>
 </g>
 </g>
 <g data-binding="l2_to_l1">
-<text x="102" y="1635" font-size="12" fill="#765194">層間対応 / l2_to_l1 / M番号・線を選択して両端を強調</text>
+<text x="102" y="1719" font-size="12" fill="#765194">層間対応 / l2_to_l1 / M番号・線を選択して両端を強調</text>
 <g class="binding-group binding-map-4" data-binding-key="map-4" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0">
 <title>M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0</title>
-<path class="binding-casing" d="M94,1087 L54,1087 L54,1665 L44,1665 L44,2140 L94,2140" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M94,1087 L54,1087 L54,1665 L44,1665 L44,2140 L94,2140" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M94,1087 L54,1087 L54,1665 L44,1665 L44,2140 L94,2140" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-4" data-from="pc-a.l2" data-to="pc-a.eth0" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="102" y="1663" font-size="10" fill="#765194">M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0</text>
+<path class="binding-casing" d="M94,1126 L54,1126 L54,1749 L44,1749 L44,2233 L94,2233" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M94,1126 L54,1126 L54,1749 L44,1749 L44,2233 L94,2233" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M94,1126 L54,1126 L54,1749 L44,1749 L44,2233 L94,2233" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-4" data-from="pc-a.l2" data-to="pc-a.eth0" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="102" y="1747" font-size="10" fill="#765194">M5 / L2: pc-a.l2 ↔ L1: pc-a.eth0</text>
 </g>
 <g class="binding-group binding-map-5" data-binding-key="map-5" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0">
 <title>M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0</title>
-<path class="binding-casing" d="M638,1087 L598,1087 L598,1665 L588,1665 L588,2140 L638,2140" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M638,1087 L598,1087 L598,1665 L588,1665 L588,2140 L638,2140" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M638,1087 L598,1087 L598,1665 L588,1665 L588,2140 L638,2140" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-5" data-from="pc-b.l2" data-to="pc-b.eth0" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="646" y="1663" font-size="10" fill="#765194">M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0</text>
+<path class="binding-casing" d="M638,1126 L598,1126 L598,1749 L588,1749 L588,2233 L638,2233" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M638,1126 L598,1126 L598,1749 L588,1749 L588,2233 L638,2233" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M638,1126 L598,1126 L598,1749 L588,1749 L588,2233 L638,2233" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-5" data-from="pc-b.l2" data-to="pc-b.eth0" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="646" y="1747" font-size="10" fill="#765194">M6 / L2: pc-b.l2 ↔ L1: pc-b.eth0</text>
 </g>
 <g class="binding-group binding-map-6" data-binding-key="map-6" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M7 / L2: sw01.access1 ↔ L1: sw01.p1">
 <title>M7 / L2: sw01.access1 ↔ L1: sw01.p1</title>
-<path class="binding-casing" d="M1182,1087 L1142,1087 L1142,1665 L1132,1665 L1132,2158 L1182,2158" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1182,1087 L1142,1087 L1142,1665 L1132,1665 L1132,2158 L1182,2158" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1182,1087 L1142,1087 L1142,1665 L1132,1665 L1132,2158 L1182,2158" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-6" data-from="sw01.access1" data-to="sw01.p1" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1190" y="1663" font-size="10" fill="#765194">M7 / L2: sw01.access1 ↔ L1: sw01.p1</text>
+<path class="binding-casing" d="M1182,1126 L1142,1126 L1142,1749 L1132,1749 L1132,2251 L1182,2251" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1182,1126 L1142,1126 L1142,1749 L1132,1749 L1132,2251 L1182,2251" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1182,1126 L1142,1126 L1142,1749 L1132,1749 L1132,2251 L1182,2251" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-6" data-from="sw01.access1" data-to="sw01.p1" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1190" y="1747" font-size="10" fill="#765194">M7 / L2: sw01.access1 ↔ L1: sw01.p1</text>
 </g>
 <g class="binding-group binding-map-7" data-binding-key="map-7" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M8 / L2: sw01.access2 ↔ L1: sw01.p2">
 <title>M8 / L2: sw01.access2 ↔ L1: sw01.p2</title>
-<path class="binding-casing" d="M1182,1195 L1152,1195 L1152,1677 L1122,1677 L1122,2230 L1182,2230" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1182,1195 L1152,1195 L1152,1677 L1122,1677 L1122,2230 L1182,2230" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1182,1195 L1152,1195 L1152,1677 L1122,1677 L1122,2230 L1182,2230" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-7" data-from="sw01.access2" data-to="sw01.p2" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1190" y="1693" font-size="10" fill="#765194">M8 / L2: sw01.access2 ↔ L1: sw01.p2</text>
+<path class="binding-casing" d="M1182,1258 L1152,1258 L1152,1761 L1122,1761 L1122,2329 L1182,2329" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1182,1258 L1152,1258 L1152,1761 L1122,1761 L1122,2329 L1182,2329" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1182,1258 L1152,1258 L1152,1761 L1122,1761 L1122,2329 L1182,2329" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-7" data-from="sw01.access2" data-to="sw01.p2" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1190" y="1777" font-size="10" fill="#765194">M8 / L2: sw01.access2 ↔ L1: sw01.p2</text>
 </g>
 <g class="binding-group binding-map-8" data-binding-key="map-8" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M9 / L2: sw01.trunk ↔ L1: sw01.p24">
 <title>M9 / L2: sw01.trunk ↔ L1: sw01.p24</title>
-<path class="binding-casing" d="M1182,1321 L1162,1321 L1162,1689 L1112,1689 L1112,2302 L1182,2302" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1182,1321 L1162,1321 L1162,1689 L1112,1689 L1112,2302 L1182,2302" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1182,1321 L1162,1321 L1162,1689 L1112,1689 L1112,2302 L1182,2302" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-8" data-from="sw01.trunk" data-to="sw01.p24" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1190" y="1723" font-size="10" fill="#765194">M9 / L2: sw01.trunk ↔ L1: sw01.p24</text>
+<path class="binding-casing" d="M1182,1408 L1162,1408 L1162,1773 L1112,1773 L1112,2407 L1182,2407" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1182,1408 L1162,1408 L1162,1773 L1112,1773 L1112,2407 L1182,2407" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1182,1408 L1162,1408 L1162,1773 L1112,1773 L1112,2407 L1182,2407" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-8" data-from="sw01.trunk" data-to="sw01.p24" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1190" y="1807" font-size="10" fill="#765194">M9 / L2: sw01.trunk ↔ L1: sw01.p24</text>
 </g>
 <g class="binding-group binding-map-9" data-binding-key="map-9" data-binding-kind="l2_to_l1" tabindex="0" role="button" aria-pressed="false" aria-label="M10 / L2: gw01.trunk ↔ L1: gw01.lan">
 <title>M10 / L2: gw01.trunk ↔ L1: gw01.lan</title>
-<path class="binding-casing" d="M1726,1123 L1666,1123 L1666,1665 L1656,1665 L1656,2158 L1726,2158" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
-<path class="binding-hit" d="M1726,1123 L1666,1123 L1666,1665 L1656,1665 L1656,2158 L1726,2158" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
-<path class="binding-edge" d="M1726,1123 L1666,1123 L1666,1665 L1656,1665 L1656,2158 L1726,2158" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-9" data-from="gw01.trunk" data-to="gw01.lan" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
-<text x="1734" y="1663" font-size="10" fill="#765194">M10 / L2: gw01.trunk ↔ L1: gw01.lan</text>
+<path class="binding-casing" d="M1726,1162 L1666,1162 L1666,1749 L1656,1749 L1656,2251 L1726,2251" fill="none" stroke="#f8fafc" stroke-width="1.7" style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"/>
+<path class="binding-hit" d="M1726,1162 L1666,1162 L1666,1749 L1656,1749 L1656,2251 L1726,2251" fill="none" stroke="transparent" stroke-width="1.7" style="stroke-width:14;pointer-events:stroke" aria-hidden="true"/>
+<path class="binding-edge" d="M1726,1162 L1666,1162 L1666,1749 L1656,1749 L1656,2251 L1726,2251" fill="none" stroke="#8665a6" stroke-width="1.7" data-binding-key="map-9" data-from="gw01.trunk" data-to="gw01.lan" data-from-layer="l2" data-to-layer="l1" stroke-dasharray="5 5" stroke-linejoin="round"/>
+<text x="1734" y="1747" font-size="10" fill="#765194">M10 / L2: gw01.trunk ↔ L1: gw01.lan</text>
 </g>
 </g>
-<text x="40" y="2614" font-size="19" fill="#23344d">L3経路 / 次ホップの指定（通信許可を意味しません）</text>
-<text x="40" y="2642" font-size="13" fill="#23344d">pc-a / pc-a.ip : 0.0.0.0/0 → 192.168.10.1</text>
-<text x="40" y="2668" font-size="13" fill="#23344d">pc-b / pc-b.ip : 0.0.0.0/0 → 192.168.20.1</text>
-<text x="40" y="2712" font-size="12" fill="#23344d">注：ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。</text>
-<text x="40" y="2738" font-size="12" fill="#23344d">注：経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。</text>
-<text x="40" y="2764" font-size="12" fill="#23344d">注：VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。</text>
-<text x="40" y="2800" font-size="12" fill="#23344d">一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応</text></svg>
+<text x="40" y="2716" font-size="19" fill="#23344d">L3経路 / 次ホップの指定（通信許可を意味しません）</text>
+<text x="40" y="2744" font-size="13" fill="#23344d">pc-a / pc-a.ip : 0.0.0.0/0 → 192.168.10.1</text>
+<text x="40" y="2770" font-size="13" fill="#23344d">pc-b / pc-b.ip : 0.0.0.0/0 → 192.168.20.1</text>
+<text x="40" y="2814" font-size="12" fill="#23344d">注：ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。</text>
+<text x="40" y="2840" font-size="12" fill="#23344d">注：経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。</text>
+<text x="40" y="2866" font-size="12" fill="#23344d">注：VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。</text>
+<text x="40" y="2902" font-size="12" fill="#23344d">一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応</text></svg>

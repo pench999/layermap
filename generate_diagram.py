@@ -234,15 +234,22 @@ def render(model, layers=None, show_bindings=True):
             for item in ix[group].values():
                 if item['device']!=device:
                     continue
-                details = ([item.get('name',item['id'].split('.')[-1])] if layer=='l1' else
-                           ['access / '+item['untagged_vlan']] if layer=='l2' and item['mode']=='access' else
-                           ['trunk / '+', '.join(item['tagged_vlans'])] if layer=='l2' else
-                           [item['address'],'subnet / '+item['subnet']])
+                # Lead with the operational value, retaining stable reference IDs below.
+                if layer=='l1':
+                    primary=item.get('name') or item['id'].split('.')[-1]
+                    details=[item['id']]
+                elif layer=='l2':
+                    vlan_refs=[item['untagged_vlan']] if item['mode']=='access' else item['tagged_vlans']
+                    primary='VLAN '+(', '.join(str(ix['l2.vlans'][v]['tag']) for v in vlan_refs) or 'なし')
+                    details=[item['id'],item['mode']+(' / untagged' if item['mode']=='access' else ' / tagged')]
+                else:
+                    primary=item['address']
+                    details=[item['id'],'subnet / '+item['subnet']]
                 if layer=='l1' and item.get('connector'):
                     details.append('connector / '+item['connector'])
-                title_lines=wrap_label(item['id'],43)
+                title_lines=wrap_label(primary,30)
                 detail_lines=[part for detail in details for part in wrap_label(detail,46)]
-                height=18*(len(title_lines)+len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[]))+sum(len(wrap_label(binding_badge(b,layer),46)) for b in row_bindings.get((layer,item['id']),[])))+18
+                height=24*len(title_lines)+18*(len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[]))+sum(len(wrap_label(binding_badge(b,layer),46)) for b in row_bindings.get((layer,item['id']),[])))+18
                 rows.append((item,title_lines,detail_lines,height))
             height=header+sum(row[3] for row in rows)+12
             if not rows:
@@ -291,14 +298,15 @@ def render(model, layers=None, show_bindings=True):
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
                 member_classes=' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
-                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / "+"".join(title_lines)+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'transparent','none','interface-hit')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'#f1eafa','#8665a6','binding-row-highlight')
                 svg.append(f'<title>{escape(item["id"])}</title>')
                 edge([(left+12,row_top),(right-12,row_top)],'#e0e7ee','row-separator')
-                lines_at(left+16,row_top+21,title_lines,13)
-                lines_at(left+16,row_top+21+18*len(title_lines),detail_lines,12,'#60788e')
-                member_top=row_top+21+18*(len(title_lines)+len(detail_lines))
+                for line_no,line in enumerate(title_lines):
+                    svg.append(f'<text class="interface-primary" x="{left+16}" y="{row_top+24+line_no*24}" font-size="18" font-weight="700" fill="#23344d">{escape(line)}</text>')
+                lines_at(left+16,row_top+24+24*len(title_lines),detail_lines,11,'#60788e')
+                member_top=row_top+24+24*len(title_lines)+18*len(detail_lines)
                 for net in memberships.get((layer,item['id']),[]):
                     member_lines=wrap_label(net['number']+' / '+net['id'],46)
                     member_y=member_top-4
