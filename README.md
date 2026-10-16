@@ -69,8 +69,44 @@ L2/L3は共有ネットワークごとにV（VLAN）・S（サブネット）・
 
 YAMLは描画のため同じサーバーへ送信します。サーバーは永続保存せず、本文をログへ記録しません。
 フロントエンドとAPIは同一オリジンで提供し、CDNや外部フォントは使いません。
-YAMLは256 KiB、機器は24台、全要素は500件、HTTPリクエストは1 MiBまでです。YAMLのエイリアス・重複キーと未定義フィールドは拒否します。
+構成全体の保持上限はYAML 2 MiB、機器256台、全要素10,000件です。HTTPリクエストは8 MiBまでです。保持とはブラウザーのエディター内の構成全体を指し、サーバーに永続保存する機能はありません。
+
+表示上限は24台・200行・接続／所属400件・構成要素500件・VLAN／ブリッジ／サブネット80件、出力SVG 4 MiBです。表示中のレイヤーについて数え、trunkの各VLAN所属も接続1件として扱います。超えた場合は図を間引かず、検証済みの構成と選択肢を保持して絞り込みを案内します。描画APIの同時実行は2件までで、混雑時は429を返し、画面は最大10回まで再試行します。最新の値は GET /api/limits で取得できます。
+
+要素数は機器、L1ポート／ケーブル、L2 VLAN／インターフェース／ブリッジ、L3サブネット／インターフェース／経路、層間対応の各レコードの合計です。所属リストは保持側のレコード数には含めず、表示側の接続数で制限します。YAMLのエイリアス・重複キーと未定義フィールドは拒否します。
 ファイルは手元から読み込み、手元へダウンロードします。サーバーの任意のファイルを読む機能はありません。
+
+## 表示範囲の絞り込み
+
+拠点は既存の devices.location.site、機器群は任意の devices.groups で定義します。groupsは省略可能な文字列リストで、複数の群に所属できます。既存のYAMLもそのまま使えます。
+
+```yaml
+groups: [ネットワーク機器, 1F]
+location:
+  site: 本社
+  room: サーバー室
+```
+
+画面の「表示範囲」で拠点・機器群・機器を選びます。条件はANDで適用します。機器を1台に絞ると、図が大きすぎる場合も「対応関係の起点」でポートやインターフェースを選択できます。図で行を選んだ追跡パネルの「この対応だけを表示」からも絞れます。層間対応だけを双方向に追跡し、共有する物理ポートの枝も含みます。ケーブルやVLAN／サブネットの所属先へは広げません。
+
+範囲外へつながるケーブルは図から省略し、ケーブルID・両端ポート・相手機器の一覧を表示します。同じVLAN／サブネットの範囲外の機器も表示しません。SVGには部分表示である旨と境界ケーブル数を記載します。YAML保存は常に構成全体、SVG出力は選択範囲です。絞り込みでYAMLを書き換えません。検証は範囲外の参照も含め、必ず構成全体に実行します。
+
+CLIも --site、--group、--device（繰り返し可）、--focus-layer と --focus-id の組で同じ絞り込みを利用できます。
+
+```sh
+docker compose run --rm generate python generate_diagram.py your-network.yaml --site 本社 --group ネットワーク機器 -o /output/hq.svg
+docker compose run --rm generate python generate_diagram.py your-network.yaml --device sw01 --focus-layer l1 --focus-id sw01.p1 -o /output/port.svg
+```
+
+## 負荷試験
+
+```sh
+docker compose --profile qa run --rm benchmark
+# 64台の架空YAMLを作成（実機情報は含みません）
+docker compose --profile qa run --rm benchmark python bench_scale.py --example /output/scale-example.yaml
+```
+
+1 CPU・512 MiBの独立コンテナーで、少量・24台・多数行・64 VLAN trunk・256台10,000要素・長いラベル・上限超過を各3回測定します。再現用コードは bench_scale.py、結果は artifacts/scale-benchmark.json、評価は docs/scale-limits.md を参照してください。合成データによる初期評価であり、すべての配線形状で応答時間や読みやすさを保証する上限ではありません。
 
 ## Docker内の検証
 

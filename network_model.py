@@ -6,8 +6,11 @@ from typing import Annotated, Literal
 import yaml
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
-MAX_YAML_BYTES = 262144
-MAX_ELEMENTS = 500
+MAX_YAML_BYTES = 2 * 1024 * 1024
+MAX_DEVICES = 256
+MAX_ELEMENTS = 10000
+MAX_YAML_NODES = 200000
+MAX_YAML_DEPTH = 48
 Text = Annotated[str, Field(min_length=1, max_length=200)]
 Id = Annotated[str, Field(min_length=1, max_length=100)]
 
@@ -30,6 +33,7 @@ class Device(Record):
     manufacturer: Text | None = None
     model: Text | None = None
     serial_number: Text | None = None
+    groups: list[Id] = Field(default_factory=list, max_length=16)
     location: dict[Text, Text | int] = Field(default_factory=dict, max_length=12)
 
 
@@ -123,7 +127,7 @@ class Network(Record):
     schema_version: Literal['lan-example/v1'] = Field(alias='schema')
     name: Text = 'LAN'
     scope: Text = '社内LAN'
-    devices: list[Device] = Field(min_length=1, max_length=24)
+    devices: list[Device] = Field(min_length=1, max_length=MAX_DEVICES)
     l1: L1
     l2: L2
     l3: L3
@@ -243,7 +247,10 @@ def validate(data):
     return ix
 
 
-class BoundedLoader(yaml.SafeLoader):
+BaseLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class BoundedLoader(BaseLoader):
     def __init__(self, stream):
         super().__init__(stream)
         self.node_count = 0
@@ -252,7 +259,7 @@ class BoundedLoader(yaml.SafeLoader):
         if self.check_event(yaml.AliasEvent):
             raise yaml.YAMLError('YAMLのエイリアスは使用できません')
         self.node_count += 1
-        if self.node_count > 12000:
+        if self.node_count > MAX_YAML_NODES:
             raise yaml.YAMLError('YAMLの構造が大きすぎます')
         return super().compose_node(parent, index)
 
@@ -265,7 +272,27 @@ class BoundedLoader(yaml.SafeLoader):
         return super().construct_mapping(node, deep)
 
 
+def guard_yaml(source):
+    # C loaders do not call Python compose_node. Stream the events first so
+    # alias/node/depth limits apply with either the C or pure-Python loader.
+    count = depth = 0
+    for event in yaml.parse(source, Loader=BaseLoader):
+        if isinstance(event, yaml.AliasEvent):
+            raise yaml.YAMLError('YAMLのエイリアスは使用できません')
+        if isinstance(event, (yaml.ScalarEvent, yaml.MappingStartEvent, yaml.SequenceStartEvent)):
+            count += 1
+            if count > MAX_YAML_NODES:
+                raise yaml.YAMLError('YAMLの構造が大きすぎます')
+        if isinstance(event, (yaml.MappingStartEvent, yaml.SequenceStartEvent)):
+            depth += 1
+            if depth > MAX_YAML_DEPTH:
+                raise yaml.YAMLError('YAMLの入れ子が深すぎます')
+        elif isinstance(event, (yaml.MappingEndEvent, yaml.SequenceEndEvent)):
+            depth -= 1
+
+
 def locate(source, p):
+    guard_yaml(source)
     node = yaml.compose(source, Loader=BoundedLoader)
     for key, number in re.findall(r'([^.\[\]]+)|\[(\d+)\]', p):
         if number and isinstance(node, yaml.SequenceNode):
@@ -277,13 +304,14 @@ def locate(source, p):
     return (node.start_mark.line+1, node.start_mark.column+1) if node else (None,None)
 
 
-def load_model(source):
+def load_model(source, with_index=False):
     if len(source.encode('utf-8')) > MAX_YAML_BYTES:
-        raise ModelError('YAMLは256 KiB以下にしてください')
+        raise ModelError(f'YAMLは{MAX_YAML_BYTES // 1024} KiB以下にしてください')
     try:
+        guard_yaml(source)
         model = yaml.load(source, Loader=BoundedLoader)
-        validate(model)
-        return model
+        ix = validate(model)
+        return (model, ix) if with_index else model
     except ModelError as exc:
         if exc.path:
             exc.line, exc.column = locate(source, exc.path)

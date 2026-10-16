@@ -1,6 +1,7 @@
 """Stateless LayerMap API and bundled frontend. No submitted YAML is persisted."""
 from pathlib import Path
 from typing import Literal
+from threading import BoundedSemaphore
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
@@ -9,9 +10,11 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
 from generate_diagram import render
-from network_model import ModelError, load_model
+from network_model import ModelError, load_model, MAX_YAML_BYTES
+from view_model import ViewScope, prepare_view, limits, MAX_HTTP_BYTES, MAX_RENDER_JOBS, MAX_SVG_BYTES
 
 ROOT = Path(__file__).parent
+render_slots = BoundedSemaphore(MAX_RENDER_JOBS)
 app = FastAPI(title='LayerMap', docs_url=None, redoc_url=None, openapi_url=None)
 
 
@@ -29,8 +32,8 @@ class BodyLimit:
                 return
             chunk = message.get('body', b'')
             size += len(chunk)
-            if size > 1048576:
-                response = JSONResponse({'errors':[{'message':'リクエストは1 MiB以下にしてください','path':'','line':None,'column':None}]}, status_code=413)
+            if size > MAX_HTTP_BYTES:
+                response = JSONResponse({'errors':[{'message':f'リクエストは{MAX_HTTP_BYTES // 1048576} MiB以下にしてください','path':'','line':None,'column':None}]}, status_code=413)
                 return await response(scope, receive, send)
             chunks.append(chunk)
             if not message.get('more_body'):
@@ -61,14 +64,20 @@ async def headers(request, call_next):
 
 class RenderRequest(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
-    yaml_text: str = Field(max_length=262144)
+    yaml_text: str = Field(max_length=MAX_YAML_BYTES)
     view: Literal['all','l1','l2','l3'] = 'all'
     show_bindings: bool = True
+    scope: ViewScope = Field(default_factory=ViewScope)
 
 
 @app.exception_handler(RequestValidationError)
 async def request_error(request, exc):
     return JSONResponse({'errors':[{'message':'描画リクエストの形式が不正です','path':'.'.join(map(str,e['loc'])), 'line':None,'column':None} for e in exc.errors()]},status_code=422)
+
+
+@app.get('/api/limits')
+def get_limits():
+    return limits()
 
 
 @app.get('/api/health')
@@ -104,14 +113,25 @@ def get_sample(sample_id: str):
 
 @app.post('/api/render')
 def draw(request: RenderRequest):
+    if not render_slots.acquire(blocking=False):
+        return JSONResponse({'errors':[{'message':'描画処理が混み合っています。少し待って再試行してください。','path':'','line':None,'column':None}]},status_code=429,headers={'Retry-After':'1'})
     try:
-        model = load_model(request.yaml_text)
+        # Validate the COMPLETE input before applying any display filters.
+        model,ix = load_model(request.yaml_text,with_index=True)
         layers = None if request.view == 'all' else [request.view]
-        svg = render(model, layers=layers, show_bindings=request.show_bindings)
-        return {'svg':svg,'devices':[{'id':d['id'],'name':d.get('name',d['id'])} for d in model['devices']],
-                'counts':{'devices':len(model['devices']), 'links':len(model['l1']['links']), 'vlans':len(model['l2']['vlans'])}}
+        projected,display,catalog = prepare_view(model,ix,request.scope,layers,request.show_bindings)
+        svg = render(projected,layers=layers,show_bindings=request.show_bindings,context_notes=display['context_notes']) if display['status']=='ready' else ''
+        if len(svg.encode('utf-8'))>MAX_SVG_BYTES:
+            svg='';display['status']='too_large';display['message']='SVGの容量上限を超えています。表示範囲をさらに絞り込んでください。'
+        return {'svg':svg,'devices':[{'id':d['id'],'name':d.get('name') or d['id'],'site':str(d.get('location',{}).get('site','')),'groups':d.get('groups',[])} for d in ix['devices'].values()],
+                'visible_devices':[d['id'] for d in projected['devices']],
+                'counts':{'devices':len(model['devices']),'links':len(model['l1']['links']),'vlans':len(model['l2']['vlans'])},
+                'display':display,'catalog':catalog,'limits':limits()}
     except ModelError as exc:
         return JSONResponse({'errors':[{'message':str(exc),'path':exc.path,'line':exc.line,'column':exc.column}]}, status_code=422)
+    finally:
+        render_slots.release()
+
 
 
 # Serving is local and bundled; no CDN, storage service, or external fonts are used.

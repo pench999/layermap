@@ -1,0 +1,164 @@
+"""Whole-model validation is separate from a bounded, explicit drawing projection."""
+from collections import Counter, defaultdict, deque
+from typing import Literal
+from pydantic import Field
+from network_model import Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS
+
+MAX_VIEW_DEVICES = 24
+MAX_VIEW_ROWS = 200
+MAX_VIEW_CONNECTIONS = 400
+MAX_VIEW_ELEMENTS = 500
+MAX_VIEW_GROUPS = 80
+MAX_SVG_BYTES = 4 * 1024 * 1024
+MAX_HTTP_BYTES = 8 * 1024 * 1024
+MAX_RENDER_JOBS = 2
+
+
+class TraceRoot(Record):
+    layer: Literal['l1','l2','l3']
+    id: Id
+
+
+class ViewScope(Record):
+    # None means all; empty string means unassigned (valid names are nonempty).
+    site: str | None = Field(default=None, max_length=200)
+    group: str | None = Field(default=None, max_length=100)
+    device_ids: list[Id] = Field(default_factory=list, max_length=MAX_DEVICES)
+    trace_root: TraceRoot | None = None
+
+
+def limits():
+    return dict(yaml_bytes=MAX_YAML_BYTES, devices=MAX_DEVICES, elements=MAX_ELEMENTS,
+                view_devices=MAX_VIEW_DEVICES, view_rows=MAX_VIEW_ROWS,
+                view_connections=MAX_VIEW_CONNECTIONS, view_elements=MAX_VIEW_ELEMENTS,
+                view_groups=MAX_VIEW_GROUPS, svg_bytes=MAX_SVG_BYTES,
+                http_bytes=MAX_HTTP_BYTES, render_jobs=MAX_RENDER_JOBS)
+
+
+def element_count(model):
+    return (len(model['devices'])+sum(len(model[layer][key]) for layer,keys in
+            [('l1',['ports','links']),('l2',['vlans','interfaces','bridges']),('l3',['subnets','interfaces'])] for key in keys)
+            +len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
+
+
+def display_stats(model, layers=None, show_bindings=True):
+    wanted=set(layers or ['l1','l2','l3'])
+    rows=sum(len(model[layer]['ports' if layer=='l1' else 'interfaces']) for layer in wanted)
+    groups=connections=0
+    elements=len(model['devices'])
+    if 'l1' in wanted:
+        connections+=len(model['l1']['links'])
+        elements+=len(model['l1']['ports'])+len(model['l1']['links'])
+    if 'l2' in wanted:
+        groups+=len(model['l2']['vlans'])+len(model['l2']['bridges'])
+        elements+=len(model['l2']['interfaces'])+len(model['l2']['vlans'])+len(model['l2']['bridges'])
+        connections+=sum(1 if i['mode']=='access' else len(i.get('tagged_vlans',[])) for i in model['l2']['interfaces'])
+        connections+=sum(len(b['members']) for b in model['l2']['bridges'])
+    if 'l3' in wanted:
+        groups+=len(model['l3']['subnets'])
+        connections+=len(model['l3']['interfaces'])
+        elements+=len(model['l3']['interfaces'])+len(model['l3']['subnets'])+len(model['l3'].get('routes',[]))
+    if show_bindings:
+        for upper,lower,key in [('l3','l2','l3_to_l2'),('l2','l1','l2_to_l1')]:
+            if upper in wanted and lower in wanted:
+                connections+=len(model['bindings'][key]);elements+=len(model['bindings'][key])
+    return dict(devices=len(model['devices']),rows=rows,connections=connections,
+                elements=elements,groups=groups)
+
+
+def budget_errors(stats):
+    caps={'devices':MAX_VIEW_DEVICES,'rows':MAX_VIEW_ROWS,'connections':MAX_VIEW_CONNECTIONS,
+          'elements':MAX_VIEW_ELEMENTS,'groups':MAX_VIEW_GROUPS}
+    labels={'devices':'機器','rows':'行','connections':'接続・所属','elements':'構成要素','groups':'VLAN・ブリッジ・サブネット'}
+    return [f'{labels[k]} {stats[k]}/{cap}' for k,cap in caps.items() if stats[k]>cap]
+
+
+def require_display_budget(model, layers=None, show_bindings=True):
+    problems=budget_errors(display_stats(model,layers,show_bindings))
+    if problems:
+        raise ModelError('描画上限を超えています（'+', '.join(problems)+'）。拠点・機器群・機器・対応関係で表示を絞り込んでください')
+
+
+def site_of(device):
+    value=device.get('location',{}).get('site')
+    return '' if value is None else str(value)
+
+
+def binding_component(model, root, ix):
+    section='l1.ports' if root.layer=='l1' else root.layer+'.interfaces'
+    if root.id not in ix[section]:
+        raise ModelError('対応関係の起点が見つかりません','scope.trace_root.id')
+    adjacency=defaultdict(list)
+    for upper,lower,key,ak,bk in [('l3','l2','l3_to_l2','l3_interface','l2_interface'),('l2','l1','l2_to_l1','l2_interface','physical_port')]:
+        for binding in model['bindings'][key]:
+            a,b=(upper,binding[ak]),(lower,binding[bk])
+            adjacency[a].append(b);adjacency[b].append(a)
+    start=(root.layer,root.id)
+    seen={start};queue=deque([start])
+    while queue:
+        for node in adjacency[queue.popleft()]:
+            if node not in seen:seen.add(node);queue.append(node)
+    return seen
+
+
+def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
+    scope=scope or ViewScope()
+    all_devices=list(ix['devices'].values())
+    chosen=[d for d in all_devices if
+            (scope.site is None or site_of(d)==scope.site) and
+            (scope.group is None or (scope.group in d.get('groups',[]) if scope.group else not d.get('groups'))) and
+            (not scope.device_ids or d['id'] in scope.device_ids)]
+    # The full catalog stays available even when the current view is too large.
+    catalog={'sites':sorted({site_of(d) for d in all_devices}),
+             'groups':sorted({g for d in all_devices for g in (d.get('groups') or [''])}),
+             'focus_options':[]}
+    if len(chosen)==1:
+        for layer,key in [('l1','l1.ports'),('l2','l2.interfaces'),('l3','l3.interfaces')]:
+            for item in ix[key].values():
+                if item['device']!=chosen[0]['id']:continue
+                value=(item.get('name') or item['id'].split('.')[-1]) if layer=='l1' else item['address'] if layer=='l3' else 'VLAN '+', '.join(str(ix['l2.vlans'][v]['tag']) for v in ([item['untagged_vlan']] if item['mode']=='access' else item['tagged_vlans']))
+                catalog['focus_options'].append(dict(layer=layer,id=item['id'],label=layer.upper()+' / '+value+' / '+item['id']))
+    nodes=binding_component(model,scope.trace_root,ix) if scope.trace_root else None
+    scoped=scope.site is not None or scope.group is not None or bool(scope.device_ids) or nodes is not None
+    if nodes is not None:
+        owners={ix['l1.ports' if layer=='l1' else layer+'.interfaces'][identity]['device'] for layer,identity in nodes}
+        chosen=[d for d in chosen if d['id'] in owners]
+    owners={d['id'] for d in chosen}
+    def items(layer,key):
+        return [dict(i) for i in ix[layer+'.'+key].values() if i['device'] in owners and (nodes is None or (layer,i['id']) in nodes)]
+    ports=items('l1','ports');l2=items('l2','interfaces');l3=items('l3','interfaces')
+    port_ids={i['id'] for i in ports};l2_ids={i['id'] for i in l2};l3_ids={i['id'] for i in l3}
+    links=[dict(l) for l in ix['l1.links'].values() if all(p in port_ids for p in l['endpoints'])]
+    boundary=[]
+    for link in ix['l1.links'].values():
+        if sum(p in port_ids for p in link['endpoints'])==1:
+            local=next(p for p in link['endpoints'] if p in port_ids)
+            remote=next(p for p in link['endpoints'] if p not in port_ids)
+            boundary.append(dict(id=link['id'],local=local,remote=remote,remote_device=ix['l1.ports'][remote]['device']))
+    vlan_ids={v for i in l2 for v in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])}
+    subnet_ids={i['subnet'] for i in l3}
+    bridges=[]
+    for bridge in ix['l2.bridges'].values():
+        if bridge['device'] in owners:
+            members=[m for m in bridge['members'] if m in l2_ids]
+            if members or not scoped:bridges.append(dict(bridge,members=members))
+    notes=[]
+    if scoped:
+        notes.insert(0,'表示範囲を絞り込んでいます。構成全体のYAMLは保持されています。')
+        if boundary:notes.insert(1,f'範囲外に接続するケーブル{len(boundary)}本は図から省略しています。接続先は画面の範囲外接続一覧で確認してください。')
+    projected={'schema':model['schema'],'name':model.get('name','LAN'),'scope':model.get('scope','社内LAN'),
+       'devices':chosen,'l1':{'ports':ports,'links':links},
+       'l2':{'interfaces':l2,'vlans':[dict(v) for v in ix['l2.vlans'].values() if not scoped or v['id'] in vlan_ids],'bridges':bridges},
+       'l3':{'interfaces':l3,'subnets':[dict(s) for s in ix['l3.subnets'].values() if not scoped or s['id'] in subnet_ids],
+             'routes':[r for r in model['l3'].get('routes',[]) if r['interface'] in l3_ids]},
+       'bindings':{'l2_to_l1':[b for b in model['bindings']['l2_to_l1'] if b['l2_interface'] in l2_ids and b['physical_port'] in port_ids],
+                   'l3_to_l2':[b for b in model['bindings']['l3_to_l2'] if b['l3_interface'] in l3_ids and b['l2_interface'] in l2_ids]},
+       'notes':list(model.get('notes',[]))}
+    stats=display_stats(projected,layers,show_bindings)
+    problems=budget_errors(stats)
+    status='empty' if not chosen else 'too_large' if problems else 'ready'
+    message=('該当する機器・対応関係がありません。表示条件を変更してください。' if status=='empty' else
+             '描画上限を超えています（'+', '.join(problems)+'）。拠点・機器群・機器・対応関係で絞り込んでください。' if problems else '')
+    metadata={'status':status,'counts':stats,'message':message,'filtered':scoped,
+              'context_notes':notes,'boundary_links':{'total':len(boundary),'items':boundary[:100],'has_more':len(boundary)>100}}
+    return projected,metadata,catalog

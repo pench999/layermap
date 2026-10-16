@@ -1,0 +1,182 @@
+{
+  "parallel": {
+    "wall_ms": 1498.8000030517578,
+    "jobs": [
+      {
+        "status": 200,
+        "display": "ready",
+        "finished_ms": 1460
+      },
+      {
+        "status": 200,
+        "display": "ready",
+        "finished_ms": 1498.8000030517578
+      }
+    ]
+  },
+  "note": "Chromium in Docker; API + JSON + DOM + double requestAnimationFrame; 3 runs per synthetic case",
+  "runs": [
+    {
+      "name": "24-devices",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 24,
+        "rows": 144,
+        "connections": 252,
+        "elements": 325,
+        "groups": 49
+      },
+      "api_ms": 66.0999984741211,
+      "svg_dom_paint_ms": 522.8000030517578,
+      "total_ms": 588.9000015258789,
+      "svg_bytes": 795431,
+      "dom_nodes": 3736
+    },
+    {
+      "name": "24-devices",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 24,
+        "rows": 144,
+        "connections": 252,
+        "elements": 325,
+        "groups": 49
+      },
+      "api_ms": 70.19999694824219,
+      "svg_dom_paint_ms": 508.5,
+      "total_ms": 578.6999969482422,
+      "svg_bytes": 795431,
+      "dom_nodes": 3736
+    },
+    {
+      "name": "24-devices",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 24,
+        "rows": 144,
+        "connections": 252,
+        "elements": 325,
+        "groups": 49
+      },
+      "api_ms": 85.80000305175781,
+      "svg_dom_paint_ms": 517.6999969482422,
+      "total_ms": 603.5,
+      "svg_bytes": 795431,
+      "dom_nodes": 3736
+    },
+    {
+      "name": "64-vlan-trunk",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 1,
+        "rows": 12,
+        "connections": 272,
+        "elements": 87,
+        "groups": 66
+      },
+      "api_ms": 29,
+      "svg_dom_paint_ms": 264.5999984741211,
+      "total_ms": 293.5999984741211,
+      "svg_bytes": 419373,
+      "dom_nodes": 1913
+    },
+    {
+      "name": "64-vlan-trunk",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 1,
+        "rows": 12,
+        "connections": 272,
+        "elements": 87,
+        "groups": 66
+      },
+      "api_ms": 25.70000457763672,
+      "svg_dom_paint_ms": 266.0999984741211,
+      "total_ms": 291.8000030517578,
+      "svg_bytes": 419373,
+      "dom_nodes": 1913
+    },
+    {
+      "name": "64-vlan-trunk",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 1,
+        "rows": 12,
+        "connections": 272,
+        "elements": 87,
+        "groups": 66
+      },
+      "api_ms": 31.199996948242188,
+      "svg_dom_paint_ms": 262.5,
+      "total_ms": 293.6999969482422,
+      "svg_bytes": 419373,
+      "dom_nodes": 1913
+    },
+    {
+      "name": "256-devices-group",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 4,
+        "rows": 88,
+        "connections": 142,
+        "elements": 159,
+        "groups": 9
+      },
+      "api_ms": 700.4000015258789,
+      "svg_dom_paint_ms": 223.0999984741211,
+      "total_ms": 923.5,
+      "svg_bytes": 406408,
+      "dom_nodes": 1939
+    },
+    {
+      "name": "256-devices-group",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 4,
+        "rows": 88,
+        "connections": 142,
+        "elements": 159,
+        "groups": 9
+      },
+      "api_ms": 2253.599998474121,
+      "svg_dom_paint_ms": 213.60000610351562,
+      "total_ms": 2467.2000045776367,
+      "svg_bytes": 406408,
+      "dom_nodes": 1939
+    },
+    {
+      "name": "256-devices-group",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 4,
+        "rows": 88,
+        "connections": 142,
+        "elements": 159,
+        "groups": 9
+      },
+      "api_ms": 667.9000015258789,
+      "svg_dom_paint_ms": 225.3000030517578,
+      "total_ms": 893.2000045776367,
+      "svg_bytes": 406408,
+      "dom_nodes": 1939
+    }
+  ]
+}

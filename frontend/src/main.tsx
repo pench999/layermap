@@ -7,16 +7,19 @@ import {yaml} from '@codemirror/lang-yaml';
 import {setDiagnostics} from '@codemirror/lint';
 import './style.css';
 import {Help, type Sample} from './Help';
+import {ScopeControls} from './ScopeControls';
+import {emptyScope,defaultLimits,sizeLabel,type Scope,type Result,type Limits} from './scope';
 import {endpointKey,traceFromSvg,type Endpoint,type Trace} from './trace';
 
 type Issue = {message:string; path:string; line:number|null; column:number|null};
-type Result = {svg:string; devices:{id:string;name:string}[]; counts:{devices:number;links:number;vlans:number}};
 type View = 'all'|'l1'|'l2'|'l3';
 const encoder = new TextEncoder();
-const maxBytes = 262144;
+
 const LABELS = {all:'全レイヤー',l1:'L1 物理',l2:'L2 VLAN',l3:'L3 IP'};
 
 function App() {
+  const [scope,setScope]=useState<Scope>(emptyScope);
+  const [limits,setLimits]=useState<Limits>(defaultLimits);
   const [source,setSource] = useState('');
   const [filename,setFilename] = useState('lan-sample.yaml');
   const [view,setView] = useState<View>('all');
@@ -60,13 +63,13 @@ function App() {
   const changeSource = (value:string, user=true) => {
     if(value!==sourceRef.current){
       invalidate(); sourceRef.current = value; latest.current.source=value;
-      setSource(value);
+      setSource(value);setScope(s=>s.trace_root?{...s,trace_root:null}:s);
     }
     dirtyRef.current=user && value!==saved.current;
     setDirty(dirtyRef.current);
   };
   const replaceSource = (value:string) => {
-    invalidate();setRenderEpoch(n=>n+1);
+    invalidate();setScope(emptyScope());setRenderEpoch(n=>n+1);
     changeSource(value,false); saved.current=value; dirtyRef.current=false; setDirty(false);
     const ed = editor.current;
     if(ed) ed.dispatch({changes:{from:0,to:ed.state.doc.length,insert:value}});
@@ -83,6 +86,7 @@ function App() {
     ]})});
     editor.current=ed;
     let active=true;
+    fetch('/api/limits').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)setLimits(data);}).catch(()=>{});
     fetch('/api/samples').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)setSamples(data.samples);}).catch(()=>{if(active)setSampleError('サンプル一覧を取得できません。画面を再読み込みしてください。');});
     fetch('/api/sample').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)replaceSource(data.yaml_text);}).catch(()=>{if(active){setPhase('invalid');setIssues([{message:'サンプルを読み込めません。接続を確認して再読み込みしてください。',path:'',line:null,column:null}]);}});
     return ()=>{active=false;ed.destroy();editor.current=null;};
@@ -95,22 +99,27 @@ function App() {
     const controller=new AbortController(); currentController.current=controller;
     const timer=window.setTimeout(async()=>{
       try {
-        if(encoder.encode(source).length>maxBytes)throw new Error('YAMLは256 KiB以下にしてください');
-        const response=await fetch('/api/render',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({yaml_text:source,view,show_bindings:bindings}),signal:controller.signal});
+        if(encoder.encode(source).length>limits.yaml_bytes)throw new Error('YAMLは'+sizeLabel(limits.yaml_bytes)+'以下にしてください');
+        let response:Response;
+        for(let attempt=0;;attempt++){
+          response=await fetch('/api/render',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({yaml_text:source,view,show_bindings:bindings,scope}),signal:controller.signal});
+          if(response.status!==429||attempt>=9)break;
+          await new Promise<void>((resolve,reject)=>{const stop=()=>{window.clearTimeout(wait);reject(new DOMException('Aborted','AbortError'));};const wait=window.setTimeout(()=>{controller.signal.removeEventListener('abort',stop);resolve();},1000);controller.signal.addEventListener('abort',stop,{once:true});if(controller.signal.aborted)stop();});
+        }
         const body=await response.json();
         if(revision!==sequence.current)return;
         if(!response.ok){pendingTrace.current=null;setIssues(body.errors??[{message:'描画できませんでした',path:'',line:null,column:null}]);setPhase('invalid');return;}
         const restore=pendingTrace.current;
-        clearBinding();setResult(body);setIssues([]);setPhase('valid');
+        clearBinding();setResult(body);setLimits(body.limits);setIssues([]);setPhase('valid');
         if(restore&&restore.source===source&&view==='all'&&bindings){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(body.svg,restore.root));}
       } catch(error) {
         if(controller.signal.aborted || revision!==sequence.current)return;
         pendingTrace.current=null;
-        setIssues([{message:error instanceof Error && error.message.includes('KiB')?error.message:'サーバーへ接続できません。編集内容を保存して、接続を確認してください。',path:'',line:null,column:null}]);setPhase('invalid');
+        setIssues([{message:error instanceof Error && /[KM]iB/.test(error.message)?error.message:'サーバーへ接続できません。編集内容を保存して、接続を確認してください。',path:'',line:null,column:null}]);setPhase('invalid');
       }
     },500);
     return ()=>{window.clearTimeout(timer);controller.abort();};
-  },[source,view,bindings,renderEpoch]);
+  },[source,view,bindings,scope,limits.yaml_bytes,renderEpoch]);
 
   useEffect(()=>{
     const ed=editor.current;if(!ed)return;
@@ -123,8 +132,8 @@ function App() {
     if(!canvas.current || !result)return;
     const nodes=canvas.current.querySelectorAll<SVGGElement>('g[data-device]');
     nodes.forEach(n=>{n.classList.toggle('selected-device',!!selected && n.dataset.device===selected);n.classList.toggle('other-device',!!selected && n.dataset.device!==selected);});
-    if(selected && !result.devices.some(d=>d.id===selected))setSelected('');
-    if(fitPending.current && viewport.current){setZoom(Math.min(1,(viewport.current.clientWidth-64)/dimensions.width));fitPending.current=false;}
+    if(selected && !result.visible_devices.includes(selected))setSelected('');
+    if(result.svg && fitPending.current && viewport.current){setZoom(Math.min(1,(viewport.current.clientWidth-64)/dimensions.width));fitPending.current=false;}
   },[result,selected]);
 
   useEffect(()=>{
@@ -167,7 +176,7 @@ function App() {
   const download=(body:string,name:string,type:string)=>{const url=URL.createObjectURL(new Blob([body],{type}));const anchor=document.createElement('a');anchor.href=url;anchor.download=name;anchor.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);};
   const saveYaml=()=>{download(source,filename,'application/yaml;charset=utf-8');saved.current=source;dirtyRef.current=false;setDirty(false);setNotice('YAMLをダウンロードしました');};
   const fit=()=>{if(viewport.current)setZoom(Math.max(.1,Math.min(1,(viewport.current.clientWidth-64)/dimensions.width,(viewport.current.clientHeight-64)/dimensions.height)));};
-  const openFile=async(e:React.ChangeEvent<HTMLInputElement>)=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(f.size>maxBytes){setNotice('ファイルは256 KiB以下にしてください');return;}if(dirty&&!window.confirm('未保存の編集内容を置き換えますか？'))return;replaceSource(await f.text());setFilename(f.name);setNotice('ファイルを読み込みました');};
+  const openFile=async(e:React.ChangeEvent<HTMLInputElement>)=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(f.size>limits.yaml_bytes){setNotice('ファイルは'+sizeLabel(limits.yaml_bytes)+'以下にしてください');return;}if(dirty&&!window.confirm('未保存の編集内容を置き換えますか？'))return;replaceSource(await f.text());setFilename(f.name);setNotice('ファイルを読み込みました');};
   const loadSample=async(id:string):Promise<boolean>=>{
     if(sampleBusy.current)return false;
     if(dirtyRef.current&&!window.confirm('未保存の編集内容をサンプルで置き換えますか？'))return false;
@@ -186,6 +195,11 @@ function App() {
       setSampleError('サンプルの読み込みに失敗しました。編集内容は保持されています。もう一度お試しください。');
       return false;
     }finally{sampleBusy.current=false;setSampleLoading(false);}
+  };
+  const changeScope=(next:Scope)=>{invalidate();setSelected('');setScope(next);fitPending.current=true;};
+  const focusScope=(root:Endpoint|null)=>{
+    changeScope({...scope,trace_root:root});
+    if(root){pendingTrace.current={root,source:sourceRef.current};setView('all');setBindings(true);}
   };
   const startTrace=(root:Endpoint,row:SVGGElement)=>{
     if(selectedTrace&&endpointKey(selectedTrace.root)===endpointKey(root)){clearBinding();return;}
@@ -233,6 +247,13 @@ function App() {
     const left=box.left<frame.left+8||box.right>frame.right-8?pane.scrollLeft+(box.left+box.right-frame.left-frame.right)/2:pane.scrollLeft;
     pane.scrollTo({top,left,behavior:'instant'});
   };
+  const focusSelectedBinding=()=>{
+    const group=Array.from(canvas.current?.querySelectorAll<SVGGElement>('.binding-group')??[]).find(g=>g.dataset.bindingKey===selectedBinding?.key);
+    const edge=group?.querySelector('.binding-edge');
+    const layer=edge?.getAttribute('data-from-layer') as Endpoint['layer'];
+    const id=edge?.getAttribute('data-from');
+    if(layer&&id)focusScope({layer,id});
+  };
   const showBindingEnd=(upper:boolean)=>{
     if(!selectedBinding||!canvas.current)return;
     const group=Array.from(canvas.current.querySelectorAll<SVGGElement>('.binding-group')).find(g=>g.dataset.bindingKey===selectedBinding.key);
@@ -259,7 +280,7 @@ function App() {
         <input ref={file} type="file" accept=".yaml,.yml,text/yaml,application/yaml" onChange={openFile} hidden/>
         <button onClick={()=>file.current?.click()}><span aria-hidden="true">↥</span> YAMLを開く</button>
         <button id="save-yaml" onClick={saveYaml}><span aria-hidden="true">↓</span> YAMLを保存</button>
-        <button className="primary" disabled={!result||phase!=='valid'} onClick={()=>result&&download(result.svg,filename.replace(/\.(yaml|yml)$/i,'')+'-'+view+'.svg','image/svg+xml;charset=utf-8')}>SVGを書き出す <span aria-hidden="true">↗</span></button>
+        <button className="primary" disabled={!result?.svg||phase!=='valid'} onClick={()=>result&&download(result.svg,filename.replace(/\.(yaml|yml)$/i,'')+'-'+view+'.svg','image/svg+xml;charset=utf-8')}>SVGを書き出す <span aria-hidden="true">↗</span></button>
       </div>
     </header>
     <section className="workspace-heading">
@@ -276,17 +297,18 @@ function App() {
         <div className="panel-header"><div><span className="file-icon">≡</span> 構成データ <span className="file-type">YAML</span></div><span className={'saved '+(dirty?'unsaved':'')}>{dirty?'● 未保存':'保存済み'}</span></div>
         <div className="filename-row"><span>{filename}</span><span>{encoder.encode(source).length.toLocaleString()} bytes</span></div>
         <div className="editor" ref={editorMount}/>
-        <div className="editor-bottom"><span>UTF-8</span><span>256 KiBまで · Ctrl / ⌘ + S で保存</span></div>
+        <div className="editor-bottom"><span>UTF-8</span><span>{sizeLabel(limits.yaml_bytes)}まで · Ctrl / ⌘ + S で保存</span></div>
       </section>
       <section className="preview-panel" aria-label="ネットワーク図" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();clearBinding();}}}>
         <div className="preview-toolbar">
           <div className="tabs" role="tablist" aria-label="表示レイヤー">{(Object.keys(LABELS) as View[]).map(v=><button key={v} role="tab" aria-selected={view===v} className={view===v?'active':''} onClick={()=>{if(v!==view){invalidate();latest.current.view=v;setView(v);fitPending.current=true;}}}>{LABELS[v]}</button>)}</div>
           <label className="toggle-label"><input type="checkbox" checked={bindings} disabled={view!=='all'} onChange={e=>{invalidate();latest.current.bindings=e.target.checked;setBindings(e.target.checked);}}/><span className="toggle-track"/> 層間対応</label>
         </div>
-        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
-        {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}
+        <ScopeControls scope={scope} result={result} limits={limits} pending={phase!=='valid'} onChange={changeScope} onFocus={focusScope}/>
+        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.filter(d=>result.visible_devices.includes(d.id)).map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={focusSelectedBinding}>この対応の関連行だけを表示</button><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}
         {selectedTrace&&<section className="trace-selection" aria-label="層間対応の追跡">
-          <div className="trace-heading"><strong aria-live="polite">起点 {selectedTrace.root.layer.toUpperCase()} / {selectedTrace.root.id} · {selectedTrace.nodes.length}行・{selectedTrace.edges.length}対応</strong><button onClick={clearBinding}>追跡の強調を解除</button></div>
+          <div className="trace-heading"><strong aria-live="polite">起点 {selectedTrace.root.layer.toUpperCase()} / {selectedTrace.root.id} · {selectedTrace.nodes.length}行・{selectedTrace.edges.length}対応</strong><button onClick={()=>focusScope(selectedTrace.root)}>この対応だけを表示</button><button onClick={clearBinding}>追跡の強調を解除</button></div>
           <p>層間対応を双方向に追跡。同じポートを共有する対応も含み、通信可能性を意味しません。</p>
           <details className="trace-details" open key={endpointKey(selectedTrace.root)}><summary>関連する行と対応（行名で移動・対応名で個別に強調）</summary>
             <div className="trace-node-list">{(['l1','l2','l3'] as const).map(layer=><div key={layer}><strong>{layer.toUpperCase()}（{selectedTrace.nodes.filter(n=>n.layer===layer).length}行）</strong>{selectedTrace.nodes.filter(n=>n.layer===layer).map(node=><button key={endpointKey(node)} className={endpointKey(node)===endpointKey(selectedTrace.root)?'trace-origin':''} onClick={()=>showTraceNode(node)}>{node.id}{endpointKey(node)===endpointKey(selectedTrace.root)?'（起点）':''} · 対応{node.degree}件</button>)}</div>)}</div>
@@ -294,15 +316,15 @@ function App() {
           </details>
         </section>}
         <div className="viewport" ref={viewport}>
-          {phase!=='valid'&&result&&<div className={'stale-banner '+(phase==='invalid'?'error':'')} role="status">{phase==='invalid'?'現在のYAMLは未反映です。最後に正常生成した図を表示しています。':'更新待ち · 最後に正常生成した図を表示しています。'}</div>}
-          {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}
+          {phase!=='valid'&&result?.svg&&<div className={'stale-banner '+(phase==='invalid'?'error':'')} role="status">{phase==='invalid'?'現在のYAMLは未反映です。最後に正常生成した図を表示しています。':'更新待ち · 最後に正常生成した図を表示しています。'}</div>}
+          {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:!result.svg?<div className="empty-state" aria-label="表示範囲の案内"><span className="empty-glyph">▱</span><h2>{result.display.status==='empty'?'表示対象がありません':'表示範囲を絞り込んでください'}</h2><p>{result.display.message}</p><p>構成全体の検証は完了しています。上の「表示範囲」で条件を選んでください。</p></div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}
         </div>
         <div className="preview-bottom"><div className="legend"><span><i className="line-solid"/>レイヤー内の関係</span><span><i className="line-dash"/>層間の対応（選択可）</span></div><div className="zoom-controls"><button aria-label="縮小" onClick={()=>setZoom(z=>Math.max(.1,z-.1))}>−</button><span>{Math.round(zoom*100)}%</span><button aria-label="拡大" onClick={()=>setZoom(z=>Math.min(2,z+.1))}>＋</button><button onClick={fit}>全体表示</button></div></div>
       </section>
     </main>
-    <section className={'validation '+phase} aria-live="polite" aria-label="検証結果"><div className="validation-title"><span className="status-icon">{phase==='valid'?'✓':phase==='invalid'?'!':'◌'}</span><strong>{phase==='valid'?'検証済み':phase==='invalid'?'入力を確認してください':phase==='loading'?'読み込み中':'更新待ち'}</strong>{phase==='valid'&&result&&<span className="counts">{result.counts.devices} 機器 <b>·</b> {result.counts.links} ケーブル <b>·</b> {result.counts.vlans} VLAN</span>}<span className="validation-hint">{phase==='valid'?'最新のYAMLを図面に反映しました':'編集が止まると自動で検証します'}</span></div>{issues.map((issue,n)=><button className="issue" key={n} onClick={()=>jump(issue)}>{issue.line&&<span>{issue.line}行{issue.column?':'+issue.column:''}</span>}<code>{issue.path}</code>{issue.message}</button>)}</section>
+    <section className={'validation '+phase} aria-live="polite" aria-label="検証結果"><div className="validation-title"><span className="status-icon">{phase==='valid'?'✓':phase==='invalid'?'!':'◌'}</span><strong>{phase==='valid'?'検証済み':phase==='invalid'?'入力を確認してください':phase==='loading'?'読み込み中':'更新待ち'}</strong>{phase==='valid'&&result&&<span className="counts">{result.counts.devices} 機器 <b>·</b> {result.counts.links} ケーブル <b>·</b> {result.counts.vlans} VLAN</span>}<span className="validation-hint">{phase==='valid'?(result?.svg?'最新のYAMLを選択範囲の図面に反映しました':'構成は有効です。描画する範囲を選んでください'):'編集が止まると自動で検証します'}</span></div>{issues.map((issue,n)=><button className="issue" key={n} onClick={()=>jump(issue)}>{issue.line&&<span>{issue.line}行{issue.column?':'+issue.column:''}</span>}<code>{issue.path}</code>{issue.message}</button>)}</section>
     <footer><span>LayerMap <b>·</b> 構成の意味を、ひとつに。</span><span>YAMLは描画のためサーバーへ送信されます。永続保存はしません。</span></footer>
-    {helpOpen&&<Help samples={samples} loading={sampleLoading} error={sampleError} onClose={()=>setHelpOpen(false)} onLoadSample={loadSample}/>}
+    {helpOpen&&<Help limits={limits} samples={samples} loading={sampleLoading} error={sampleError} onClose={()=>setHelpOpen(false)} onLoadSample={loadSample}/>}
     {notice&&<div className="toast" role="status" onClick={()=>setNotice('')}>{notice}<button aria-label="通知を閉じる" onClick={()=>setNotice('')}>×</button></div>}
   </div>;
 }

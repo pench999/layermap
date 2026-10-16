@@ -1,0 +1,982 @@
+{
+  "environment": {
+    "python": "3.12.15",
+    "yaml": "6.0.3",
+    "libyaml": true,
+    "platform": "Linux-6.1.0-28-amd64-x86_64-with-glibc2.36",
+    "cpu_quota": "1 CPU",
+    "memory_limit_mib": 512
+  },
+  "limits": {
+    "yaml_bytes": 2097152,
+    "devices": 256,
+    "elements": 10000,
+    "view_devices": 24,
+    "view_rows": 200,
+    "view_connections": 400,
+    "view_elements": 500,
+    "view_groups": 80,
+    "svg_bytes": 4194304,
+    "http_bytes": 8388608,
+    "render_jobs": 2
+  },
+  "repeats": 3,
+  "cases": [
+    {
+      "name": "small",
+      "runs": [
+        {
+          "yaml_bytes": 4236,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 3.4,
+          "projection_ms": 0.07,
+          "render_ms": 3.74,
+          "total_ms": 7.22,
+          "svg_bytes": 137970,
+          "process_rss_mib": 38.72,
+          "wall_ms": 590.34
+        },
+        {
+          "yaml_bytes": 4236,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 3.35,
+          "projection_ms": 0.07,
+          "render_ms": 3.68,
+          "total_ms": 7.11,
+          "svg_bytes": 137970,
+          "process_rss_mib": 38.71,
+          "wall_ms": 566.34
+        },
+        {
+          "yaml_bytes": 4236,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 3.45,
+          "projection_ms": 0.08,
+          "render_ms": 3.68,
+          "total_ms": 7.2,
+          "svg_bytes": 137970,
+          "process_rss_mib": 38.57,
+          "wall_ms": 564.33
+        }
+      ],
+      "median_ms": 7.2,
+      "max_ms": 7.22,
+      "max_rss_mib": 38.72
+    },
+    {
+      "name": "view-24-devices",
+      "runs": [
+        {
+          "yaml_bytes": 24048,
+          "status": "ready",
+          "devices": 24,
+          "elements": 325,
+          "display": {
+            "devices": 24,
+            "rows": 144,
+            "connections": 252,
+            "elements": 325,
+            "groups": 49
+          },
+          "parse_ms": 17.97,
+          "projection_ms": 0.18,
+          "render_ms": 33.76,
+          "total_ms": 51.91,
+          "svg_bytes": 809382,
+          "process_rss_mib": 40.5,
+          "wall_ms": 609.3
+        },
+        {
+          "yaml_bytes": 24048,
+          "status": "ready",
+          "devices": 24,
+          "elements": 325,
+          "display": {
+            "devices": 24,
+            "rows": 144,
+            "connections": 252,
+            "elements": 325,
+            "groups": 49
+          },
+          "parse_ms": 17.81,
+          "projection_ms": 0.17,
+          "render_ms": 28.83,
+          "total_ms": 46.81,
+          "svg_bytes": 809382,
+          "process_rss_mib": 40.52,
+          "wall_ms": 607.48
+        },
+        {
+          "yaml_bytes": 24048,
+          "status": "ready",
+          "devices": 24,
+          "elements": 325,
+          "display": {
+            "devices": 24,
+            "rows": 144,
+            "connections": 252,
+            "elements": 325,
+            "groups": 49
+          },
+          "parse_ms": 18.05,
+          "projection_ms": 0.16,
+          "render_ms": 33.75,
+          "total_ms": 51.96,
+          "svg_bytes": 809382,
+          "process_rss_mib": 40.21,
+          "wall_ms": 610.87
+        }
+      ],
+      "median_ms": 51.91,
+      "max_ms": 51.96,
+      "max_rss_mib": 40.52
+    },
+    {
+      "name": "view-168-rows",
+      "runs": [
+        {
+          "yaml_bytes": 22270,
+          "status": "ready",
+          "devices": 8,
+          "elements": 309,
+          "display": {
+            "devices": 8,
+            "rows": 168,
+            "connections": 284,
+            "elements": 309,
+            "groups": 17
+          },
+          "parse_ms": 16.39,
+          "projection_ms": 0.15,
+          "render_ms": 21.92,
+          "total_ms": 38.46,
+          "svg_bytes": 816331,
+          "process_rss_mib": 40.42,
+          "wall_ms": 599.27
+        },
+        {
+          "yaml_bytes": 22270,
+          "status": "ready",
+          "devices": 8,
+          "elements": 309,
+          "display": {
+            "devices": 8,
+            "rows": 168,
+            "connections": 284,
+            "elements": 309,
+            "groups": 17
+          },
+          "parse_ms": 16.55,
+          "projection_ms": 0.15,
+          "render_ms": 22.06,
+          "total_ms": 38.76,
+          "svg_bytes": 816331,
+          "process_rss_mib": 40.68,
+          "wall_ms": 602.11
+        },
+        {
+          "yaml_bytes": 22270,
+          "status": "ready",
+          "devices": 8,
+          "elements": 309,
+          "display": {
+            "devices": 8,
+            "rows": 168,
+            "connections": 284,
+            "elements": 309,
+            "groups": 17
+          },
+          "parse_ms": 16.98,
+          "projection_ms": 0.16,
+          "render_ms": 22.56,
+          "total_ms": 39.69,
+          "svg_bytes": 816331,
+          "process_rss_mib": 40.36,
+          "wall_ms": 617.08
+        }
+      ],
+      "median_ms": 38.76,
+      "max_ms": 39.69,
+      "max_rss_mib": 40.68
+    },
+    {
+      "name": "view-216-rows-blocked",
+      "runs": [
+        {
+          "yaml_bytes": 27910,
+          "status": "too_large",
+          "devices": 8,
+          "elements": 389,
+          "display": {
+            "devices": 8,
+            "rows": 216,
+            "connections": 364,
+            "elements": 389,
+            "groups": 17
+          },
+          "parse_ms": 20.76,
+          "projection_ms": 0.18,
+          "render_ms": 0.0,
+          "total_ms": 20.94,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.55,
+          "wall_ms": 587.11
+        },
+        {
+          "yaml_bytes": 27910,
+          "status": "too_large",
+          "devices": 8,
+          "elements": 389,
+          "display": {
+            "devices": 8,
+            "rows": 216,
+            "connections": 364,
+            "elements": 389,
+            "groups": 17
+          },
+          "parse_ms": 20.84,
+          "projection_ms": 0.18,
+          "render_ms": 0.0,
+          "total_ms": 21.02,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.42,
+          "wall_ms": 598.47
+        },
+        {
+          "yaml_bytes": 27910,
+          "status": "too_large",
+          "devices": 8,
+          "elements": 389,
+          "display": {
+            "devices": 8,
+            "rows": 216,
+            "connections": 364,
+            "elements": 389,
+            "groups": 17
+          },
+          "parse_ms": 20.46,
+          "projection_ms": 0.17,
+          "render_ms": 0.0,
+          "total_ms": 20.63,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.68,
+          "wall_ms": 578.99
+        }
+      ],
+      "median_ms": 20.94,
+      "max_ms": 21.02,
+      "max_rss_mib": 38.68
+    },
+    {
+      "name": "dense-64-vlans",
+      "runs": [
+        {
+          "yaml_bytes": 5994,
+          "status": "ready",
+          "devices": 1,
+          "elements": 87,
+          "display": {
+            "devices": 1,
+            "rows": 12,
+            "connections": 272,
+            "elements": 87,
+            "groups": 66
+          },
+          "parse_ms": 5.15,
+          "projection_ms": 0.15,
+          "render_ms": 8.98,
+          "total_ms": 14.28,
+          "svg_bytes": 424327,
+          "process_rss_mib": 38.55,
+          "wall_ms": 573.89
+        },
+        {
+          "yaml_bytes": 5994,
+          "status": "ready",
+          "devices": 1,
+          "elements": 87,
+          "display": {
+            "devices": 1,
+            "rows": 12,
+            "connections": 272,
+            "elements": 87,
+            "groups": 66
+          },
+          "parse_ms": 5.19,
+          "projection_ms": 0.15,
+          "render_ms": 8.89,
+          "total_ms": 14.22,
+          "svg_bytes": 424327,
+          "process_rss_mib": 38.41,
+          "wall_ms": 577.02
+        },
+        {
+          "yaml_bytes": 5994,
+          "status": "ready",
+          "devices": 1,
+          "elements": 87,
+          "display": {
+            "devices": 1,
+            "rows": 12,
+            "connections": 272,
+            "elements": 87,
+            "groups": 66
+          },
+          "parse_ms": 5.23,
+          "projection_ms": 0.15,
+          "render_ms": 8.98,
+          "total_ms": 14.37,
+          "svg_bytes": 424327,
+          "process_rss_mib": 38.42,
+          "wall_ms": 574.77
+        }
+      ],
+      "median_ms": 14.28,
+      "max_ms": 14.37,
+      "max_rss_mib": 38.55
+    },
+    {
+      "name": "dense-over-budget",
+      "runs": [
+        {
+          "yaml_bytes": 8952,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 476,
+            "elements": 102,
+            "groups": 66
+          },
+          "parse_ms": 7.7,
+          "projection_ms": 0.21,
+          "render_ms": 0.0,
+          "total_ms": 7.91,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.41,
+          "wall_ms": 569.24
+        },
+        {
+          "yaml_bytes": 8952,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 476,
+            "elements": 102,
+            "groups": 66
+          },
+          "parse_ms": 7.81,
+          "projection_ms": 0.21,
+          "render_ms": 0.0,
+          "total_ms": 8.02,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.65,
+          "wall_ms": 571.62
+        },
+        {
+          "yaml_bytes": 8952,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 476,
+            "elements": 102,
+            "groups": 66
+          },
+          "parse_ms": 7.86,
+          "projection_ms": 0.21,
+          "render_ms": 0.0,
+          "total_ms": 8.07,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.57,
+          "wall_ms": 587.42
+        }
+      ],
+      "median_ms": 8.02,
+      "max_ms": 8.07,
+      "max_rss_mib": 38.65
+    },
+    {
+      "name": "dense-focused",
+      "runs": [
+        {
+          "yaml_bytes": 8952,
+          "status": "ready",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 68,
+            "elements": 72,
+            "groups": 66
+          },
+          "parse_ms": 8.0,
+          "projection_ms": 0.22,
+          "render_ms": 3.23,
+          "total_ms": 11.45,
+          "svg_bytes": 217342,
+          "process_rss_mib": 38.56,
+          "wall_ms": 579.14
+        },
+        {
+          "yaml_bytes": 8952,
+          "status": "ready",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 68,
+            "elements": 72,
+            "groups": 66
+          },
+          "parse_ms": 7.74,
+          "projection_ms": 0.22,
+          "render_ms": 3.21,
+          "total_ms": 11.17,
+          "svg_bytes": 217342,
+          "process_rss_mib": 38.58,
+          "wall_ms": 599.69
+        },
+        {
+          "yaml_bytes": 8952,
+          "status": "ready",
+          "devices": 1,
+          "elements": 102,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 68,
+            "elements": 72,
+            "groups": 66
+          },
+          "parse_ms": 7.88,
+          "projection_ms": 0.22,
+          "render_ms": 3.21,
+          "total_ms": 11.31,
+          "svg_bytes": 217342,
+          "process_rss_mib": 38.35,
+          "wall_ms": 620.29
+        }
+      ],
+      "median_ms": 11.31,
+      "max_ms": 11.45,
+      "max_rss_mib": 38.58
+    },
+    {
+      "name": "large-whole-blocked",
+      "runs": [
+        {
+          "yaml_bytes": 712009,
+          "status": "too_large",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 256,
+            "rows": 5519,
+            "connections": 9088,
+            "elements": 10000,
+            "groups": 513
+          },
+          "parse_ms": 627.9,
+          "projection_ms": 4.73,
+          "render_ms": 0.0,
+          "total_ms": 632.63,
+          "svg_bytes": 0,
+          "process_rss_mib": 71.79,
+          "wall_ms": 1199.39
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "too_large",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 256,
+            "rows": 5519,
+            "connections": 9088,
+            "elements": 10000,
+            "groups": 513
+          },
+          "parse_ms": 621.72,
+          "projection_ms": 4.76,
+          "render_ms": 0.0,
+          "total_ms": 626.49,
+          "svg_bytes": 0,
+          "process_rss_mib": 71.8,
+          "wall_ms": 1195.26
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "too_large",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 256,
+            "rows": 5519,
+            "connections": 9088,
+            "elements": 10000,
+            "groups": 513
+          },
+          "parse_ms": 837.63,
+          "projection_ms": 4.71,
+          "render_ms": 0.0,
+          "total_ms": 842.34,
+          "svg_bytes": 0,
+          "process_rss_mib": 71.79,
+          "wall_ms": 1409.36
+        }
+      ],
+      "median_ms": 632.63,
+      "max_ms": 842.34,
+      "max_rss_mib": 71.8
+    },
+    {
+      "name": "large-group",
+      "runs": [
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 8,
+            "rows": 176,
+            "connections": 284,
+            "elements": 317,
+            "groups": 17
+          },
+          "parse_ms": 668.74,
+          "projection_ms": 1.29,
+          "render_ms": 20.91,
+          "total_ms": 690.94,
+          "svg_bytes": 823712,
+          "process_rss_mib": 71.86,
+          "wall_ms": 1276.98
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 8,
+            "rows": 176,
+            "connections": 284,
+            "elements": 317,
+            "groups": 17
+          },
+          "parse_ms": 648.67,
+          "projection_ms": 1.32,
+          "render_ms": 20.97,
+          "total_ms": 670.96,
+          "svg_bytes": 823712,
+          "process_rss_mib": 71.76,
+          "wall_ms": 1242.28
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 8,
+            "rows": 176,
+            "connections": 284,
+            "elements": 317,
+            "groups": 17
+          },
+          "parse_ms": 619.88,
+          "projection_ms": 1.29,
+          "render_ms": 21.07,
+          "total_ms": 642.23,
+          "svg_bytes": 823712,
+          "process_rss_mib": 71.69,
+          "wall_ms": 1238.66
+        }
+      ],
+      "median_ms": 670.96,
+      "max_ms": 690.94,
+      "max_rss_mib": 71.86
+    },
+    {
+      "name": "large-focused",
+      "runs": [
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 9,
+            "groups": 3
+          },
+          "parse_ms": 627.01,
+          "projection_ms": 4.58,
+          "render_ms": 1.0,
+          "total_ms": 632.58,
+          "svg_bytes": 25161,
+          "process_rss_mib": 71.96,
+          "wall_ms": 1220.48
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 9,
+            "groups": 3
+          },
+          "parse_ms": 631.56,
+          "projection_ms": 4.36,
+          "render_ms": 0.99,
+          "total_ms": 636.91,
+          "svg_bytes": 25161,
+          "process_rss_mib": 71.86,
+          "wall_ms": 1204.46
+        },
+        {
+          "yaml_bytes": 712009,
+          "status": "ready",
+          "devices": 256,
+          "elements": 10000,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 9,
+            "groups": 3
+          },
+          "parse_ms": 632.65,
+          "projection_ms": 4.4,
+          "render_ms": 0.97,
+          "total_ms": 638.02,
+          "svg_bytes": 25161,
+          "process_rss_mib": 71.88,
+          "wall_ms": 1202.63
+        }
+      ],
+      "median_ms": 636.91,
+      "max_ms": 638.02,
+      "max_rss_mib": 71.96
+    },
+    {
+      "name": "large-long-names",
+      "runs": [
+        {
+          "yaml_bytes": 1554730,
+          "status": "ready",
+          "devices": 256,
+          "elements": 9857,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 35,
+            "elements": 39,
+            "groups": 3
+          },
+          "parse_ms": 634.59,
+          "projection_ms": 1.74,
+          "render_ms": 2.93,
+          "total_ms": 639.25,
+          "svg_bytes": 119565,
+          "process_rss_mib": 73.61,
+          "wall_ms": 1210.9
+        },
+        {
+          "yaml_bytes": 1554730,
+          "status": "ready",
+          "devices": 256,
+          "elements": 9857,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 35,
+            "elements": 39,
+            "groups": 3
+          },
+          "parse_ms": 646.24,
+          "projection_ms": 1.73,
+          "render_ms": 2.97,
+          "total_ms": 650.93,
+          "svg_bytes": 119565,
+          "process_rss_mib": 73.13,
+          "wall_ms": 1226.22
+        },
+        {
+          "yaml_bytes": 1554730,
+          "status": "ready",
+          "devices": 256,
+          "elements": 9857,
+          "display": {
+            "devices": 1,
+            "rows": 21,
+            "connections": 35,
+            "elements": 39,
+            "groups": 3
+          },
+          "parse_ms": 639.74,
+          "projection_ms": 1.76,
+          "render_ms": 2.95,
+          "total_ms": 644.45,
+          "svg_bytes": 119565,
+          "process_rss_mib": 72.94,
+          "wall_ms": 1249.74
+        }
+      ],
+      "median_ms": 644.45,
+      "max_ms": 650.93,
+      "max_rss_mib": 73.61
+    },
+    {
+      "name": "over-elements",
+      "runs": [
+        {
+          "yaml_bytes": 712044,
+          "status": "invalid",
+          "message": "要素数は合計10000以下にしてください",
+          "total_ms": 589.36,
+          "process_rss_mib": 71.85,
+          "wall_ms": 1159.15
+        },
+        {
+          "yaml_bytes": 712044,
+          "status": "invalid",
+          "message": "要素数は合計10000以下にしてください",
+          "total_ms": 594.21,
+          "process_rss_mib": 71.7,
+          "wall_ms": 1159.98
+        },
+        {
+          "yaml_bytes": 712044,
+          "status": "invalid",
+          "message": "要素数は合計10000以下にしてください",
+          "total_ms": 634.7,
+          "process_rss_mib": 71.65,
+          "wall_ms": 1202.23
+        }
+      ],
+      "median_ms": 594.21,
+      "max_ms": 634.7,
+      "max_rss_mib": 71.85
+    },
+    {
+      "name": "over-devices",
+      "runs": [
+        {
+          "yaml_bytes": 164635,
+          "status": "invalid",
+          "message": "List should have at most 256 items after validation, not 257",
+          "total_ms": 212.75,
+          "process_rss_mib": 43.4,
+          "wall_ms": 773.92
+        },
+        {
+          "yaml_bytes": 164635,
+          "status": "invalid",
+          "message": "List should have at most 256 items after validation, not 257",
+          "total_ms": 211.46,
+          "process_rss_mib": 43.39,
+          "wall_ms": 771.3
+        },
+        {
+          "yaml_bytes": 164635,
+          "status": "invalid",
+          "message": "List should have at most 256 items after validation, not 257",
+          "total_ms": 209.43,
+          "process_rss_mib": 43.42,
+          "wall_ms": 768.85
+        }
+      ],
+      "median_ms": 211.46,
+      "max_ms": 212.75,
+      "max_rss_mib": 43.42
+    },
+    {
+      "name": "exact-yaml-bytes",
+      "runs": [
+        {
+          "yaml_bytes": 2097152,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 32.94,
+          "projection_ms": 0.08,
+          "render_ms": 3.74,
+          "total_ms": 36.76,
+          "svg_bytes": 137970,
+          "process_rss_mib": 43.84,
+          "wall_ms": 599.76
+        },
+        {
+          "yaml_bytes": 2097152,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 32.7,
+          "projection_ms": 0.08,
+          "render_ms": 3.74,
+          "total_ms": 36.53,
+          "svg_bytes": 137970,
+          "process_rss_mib": 43.79,
+          "wall_ms": 621.83
+        },
+        {
+          "yaml_bytes": 2097152,
+          "status": "ready",
+          "devices": 4,
+          "elements": 55,
+          "display": {
+            "devices": 4,
+            "rows": 24,
+            "connections": 42,
+            "elements": 55,
+            "groups": 9
+          },
+          "parse_ms": 33.3,
+          "projection_ms": 0.08,
+          "render_ms": 3.71,
+          "total_ms": 37.09,
+          "svg_bytes": 137970,
+          "process_rss_mib": 44.52,
+          "wall_ms": 602.76
+        }
+      ],
+      "median_ms": 36.76,
+      "max_ms": 37.09,
+      "max_rss_mib": 44.52
+    },
+    {
+      "name": "over-yaml-bytes",
+      "runs": [
+        {
+          "yaml_bytes": 2097153,
+          "status": "invalid",
+          "message": "YAMLは2048 KiB以下にしてください",
+          "total_ms": 2.57,
+          "process_rss_mib": 44.12,
+          "wall_ms": 565.38
+        },
+        {
+          "yaml_bytes": 2097153,
+          "status": "invalid",
+          "message": "YAMLは2048 KiB以下にしてください",
+          "total_ms": 2.44,
+          "process_rss_mib": 43.99,
+          "wall_ms": 564.92
+        },
+        {
+          "yaml_bytes": 2097153,
+          "status": "invalid",
+          "message": "YAMLは2048 KiB以下にしてください",
+          "total_ms": 4.11,
+          "process_rss_mib": 44.14,
+          "wall_ms": 694.78
+        }
+      ],
+      "median_ms": 2.57,
+      "max_ms": 4.11,
+      "max_rss_mib": 44.14
+    }
+  ],
+  "parallel_two": {
+    "wall_ms": 10267.18,
+    "runs": [
+      {
+        "yaml_bytes": 712009,
+        "status": "ready",
+        "devices": 256,
+        "elements": 10000,
+        "display": {
+          "devices": 8,
+          "rows": 176,
+          "connections": 284,
+          "elements": 317,
+          "groups": 17
+        },
+        "parse_ms": 5964.33,
+        "projection_ms": 6.2,
+        "render_ms": 217.18,
+        "total_ms": 6187.71,
+        "svg_bytes": 823712,
+        "process_rss_mib": 71.56
+      },
+      {
+        "yaml_bytes": 712009,
+        "status": "ready",
+        "devices": 256,
+        "elements": 10000,
+        "display": {
+          "devices": 8,
+          "rows": 176,
+          "connections": 284,
+          "elements": 317,
+          "groups": 17
+        },
+        "parse_ms": 6016.55,
+        "projection_ms": 54.72,
+        "render_ms": 255.84,
+        "total_ms": 6327.11,
+        "svg_bytes": 823712,
+        "process_rss_mib": 71.66
+      }
+    ]
+  },
+  "container_peak_mib": 189.73
+}

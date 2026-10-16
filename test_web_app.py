@@ -6,7 +6,8 @@ from pathlib import Path
 import yaml
 from fastapi.testclient import TestClient
 from generate_diagram import render
-from network_model import load_model, ModelError
+from network_model import load_model, ModelError, MAX_YAML_BYTES
+from view_model import MAX_HTTP_BYTES
 from web_app import app
 
 
@@ -64,9 +65,9 @@ class WebTests(unittest.TestCase):
             self.assertEqual(self.request(text).status_code,422)
 
     def test_limits_duplicates_and_aliases(self):
-        for text in ['x'*262145,'schema: a\nschema: b', 'x: &a [1,2]\ny: *a']:
+        for text in ['x'*(MAX_YAML_BYTES+1),'schema: a\nschema: b', 'x: &a [1,2]\ny: *a']:
             self.assertEqual(self.request(text).status_code,422)
-        response = self.client.post('/api/render',content=b'x'*1048577,headers={'Content-Type':'application/json'})
+        response = self.client.post('/api/render',content=b'x'*(MAX_HTTP_BYTES+1),headers={'Content-Type':'application/json'})
         self.assertEqual(response.status_code,413)
 
     def test_unknown_fields_and_views_rejected_without_input_echo(self):

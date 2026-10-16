@@ -62,3 +62,20 @@ services:
         condition: service_healthy
     volumes:
       - ./artifacts/browser:/artifacts
+
+  benchmark:
+    profiles: [qa]
+    image: layermap-dev:local
+    working_dir: /workspace
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    volumes:
+      - .:/workspace:ro
+      - ./artifacts:/output
+    read_only: true
+    tmpfs: [/tmp:mode=1777]
+    network_mode: none
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 1.0
+    mem_limit: 512m
+    command: [python, bench_scale.py]

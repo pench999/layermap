@@ -1,6 +1,7 @@
 import {useEffect,useRef} from 'react';
+import {type Limits,sizeLabel} from './scope';
 export type Sample = {id:string;title:string;description:string;filename:string};
-type Props = {samples:Sample[];loading:boolean;error:string;onClose:()=>void;onLoadSample:(id:string)=>Promise<boolean>};
+type Props = {limits:Limits;samples:Sample[];loading:boolean;error:string;onClose:()=>void;onLoadSample:(id:string)=>Promise<boolean>};
 const fields:[string,string][] = [
  ['schema','データ形式。現在は lan-example/v1 固定です。'],
  ['name / scope','図面のタイトル / 図面で扱う範囲の説明。'],
@@ -23,18 +24,19 @@ const deviceFields:[string,string][] = [
  ['label / name','補足名称 / 運用上の機器名。現在の図では主にnameを表示します。'],
  ['manufacturer / model','メーカー / 型番。'],
  ['serial_number','シリアルNo。数字だけでも引用符で囲み、文字列にします。'],
+ ['groups','任意の機器群。例：groups: [ネットワーク機器, 1F]。複数の群に所属でき、画面の絞り込みに使います。'],
  ['location','設置場所。site＝拠点、room＝部屋、rack＝ラック、rack_unit＝U位置、position＝座席など。値は文字列か整数です。'],
 ];
 function Fields({rows}:{rows:[string,string][]}){return <div className="help-table-wrap"><table className="help-table"><thead><tr><th>項目</th><th>意味</th></tr></thead><tbody>{rows.map(([key,value])=><tr key={key}><td><code>{key}</code></td><td>{value}</td></tr>)}</tbody></table></div>;}
 function Code({lines}:{lines:string[]}){return <pre className="help-code"><code>{lines.join(String.fromCharCode(10))}</code></pre>;}
-export function Help({samples,loading,error,onClose,onLoadSample}:Props){
+export function Help({limits,samples,loading,error,onClose,onLoadSample}:Props){
  const dialog=useRef<HTMLDialogElement>(null);
  useEffect(()=>{dialog.current?.showModal();},[]);
  const move=(id:string)=>dialog.current?.querySelector('#'+id)?.scrollIntoView({block:'start'});
  const load=async(id:string)=>{if(await onLoadSample(id))dialog.current?.close();};
  return <dialog ref={dialog} className="help-dialog" aria-labelledby="help-title" onClose={onClose} onClick={e=>{const modal=dialog.current;if(modal&&e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}}}>
  <header className="help-header"><div><div className="eyebrow">LAYERMAP GUIDE</div><h2 id="help-title">YAMLの書き方と構成の追加</h2><p>機器・接続・レイヤーの対応を、ひとつずつ。</p></div><button autoFocus className="help-close" aria-label="ヘルプを閉じる" onClick={()=>dialog.current?.close()}>×</button></header>
- <nav className="help-nav" aria-label="ヘルプの目次"><button onClick={()=>move('help-fields')}>項目の意味</button><button onClick={()=>move('help-pc')}>機器を追加</button><button onClick={()=>move('help-vlan')}>VLANを追加</button><button onClick={()=>move('help-rules')}>入力ルール</button></nav>
+ <nav className="help-nav" aria-label="ヘルプの目次"><button onClick={()=>move('help-fields')}>項目の意味</button><button onClick={()=>move('help-pc')}>機器を追加</button><button onClick={()=>move('help-vlan')}>VLANを追加</button><button onClick={()=>move('help-scope')}>表示範囲</button><button onClick={()=>move('help-rules')}>入力ルール</button></nav>
  <div className="help-body"><p className="help-lead">まず業務LANへPCを1台追加し、次にそのPCを新しいVLANへ移すと、各項目の関係を確認できます。図面への入力は実機の設定を変更しません。</p>
  <section className="help-samples" aria-label="ヘルプのサンプル"><h3>完成例を読み込んで試す</h3><p>サンプルは編集中のYAMLを置き換えます。未保存の編集がある場合は確認を表示します。</p><div className="help-sample-grid">{samples.map(s=><article key={s.id}><span className="sample-tag">{s.id==='base'?'START':s.id==='add-pc'?'STEP 01':'STEP 02'}</span><h4>{s.title}</h4><p>{s.description}</p><button disabled={loading} onClick={()=>load(s.id)}>{s.title}を読み込む</button></article>)}</div>{error&&<p className="sample-error" role="alert">{error}</p>}</section>
  <section id="help-fields"><div className="help-section-number">01 / REFERENCE</div><h3>各項目の意味</h3><p>機器・物理ポート・L2インターフェース・IPを個別に定義し、<code>bindings</code>で対応付けます。</p><Fields rows={fields}/><h4>機器台帳のフィールド</h4><Fields rows={deviceFields}/><h4>accessとtrunkの記述</h4><Code lines={['# タグなしでVLAN 10に所属','mode: access','untagged_vlan: vlan-office','','# VLAN 10と20をタグ付きで通す','mode: trunk','tagged_vlans: [vlan-office, vlan-guest]']}/><div className="help-callout"><strong>内部IDとVLAN番号は別のものです。</strong><p><code>vlan-office</code>は内部ID、<code>10</code>は実際のVLAN番号です。参照には内部IDを使います。<code>pc-c.eth0</code>の「.」も命名上の区切りであり、名前から所属は推測しません。</p></div></section>
@@ -55,6 +57,7 @@ export function Help({samples,loading,error,onClose,onLoadSample}:Props){
  ['PCのL3→L2対応','pc-c.ipのvlanをvlan-labへ変更。'],
  ['GWのL3→L2対応','l3_interface: gw01.v30、l2_interface: gw01.trunk、vlan: vlan-labを追加。'],
  ]}/><div className="help-callout"><strong>物理ポート・ケーブルは追加不要です。</strong><p>既存のトランク回線を使用します。完成例は「VLAN追加版」から読み込めます。</p></div><p className="help-result">完了時：5機器・4ケーブル・3 VLAN</p></section>
- <section id="help-rules"><div className="help-section-number">04 / CHECKLIST</div><h3>入力時の確認と保存</h3><ul><li>字下げにはタブではなくスペースを使います。</li><li>IDは各リスト内で重複させず、参照先を対応するリストへ登録します。</li><li>すべてのL2・L3インターフェースに、下位層へのbindingsが必要です。</li><li>IPのプレフィックスと所属サブネットを一致させます。</li><li>スイッチ内の転送に参加するポートはbridges.membersへ追加します。</li><li>同じ物理ポートを複数のケーブル端点に指定できません。</li><li>LAG・VRF・トランクのnative VLANの専用項目は現行版では未対応です。</li><li>YAMLは256 KiB、機器は24台、全要素は500件まで。未定義項目・重複キー・エイリアスは拒否します。</li></ul><p>入力途中でエラーが出ても、項目がそろうと図が更新されます。エラー中は最後の正常な図を表示し、SVG出力を無効にします。</p><div className="help-callout"><strong>編集内容は自動保存されません。</strong><p>最後に「YAMLを保存」を押してください。YAMLは描画のためサーバーへ送信されますが、永続保存されません。経路やVLANの記述は、実機の通信可否や許可設定を保証するものではありません。</p></div></section>
+ <section id="help-scope"><h3>構成全体と表示範囲を分ける</h3><p>保持できるYAMLは{sizeLabel(limits.yaml_bytes)}、機器{limits.devices}台、全要素{limits.elements.toLocaleString()}件までです。ここでの保持はエディター内の構成全体を指し、サーバーへの永続保存は行いません。</p><p>一度に描画できる範囲は{limits.view_devices}台・{limits.view_rows}行・接続／所属{limits.view_connections}件・構成要素{limits.view_elements}件・VLAN／ブリッジ／サブネット{limits.view_groups}件までです。trunkのVLAN所属も1件ずつ数えます。構成全体が有効でも描画上限を超える場合は、表示条件の変更を案内します。</p><ol><li>拠点はdevices.location.site、機器群はdevices.groupsに記述します。</li><li>「表示範囲」で拠点・機器群・機器を選びます。条件はANDで適用されます。</li><li>1台に絞ると「対応関係の起点」でポートやインターフェースを選べます。図の行を選んだ追跡パネルの「この対応だけを表示」からも絞れます。</li><li>対応関係はbindingsのみを双方向にたどります。trunkで共有するポートの分岐も含み、VLAN所属やケーブルの接続先へはたどりません。</li><li>「絞り込みを解除」で元の表示範囲へ戻ります。YAML保存は常に構成全体、SVG出力は現在の表示範囲です。</li></ol><p>範囲外につながるケーブルは線を省略し、一覧で両端を確認できます。同一VLAN・サブネットの範囲外の機器も省略します。入力の検証は表示範囲外も含めて行います。</p><Code lines={['groups: [ネットワーク機器, 1F]','location:','  site: 本社','  room: サーバー室']}/></section>
+ <section id="help-rules"><div className="help-section-number">04 / CHECKLIST</div><h3>入力時の確認と保存</h3><ul><li>字下げにはタブではなくスペースを使います。</li><li>IDは各リスト内で重複させず、参照先を対応するリストへ登録します。</li><li>すべてのL2・L3インターフェースに、下位層へのbindingsが必要です。</li><li>IPのプレフィックスと所属サブネットを一致させます。</li><li>スイッチ内の転送に参加するポートはbridges.membersへ追加します。</li><li>同じ物理ポートを複数のケーブル端点に指定できません。</li><li>LAG・VRF・トランクのnative VLANの専用項目は現行版では未対応です。</li><li>YAMLは{sizeLabel(limits.yaml_bytes)}、機器は{limits.devices}台、全要素は{limits.elements.toLocaleString()}件まで。未定義項目・重複キー・エイリアスは拒否します。</li></ul><p>入力途中でエラーが出ても、項目がそろうと図が更新されます。エラー中は最後の正常な図を表示し、SVG出力を無効にします。</p><div className="help-callout"><strong>編集内容は自動保存されません。</strong><p>最後に「YAMLを保存」を押してください。YAMLは描画のためサーバーへ送信されますが、永続保存されません。経路やVLANの記述は、実機の通信可否や許可設定を保証するものではありません。</p></div></section>
  </div></dialog>;
 }

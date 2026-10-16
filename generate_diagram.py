@@ -9,6 +9,7 @@ from pathlib import Path
 
 import yaml
 from network_model import ModelError, validate, load_model
+from view_model import require_display_budget, prepare_view, ViewScope, TraceRoot
 
 
 def wrap_label(value, columns=44):
@@ -117,11 +118,12 @@ def route_cables(links,nodes,boxes,card_top,bottom):
     return routes
 
 
-def render(model, layers=None, show_bindings=True):
+def render(model, layers=None, show_bindings=True, context_notes=None):
     ix = validate(model)
     wanted = tuple(layers) if layers is not None else ('l3', 'l2', 'l1')
     if not wanted or len(set(wanted)) != len(wanted) or any(l not in ('l1','l2','l3') for l in wanted):
         raise ModelError('表示するレイヤーはl1・l2・l3から選択してください')
+    require_display_budget(model, wanted, show_bindings)
     devices = list(ix['devices'])
     specs = [('l3','l3.interfaces','L3 / IPインターフェース・サブネット','#eaf3fc'),
              ('l2','l2.interfaces','L2 / VLAN・ブリッジ','#edf6ef'),
@@ -465,7 +467,7 @@ def render(model, layers=None, show_bindings=True):
             labels=wrap_label(route['device']+' / '+route['interface']+' : '+route['destination']+' → '+route['next_hop'],120)
             lines_at(40,y,labels,13,step=18)
             y+=len(labels)*18+8
-    for note in model.get('notes',[]):
+    for note in list(context_notes or [])+model.get('notes',[]):
         labels=wrap_label('注：'+note,120)
         lines_at(40,y+18,labels,12,step=18)
         y+=len(labels)*18+8
@@ -483,14 +485,24 @@ def main():
     parser.add_argument('input', type=Path)
     parser.add_argument('-o', '--output', type=Path)
     parser.add_argument('--watch', action='store_true', help='regenerate on input changes; Ctrl+C to stop')
+    parser.add_argument('--site', help='draw only this site')
+    parser.add_argument('--group', help='draw only this device group')
+    parser.add_argument('--device', action='append', default=[], help='device ID; repeatable')
+    parser.add_argument('--focus-layer', choices=['l1','l2','l3'])
+    parser.add_argument('--focus-id')
     args = parser.parse_args()
     def generate_once():
         try:
             output = args.output or args.input.with_suffix('.svg')
             if output.resolve() == args.input.resolve():
                 raise ModelError('output must differ from input YAML')
-            model = load_model(args.input.read_text(encoding='utf-8-sig'))
-            drawing = render(model)
+            model,ix = load_model(args.input.read_text(encoding='utf-8-sig'),with_index=True)
+            if bool(args.focus_layer)!=bool(args.focus_id):
+                raise ModelError('--focus-layerと--focus-idは一緒に指定してください')
+            scope=ViewScope(site=args.site,group=args.group,device_ids=args.device,trace_root=TraceRoot(layer=args.focus_layer,id=args.focus_id) if args.focus_layer else None)
+            projected,display,_=prepare_view(model,ix,scope)
+            if display['status']!='ready':raise ModelError(display['message'])
+            drawing = render(projected,context_notes=display['context_notes'])
             # Validation completes before touching the existing drawing.
             output.write_text(drawing, encoding='utf-8')
             print(f'Generated: {output.resolve()}', flush=True)

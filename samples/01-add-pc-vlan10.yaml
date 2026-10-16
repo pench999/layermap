@@ -4,6 +4,7 @@ name: 業務VLANにPCを追加した例
 scope: 端末からインターネットゲートウェイのLAN側まで
 devices:
 - id: pc-a
+  groups: [端末]
   role: endpoint
   label: 業務PC
   name: HQ-PC-01
@@ -15,6 +16,7 @@ devices:
     room: 執務室
     position: 座席A01
 - id: pc-b
+  groups: [端末]
   role: endpoint
   label: 来客PC
   name: HQ-GUEST-PC-01
@@ -26,6 +28,7 @@ devices:
     room: 会議室
     position: 来客席B01
 - id: sw01
+  groups: [ネットワーク機器]
   role: l2-switch
   label: 社内スイッチ
   name: HQ-SW-01
@@ -38,6 +41,7 @@ devices:
     rack: R01
     rack_unit: 12
 - id: gw01
+  groups: [ネットワーク機器]
   role: internet-gateway
   label: ゲートウェイ
   name: HQ-GW-01
@@ -50,6 +54,7 @@ devices:
     rack: R01
     rack_unit: 13
 - id: pc-c
+  groups: [端末]
   role: endpoint
   name: HQ-PC-03
   manufacturer: Example Computing

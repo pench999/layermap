@@ -7,6 +7,7 @@ devices:
   # メーカー・型番・シリアルNoを含め、以下の機器情報はすべて架空のサンプル。
   # 現在の状態だけを保持し、交換時は属性を更新する。idは各層の参照用に維持する。
   - id: pc-a
+    groups: [端末]
     role: endpoint
     label: 業務PC
     name: HQ-PC-01
@@ -15,6 +16,7 @@ devices:
     serial_number: "DEMO-PC-0001"
     location: {site: 本社, room: 執務室, position: 座席A01}
   - id: pc-b
+    groups: [端末]
     role: endpoint
     label: 来客PC
     name: HQ-GUEST-PC-01
@@ -23,6 +25,7 @@ devices:
     serial_number: "DEMO-PC-0002"
     location: {site: 本社, room: 会議室, position: 来客席B01}
   - id: sw01
+    groups: [ネットワーク機器]
     role: l2-switch
     label: 社内スイッチ
     name: HQ-SW-01
@@ -31,6 +34,7 @@ devices:
     serial_number: "DEMO-SW-0001"
     location: {site: 本社, room: サーバー室, rack: R01, rack_unit: 12}
   - id: gw01
+    groups: [ネットワーク機器]
     role: internet-gateway
     label: ゲートウェイ
     name: HQ-GW-01
