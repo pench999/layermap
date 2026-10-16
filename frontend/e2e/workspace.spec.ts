@@ -233,3 +233,49 @@ test('L1 has one direct cable path per link and focus isolates its identity',asy
   await expect(page.locator('.physical-cable')).toHaveCount(0);
   await expect(page.locator('.relation-bus').first()).toHaveAttribute('d', /^M.+ L.+/);
 });
+
+
+test('logical networks highlight exactly their member interfaces from bus and badge',async({page})=>{
+  for(const [tab,layer,network,other,member,nonmember,prefix] of [
+    ['L2 VLAN','l2','vlan-office','vlan-guest','pc-a.l2','pc-b.l2','V1'],
+    ['L3 IP','l3','net-office','net-guest','pc-a.ip','pc-b.ip','S1']
+  ]){
+    await page.getByRole('tab',{name:tab}).click();
+    const panel=page.locator('[data-layer="'+layer+'"]');
+    await expect(page.locator('[data-layer]')).toHaveCount(1);
+    await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+    await expect(panel).toHaveCount(1);
+    const group=panel.locator('[data-network-id="'+network+'"]');
+    await expect(group).toHaveAttribute('aria-label',new RegExp(member.replace('.','\\.')));
+    await group.focus();
+    await expect(panel.locator('[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
+    await expect(panel.locator('[data-element-id="'+nonmember+'"]')).toHaveCSS('opacity','0.22');
+    await expect(panel.locator('[data-element-id="'+member+'"]')).toHaveCSS('opacity','1');
+    const badge=panel.locator('[data-element-id="'+member+'"] .membership-label').filter({hasText:prefix}).first();
+    await expect(badge).toHaveCSS('font-weight','700');
+    await badge.focus();
+    const otherGroup=panel.locator('[data-network-id="'+other+'"]');
+    await otherGroup.locator('text').first().hover();
+    await expect(otherGroup).toHaveCSS('opacity','1');
+    await expect(group).toHaveCSS('opacity','0.15');
+    await page.getByRole('tab',{name:tab}).hover();
+    await expect(group.locator('.relation-bus')).toHaveCSS('stroke-width','3px');
+    await expect(panel.locator('[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
+    await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/logical-'+layer+'.png',fullPage:true});
+  }
+});
+
+test('trunk memberships use distinct anchors and added VLAN updates logical groups',async({page})=>{
+  await page.getByRole('tab',{name:'L2 VLAN'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  await expect(page.locator('[data-layer="l2"]')).toHaveCount(1);
+  const trunk=page.locator('[data-element-id="sw01.trunk"] .membership-anchor');
+  await expect(trunk).toHaveCount(3);
+  const ys=await trunk.evaluateAll(els=>els.map(el=>el.getAttribute('cy')));
+  expect(new Set(ys).size).toBe(3);
+  await page.getByLabel('サンプル構成').selectOption('add-vlan');
+  await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();
+  await expect(page.locator('[data-network-kind="vlan"]')).toHaveCount(3);
+  await expect(page.locator('[data-network-id="vlan-lab"]')).toHaveCount(1);
+});

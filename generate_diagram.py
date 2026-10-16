@@ -127,18 +127,35 @@ def render(model, layers=None, show_bindings=True):
              ('l2','l2.interfaces','L2 / VLAN・ブリッジ','#edf6ef'),
              ('l1','l1.ports','L1 / 物理ポート・ケーブル','#f0eff7')]
     specs = [spec for spec in specs if spec[0] in wanted]
-    colors = {v:c for v,c in zip(ix['l2.vlans'], ['#1676b5','#b56316','#18856c','#af3982','#5e56ba']*100)}
+    palette = ['#1676b5','#b56316','#18856c','#af3982','#5e56ba']
+    colors = {v:palette[n%len(palette)] for n,v in enumerate(ix['l2.vlans'])}
     relations = {}
     for layer, group, _, _ in specs:
         items = list(ix[group].values())
         if layer == 'l3':
-            relations[layer] = [(s['id']+' / '+s['cidr'],[i['id'] for i in items if i['subnet']==s['id']],'#1676b5') for s in ix['l3.subnets'].values()]
+            relations[layer] = [(s['id']+' / '+s['cidr'],[i['id'] for i in items if i['subnet']==s['id']],palette[n%len(palette)]) for n,s in enumerate(ix['l3.subnets'].values())]
         elif layer == 'l2':
             relations[layer] = [(v['id']+' / VLAN '+str(v['tag'])+' / '+v.get('label',''),
                                  [i['id'] for i in items if v['id'] in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])],colors[v['id']]) for v in ix['l2.vlans'].values()]
             relations[layer] += [(b['id']+' / VLAN別に転送',b['members'],'#48794b') for b in ix['l2.bridges'].values()]
         else:
             relations[layer] = []  # Physical cables are independent point-to-point paths.
+    # Memberships are explicit: VLAN/subnet badges get distinct connection points.
+    networks = {}
+    memberships = {}
+    for layer, group, _, _ in specs:
+        ids = (list(ix['l3.subnets']) if layer=='l3' else
+               list(ix['l2.vlans'])+list(ix['l2.bridges']) if layer=='l2' else [])
+        networks[layer] = []
+        for n,((label,members,color),identity) in enumerate(zip(relations[layer],ids)):
+            kind = 'subnet' if layer=='l3' else 'vlan' if n<len(ix['l2.vlans']) else 'bridge'
+            ordinal = n+1 if kind!='bridge' else n-len(ix['l2.vlans'])+1
+            number = {'subnet':'S','vlan':'V','bridge':'B'}[kind]+str(ordinal)
+            network = {'key':f'{layer}-{n}', 'id':identity, 'number':number,
+                       'kind':kind, 'label':label, 'members':members, 'color':color}
+            networks[layer].append(network)
+            for member in members:
+                memberships.setdefault((layer,member),[]).append(network)
     physical_links=list(ix['l1.links'].values())
     physical_degree=Counter(ix['l1.ports'][p]['device'] for link in physical_links for p in link['endpoints'])
     max_edges = max([max(Counter(ix[group][m]['device'] for _,members,_ in relations[layer] for m in members).values(),default=0) for layer,group,_,_ in specs]+[max(physical_degree.values(),default=1) if 'l1' in wanted else 1])
@@ -146,7 +163,7 @@ def render(model, layers=None, show_bindings=True):
     max_bindings = max([max(Counter(ix[upper+'.interfaces'][b[ak]]['device'] for b in model['bindings'][key]).values(),default=0) for upper,lower,key,ak,bk in binding_specs if upper in wanted and lower in wanted and show_bindings]+[1])
     card_width = 340
     left_space = max(60, 32 + max_bindings*7)
-    column = card_width + 32 + max_edges*7 + left_space
+    column = card_width + 40 + max_edges*10 + left_space
     lefts = {device:left_space + n*column for n,device in enumerate(devices)}
     width = max(1450, left_space + len(devices)*column)
     port_sides={}
@@ -159,6 +176,7 @@ def render(model, layers=None, show_bindings=True):
         color=['#1779a5','#b5681c','#287c58','#a04a92','#6a64b0','#ad574d'][i%6]
         port_colors[a]=port_colors[b]=color
     svg, nodes, sections = [], {}, {}
+    membership_anchors, network_styles = {}, []
     escape = lambda value: html.escape(str(value),quote=True)
 
     def text(x,y,value,size=14,color='#23344d'):
@@ -203,7 +221,7 @@ def render(model, layers=None, show_bindings=True):
                     details.append('connector / '+item['connector'])
                 title_lines=wrap_label(item['id'],43)
                 detail_lines=[part for detail in details for part in wrap_label(detail,46)]
-                height=18*(len(title_lines)+len(detail_lines))+18
+                height=18*(len(title_lines)+len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[])))+18
                 rows.append((item,title_lines,detail_lines,height))
             height=header+sum(row[3] for row in rows)+12
             if not rows:
@@ -214,11 +232,11 @@ def render(model, layers=None, show_bindings=True):
         bus_top=bottom+45
         bus_layout=[]
         cursor=bus_top
-        for label,members,color in relations[layer]:
-            labels=wrap_label(label,44)
+        for network in networks[layer]:
+            labels=wrap_label(network['number']+' / '+network['label'],44)
             by=cursor+18*len(labels)+10
-            bus_layout.append((by,labels,members,color,label))
-            cursor=by+24
+            bus_layout.append((by,labels,network))
+            cursor=by+38
         cable_rows=[]
         if layer=='l1':
             cursor=bottom+58+24*len(physical_links)
@@ -250,12 +268,23 @@ def render(model, layers=None, show_bindings=True):
                 side=port_sides.get(item['id'],1) if layer=='l1' else 1
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
-                svg.append(f'<g class="interface-row" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                member_classes=' '.join('member-'+net['key'] for net in memberships.get((layer,item['id']),[]))
+                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
                 svg.append(f'<title>{escape(item["id"])}</title>')
                 edge([(left+12,row_top),(right-12,row_top)],'#e0e7ee','row-separator')
                 lines_at(left+16,row_top+21,title_lines,13)
                 lines_at(left+16,row_top+21+18*len(title_lines),detail_lines,12,'#60788e')
-                svg.append(f'<circle class="interface-anchor" data-port-id="{escape(item["id"])}" cx="{anchor_x}" cy="{anchor}" r="4" fill="white" stroke="{port_colors.get(item["id"],"#63849a") if layer=="l1" else "#63849a"}" stroke-width="1.5"/>')
+                member_top=row_top+21+18*(len(title_lines)+len(detail_lines))
+                for net in memberships.get((layer,item['id']),[]):
+                    member_lines=wrap_label(net['number']+' / '+net['id'],46)
+                    member_y=member_top-4
+                    membership_anchors[(layer,net['key'],item['id'])]=(right,member_y)
+                    for line_no,line in enumerate(member_lines):
+                        svg.append(f'<text class="membership-label member-{net["key"]}" tabindex="0" role="img" aria-label="{escape(net["label"])}" x="{left+16}" y="{member_y+4+line_no*18}" font-size="12" fill="{net["color"]}">{escape(line)}</text>')
+                    member_top+=18*len(member_lines)
+                    svg.append(f'<circle class="membership-anchor member-{net["key"]}" data-membership-network="{escape(net["id"])}" data-membership-interface="{escape(item["id"])}" cx="{right}" cy="{member_y}" r="3.5" fill="white" stroke="{net["color"]}" stroke-width="1.5"/>')
+                if layer=='l1':
+                    svg.append(f'<circle class="interface-anchor" data-port-id="{escape(item["id"])}" cx="{anchor_x}" cy="{anchor}" r="4" fill="white" stroke="{port_colors.get(item["id"],"#63849a") if layer=="l1" else "#63849a"}" stroke-width="1.5"/>')
                 svg.append('</g>')
                 row_top+=row_height
             if not rows:
@@ -282,19 +311,49 @@ def render(model, layers=None, show_bindings=True):
                 lines_at(40,list_y,labels,12,routed['color'])
                 svg.append('</g>')
         else:
-            lanes=Counter()
-            for by,labels,members,color,label in bus_layout:
-                xs=[]
-                for member in members:
+            # Lower rows leave nearest the card; upper rows use outer tracks.
+            # This avoids the staircase crossings of relation-by-relation lanes.
+            departures={device:[] for device in devices}
+            for by,labels,net in bus_layout:
+                for member in net['members']:
                     node=nodes[(layer,member)]
-                    lane=node['right']+18+lanes[node['device']]*7
-                    lanes[node['device']]+=1
-                    edge([(node['right'],node['y']),(lane,node['y']),(lane,by)],color,'relation-branch',f'data-endpoint="{escape(member)}"')
-                    xs.append(lane)
-                    svg.append(f'<circle cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
+                    x,sy=membership_anchors[(layer,net['key'],member)]
+                    departures[node['device']].append((sy,net['key'],member))
+            lanes={}
+            for device,entries in departures.items():
+                for rank,(sy,key,member) in enumerate(sorted(entries,reverse=True)):
+                    lanes[(key,member)]=lefts[device]+card_width+18+rank*10
+            text(40,top+51,'V＝VLAN / S＝サブネット / B＝機器内ブリッジ。番号・線にマウスまたはTabで所属を強調。交差部は未接続。',11,'#60788e')
+            for by,labels,net in bus_layout:
+                key,color=net['key'],net['color']
+                description=net['number']+' / '+net['label']+' / 所属：'+(', '.join(net['members']) or 'なし')
+                svg.append(f'<g class="network-group network-{key}" data-network-id="{escape(net["id"])}" data-network-kind="{net["kind"]}" tabindex="0" role="img" aria-label="{escape(description)}">')
+                svg.append(f'<title>{escape(description)}</title>')
+                xs=[lanes[(key,member)] for member in net['members']]
+                def logical_edge(points,css,attrs=''):
+                    # A background casing makes unavoidable crossings non-junctions.
+                    edge(points,fill,'relation-casing','stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"')
+                    edge(points,color,css,attrs+' stroke-linejoin="round"')
                 if xs:
-                    edge([(min(xs)-7,by),(max(xs)+7,by)],color,'relation-bus')
+                    logical_edge([(min(xs)-7,by),(max(xs)+7,by)],'relation-bus')
+                for member in net['members']:
+                    x,sy=membership_anchors[(layer,key,member)]
+                    lane=lanes[(key,member)]
+                    attrs=f'data-endpoint="{escape(member)}" data-network="{escape(net["id"])}"'
+                    logical_edge([(x,sy),(lane,sy),(lane,by)],'relation-branch',attrs)
+                    svg.append(f'<circle class="network-junction" cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
                 lines_at(40,by-10-18*(len(labels)-1),labels,12,color)
+                if not net['members']:
+                    text(40,by+16,'所属インターフェースなし',11,'#8192a5')
+                svg.append('</g>')
+                active=f':is(.network-{key},.membership-label.member-{key},.membership-anchor.member-{key}):is(:hover,:focus)'
+                scope=f'[data-layer="{layer}"]'
+                trigger=f'svg:has({active}):not(:has({scope} :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-{key}):not(.member-{key})))'
+                network_styles.append(f'{trigger} {scope} .network-group:not(.network-{key})'+'{opacity:.15}')
+                network_styles.append(f'{trigger} {scope} .interface-row:not(.member-{key})'+'{opacity:.22}')
+                network_styles.append(f'{trigger} {scope} .membership-label.member-{key}'+'{font-weight:bold}')
+                network_styles.append(f'{trigger} {scope} .network-{key} :is(.relation-branch,.relation-bus)'+'{stroke-width:3}')
+                network_styles.append(f'{trigger} {scope} :is(.membership-label,.membership-anchor):not(.member-{key})'+'{opacity:.22}')
         svg.append('</g>')
         upper_bindings=[b for upper,lower,key,ak,bk in binding_specs if upper==layer and lower in wanted and show_bindings for b in model['bindings'][key]]
         label_space=Counter()
@@ -340,7 +399,8 @@ def render(model, layers=None, show_bindings=True):
         y+=len(labels)*18+8
     text(40,y+28,'一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応',12)
     height=y+55
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    network_css=''.join(network_styles)
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 

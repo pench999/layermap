@@ -1,327 +1,384 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1984" height="2396" viewBox="0 0 1984 2396"><style>text{font-family:"Yu Gothic",Meiryo,sans-serif}.physical-cable-group{cursor:crosshair;outline:none}.physical-cable-group:is(:hover,:focus) .physical-cable{stroke-width:3.5}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){opacity:.22}</style><rect width="100%" height="100%" fill="#f8fafc"/><text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">社内LANのレイヤー別構成例</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">端末からインターネットゲートウェイのLAN側まで</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="2628" viewBox="0 0 2100 2628"><style>text{font-family:"Yu Gothic",Meiryo,sans-serif}.physical-cable-group{cursor:crosshair;outline:none}.physical-cable-group:is(:hover,:focus) .physical-cable{stroke-width:3.5}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){opacity:.22}.network-group,.membership-label{cursor:crosshair;outline:none}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-group:not(.network-l3-0){opacity:.15}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .interface-row:not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .membership-label.member-l3-0{font-weight:bold}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] .network-l3-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-0,.membership-label.member-l3-0,.membership-anchor.member-l3-0):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-0):not(.member-l3-0))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-0){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-group:not(.network-l3-1){opacity:.15}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .interface-row:not(.member-l3-1){opacity:.22}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .membership-label.member-l3-1{font-weight:bold}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] .network-l3-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l3-1,.membership-label.member-l3-1,.membership-anchor.member-l3-1):is(:hover,:focus)):not(:has([data-layer="l3"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l3-1):not(.member-l3-1))) [data-layer="l3"] :is(.membership-label,.membership-anchor):not(.member-l3-1){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-group:not(.network-l2-0){opacity:.15}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .interface-row:not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .membership-label.member-l2-0{font-weight:bold}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] .network-l2-0 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-0,.membership-label.member-l2-0,.membership-anchor.member-l2-0):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-0):not(.member-l2-0))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-0){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-group:not(.network-l2-1){opacity:.15}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .interface-row:not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .membership-label.member-l2-1{font-weight:bold}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] .network-l2-1 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-1,.membership-label.member-l2-1,.membership-anchor.member-l2-1):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-1):not(.member-l2-1))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-1){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-group:not(.network-l2-2){opacity:.15}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .interface-row:not(.member-l2-2){opacity:.22}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .membership-label.member-l2-2{font-weight:bold}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] .network-l2-2 :is(.relation-branch,.relation-bus){stroke-width:3}svg:has(:is(.network-l2-2,.membership-label.member-l2-2,.membership-anchor.member-l2-2):is(:hover,:focus)):not(:has([data-layer="l2"] :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-l2-2):not(.member-l2-2))) [data-layer="l2"] :is(.membership-label,.membership-anchor):not(.member-l2-2){opacity:.22}</style><rect width="100%" height="100%" fill="#f8fafc"/><text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">社内LANのレイヤー別構成例</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">端末からインターネットゲートウェイのLAN側まで</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>
 <g data-layer="l3">
-<rect class="layer-panel" x="20" y="145" width="1944" height="457" rx="8" fill="#eaf3fc" stroke="#eaf3fc"/>
+<rect class="layer-panel" x="20" y="145" width="2060" height="521" rx="8" fill="#eaf3fc" stroke="#eaf3fc"/>
 <text x="40" y="177" font-size="22" fill="#23344d">L3 / IPインターフェース・サブネット</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-PC-01 / L3">
-<rect class="device-frame" x="60" y="207" width="340" height="158" rx="8" fill="white" stroke="#9fb0c4"/>
+<rect class="device-frame" x="60" y="207" width="340" height="176" rx="8" fill="white" stroke="#9fb0c4"/>
 <text x="76" y="233" font-size="16" fill="#23344d">HQ-PC-01</text>
 <text x="76" y="254" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<g class="interface-row" data-element-id="pc-a.ip" data-owner="pc-a" data-anchor-y="317.0" data-anchor-x="400">
+<g class="interface-row member-l3-0" data-element-id="pc-a.ip" data-owner="pc-a" data-anchor-y="326.0" data-anchor-x="400">
 <title>pc-a.ip</title>
 <path class="row-separator" d="M72,281 L388,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
 <text x="76" y="302" font-size="13" fill="#23344d">pc-a.ip</text>
 <text x="76" y="320" font-size="12" fill="#60788e">192.168.10.10/24</text>
 <text x="76" y="338" font-size="12" fill="#60788e">subnet / net-office</text>
-<circle class="interface-anchor" data-port-id="pc-a.ip" cx="400" cy="317.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="76" y="356" font-size="12" fill="#1676b5">S1 / net-office</text>
+<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="pc-a.ip" cx="400" cy="352" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L3">
-<rect class="device-frame" x="541" y="207" width="340" height="158" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="557" y="233" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
-<text x="557" y="254" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<g class="interface-row" data-element-id="pc-b.ip" data-owner="pc-b" data-anchor-y="317.0" data-anchor-x="881">
+<rect class="device-frame" x="570" y="207" width="340" height="176" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="586" y="233" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
+<text x="586" y="254" font-size="11" fill="#72869b">pc-b / endpoint</text>
+<g class="interface-row member-l3-1" data-element-id="pc-b.ip" data-owner="pc-b" data-anchor-y="326.0" data-anchor-x="910">
 <title>pc-b.ip</title>
-<path class="row-separator" d="M553,281 L869,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="557" y="302" font-size="13" fill="#23344d">pc-b.ip</text>
-<text x="557" y="320" font-size="12" fill="#60788e">192.168.20.10/24</text>
-<text x="557" y="338" font-size="12" fill="#60788e">subnet / net-guest</text>
-<circle class="interface-anchor" data-port-id="pc-b.ip" cx="881" cy="317.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M582,281 L898,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="586" y="302" font-size="13" fill="#23344d">pc-b.ip</text>
+<text x="586" y="320" font-size="12" fill="#60788e">192.168.20.10/24</text>
+<text x="586" y="338" font-size="12" fill="#60788e">subnet / net-guest</text>
+<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="586" y="356" font-size="12" fill="#b56316">S2 / net-guest</text>
+<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="pc-b.ip" cx="910" cy="352" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="sw01" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-SW-01 / L3">
-<rect class="device-frame" x="1022" y="207" width="340" height="130" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1038" y="233" font-size="16" fill="#23344d">HQ-SW-01</text>
-<text x="1038" y="254" font-size="11" fill="#72869b">sw01 / l2-switch</text>
-<text x="1038" y="306" font-size="12" fill="#8192a5">L3インターフェースなし</text>
+<rect class="device-frame" x="1080" y="207" width="340" height="130" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1096" y="233" font-size="16" fill="#23344d">HQ-SW-01</text>
+<text x="1096" y="254" font-size="11" fill="#72869b">sw01 / l2-switch</text>
+<text x="1096" y="306" font-size="12" fill="#8192a5">L3インターフェースなし</text>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l3" tabindex="0" role="button" aria-label="HQ-GW-01 / L3">
-<rect class="device-frame" x="1503" y="207" width="340" height="230" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1519" y="233" font-size="16" fill="#23344d">HQ-GW-01</text>
-<text x="1519" y="254" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<g class="interface-row" data-element-id="gw01.v10" data-owner="gw01" data-anchor-y="317.0" data-anchor-x="1843">
+<rect class="device-frame" x="1590" y="207" width="340" height="266" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1606" y="233" font-size="16" fill="#23344d">HQ-GW-01</text>
+<text x="1606" y="254" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
+<g class="interface-row member-l3-0" data-element-id="gw01.v10" data-owner="gw01" data-anchor-y="326.0" data-anchor-x="1930">
 <title>gw01.v10</title>
-<path class="row-separator" d="M1515,281 L1831,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1519" y="302" font-size="13" fill="#23344d">gw01.v10</text>
-<text x="1519" y="320" font-size="12" fill="#60788e">192.168.10.1/24</text>
-<text x="1519" y="338" font-size="12" fill="#60788e">subnet / net-office</text>
-<circle class="interface-anchor" data-port-id="gw01.v10" cx="1843" cy="317.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1602,281 L1918,281" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1606" y="302" font-size="13" fill="#23344d">gw01.v10</text>
+<text x="1606" y="320" font-size="12" fill="#60788e">192.168.10.1/24</text>
+<text x="1606" y="338" font-size="12" fill="#60788e">subnet / net-office</text>
+<text class="membership-label member-l3-0" tabindex="0" role="img" aria-label="net-office / 192.168.10.0/24" x="1606" y="356" font-size="12" fill="#1676b5">S1 / net-office</text>
+<circle class="membership-anchor member-l3-0" data-membership-network="net-office" data-membership-interface="gw01.v10" cx="1930" cy="352" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 </g>
-<g class="interface-row" data-element-id="gw01.v20" data-owner="gw01" data-anchor-y="389.0" data-anchor-x="1843">
+<g class="interface-row member-l3-1" data-element-id="gw01.v20" data-owner="gw01" data-anchor-y="416.0" data-anchor-x="1930">
 <title>gw01.v20</title>
-<path class="row-separator" d="M1515,353 L1831,353" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1519" y="374" font-size="13" fill="#23344d">gw01.v20</text>
-<text x="1519" y="392" font-size="12" fill="#60788e">192.168.20.1/24</text>
-<text x="1519" y="410" font-size="12" fill="#60788e">subnet / net-guest</text>
-<circle class="interface-anchor" data-port-id="gw01.v20" cx="1843" cy="389.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1602,371 L1918,371" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1606" y="392" font-size="13" fill="#23344d">gw01.v20</text>
+<text x="1606" y="410" font-size="12" fill="#60788e">192.168.20.1/24</text>
+<text x="1606" y="428" font-size="12" fill="#60788e">subnet / net-guest</text>
+<text class="membership-label member-l3-1" tabindex="0" role="img" aria-label="net-guest / 192.168.20.0/24" x="1606" y="446" font-size="12" fill="#b56316">S2 / net-guest</text>
+<circle class="membership-anchor member-l3-1" data-membership-network="net-guest" data-membership-interface="gw01.v20" cx="1930" cy="442" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 </g>
 </g>
-<path class="relation-branch" d="M400,317.0 L418,317.0 L418,510" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.ip"/>
-<circle cx="418" cy="510" r="2.8" fill="#1676b5"/>
-<path class="relation-branch" d="M1843,317.0 L1861,317.0 L1861,510" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.v10"/>
-<circle cx="1861" cy="510" r="2.8" fill="#1676b5"/>
-<path class="relation-bus" d="M411,510 L1868,510" fill="none" stroke="#1676b5" stroke-width="1.7" />
-<text x="40" y="500" font-size="12" fill="#1676b5">net-office / 192.168.10.0/24</text>
-<path class="relation-branch" d="M881,317.0 L899,317.0 L899,562" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-b.ip"/>
-<circle cx="899" cy="562" r="2.8" fill="#1676b5"/>
-<path class="relation-branch" d="M1843,389.0 L1868,389.0 L1868,562" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.v20"/>
-<circle cx="1868" cy="562" r="2.8" fill="#1676b5"/>
-<path class="relation-bus" d="M892,562 L1875,562" fill="none" stroke="#1676b5" stroke-width="1.7" />
-<text x="40" y="552" font-size="12" fill="#1676b5">net-guest / 192.168.20.0/24</text>
+<text x="40" y="196" font-size="11" fill="#60788e">V＝VLAN / S＝サブネット / B＝機器内ブリッジ。番号・線にマウスまたはTabで所属を強調。交差部は未接続。</text>
+<g class="network-group network-l3-0" data-network-id="net-office" data-network-kind="subnet" tabindex="0" role="img" aria-label="S1 / net-office / 192.168.10.0/24 / 所属：pc-a.ip, gw01.v10">
+<title>S1 / net-office / 192.168.10.0/24 / 所属：pc-a.ip, gw01.v10</title>
+<path class="relation-casing" d="M411,546 L1965,546" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M411,546 L1965,546" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M400,352 L418,352 L418,546" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M400,352 L418,352 L418,546" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.ip" data-network="net-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="418" cy="546" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1930,352 L1958,352 L1958,546" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1930,352 L1958,352 L1958,546" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.v10" data-network="net-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1958" cy="546" r="2.8" fill="#1676b5"/>
+<text x="40" y="536" font-size="12" fill="#1676b5">S1 / net-office / 192.168.10.0/24</text>
+</g>
+<g class="network-group network-l3-1" data-network-id="net-guest" data-network-kind="subnet" tabindex="0" role="img" aria-label="S2 / net-guest / 192.168.20.0/24 / 所属：pc-b.ip, gw01.v20">
+<title>S2 / net-guest / 192.168.20.0/24 / 所属：pc-b.ip, gw01.v20</title>
+<path class="relation-casing" d="M921,612 L1955,612" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M921,612 L1955,612" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M910,352 L928,352 L928,612" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M910,352 L928,352 L928,612" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.ip" data-network="net-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="928" cy="612" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1930,442 L1948,442 L1948,612" fill="none" stroke="#eaf3fc" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1930,442 L1948,442 L1948,612" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.v20" data-network="net-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1948" cy="612" r="2.8" fill="#b56316"/>
+<text x="40" y="602" font-size="12" fill="#b56316">S2 / net-guest / 192.168.20.0/24</text>
+</g>
 </g>
 <g data-layer="l2">
-<rect class="layer-panel" x="20" y="721" width="1944" height="527" rx="8" fill="#edf6ef" stroke="#edf6ef"/>
-<text x="40" y="753" font-size="22" fill="#23344d">L2 / VLAN・ブリッジ</text>
+<rect class="layer-panel" x="20" y="785" width="2060" height="695" rx="8" fill="#edf6ef" stroke="#edf6ef"/>
+<text x="40" y="817" font-size="22" fill="#23344d">L2 / VLAN・ブリッジ</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-PC-01 / L2">
-<rect class="device-frame" x="60" y="783" width="340" height="140" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="76" y="809" font-size="16" fill="#23344d">HQ-PC-01</text>
-<text x="76" y="830" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<g class="interface-row" data-element-id="pc-a.l2" data-owner="pc-a" data-anchor-y="884.0" data-anchor-x="400">
+<rect class="device-frame" x="60" y="847" width="340" height="158" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="76" y="873" font-size="16" fill="#23344d">HQ-PC-01</text>
+<text x="76" y="894" font-size="11" fill="#72869b">pc-a / endpoint</text>
+<g class="interface-row member-l2-0" data-element-id="pc-a.l2" data-owner="pc-a" data-anchor-y="957.0" data-anchor-x="400">
 <title>pc-a.l2</title>
-<path class="row-separator" d="M72,857 L388,857" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="76" y="878" font-size="13" fill="#23344d">pc-a.l2</text>
-<text x="76" y="896" font-size="12" fill="#60788e">access / vlan-office</text>
-<circle class="interface-anchor" data-port-id="pc-a.l2" cx="400" cy="884.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M72,921 L388,921" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="76" y="942" font-size="13" fill="#23344d">pc-a.l2</text>
+<text x="76" y="960" font-size="12" fill="#60788e">access / vlan-office</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="76" y="978" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="pc-a.l2" cx="400" cy="974" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L2">
-<rect class="device-frame" x="541" y="783" width="340" height="140" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="557" y="809" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
-<text x="557" y="830" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<g class="interface-row" data-element-id="pc-b.l2" data-owner="pc-b" data-anchor-y="884.0" data-anchor-x="881">
+<rect class="device-frame" x="570" y="847" width="340" height="158" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="586" y="873" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
+<text x="586" y="894" font-size="11" fill="#72869b">pc-b / endpoint</text>
+<g class="interface-row member-l2-1" data-element-id="pc-b.l2" data-owner="pc-b" data-anchor-y="957.0" data-anchor-x="910">
 <title>pc-b.l2</title>
-<path class="row-separator" d="M553,857 L869,857" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="557" y="878" font-size="13" fill="#23344d">pc-b.l2</text>
-<text x="557" y="896" font-size="12" fill="#60788e">access / vlan-guest</text>
-<circle class="interface-anchor" data-port-id="pc-b.l2" cx="881" cy="884.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M582,921 L898,921" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="586" y="942" font-size="13" fill="#23344d">pc-b.l2</text>
+<text x="586" y="960" font-size="12" fill="#60788e">access / vlan-guest</text>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="586" y="978" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="pc-b.l2" cx="910" cy="974" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="sw01" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-SW-01 / L2">
-<rect class="device-frame" x="1022" y="783" width="340" height="248" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1038" y="809" font-size="16" fill="#23344d">HQ-SW-01</text>
-<text x="1038" y="830" font-size="11" fill="#72869b">sw01 / l2-switch</text>
-<g class="interface-row" data-element-id="sw01.access1" data-owner="sw01" data-anchor-y="884.0" data-anchor-x="1362">
+<rect class="device-frame" x="1080" y="847" width="340" height="374" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1096" y="873" font-size="16" fill="#23344d">HQ-SW-01</text>
+<text x="1096" y="894" font-size="11" fill="#72869b">sw01 / l2-switch</text>
+<g class="interface-row member-l2-0 member-l2-2" data-element-id="sw01.access1" data-owner="sw01" data-anchor-y="966.0" data-anchor-x="1420">
 <title>sw01.access1</title>
-<path class="row-separator" d="M1034,857 L1350,857" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="878" font-size="13" fill="#23344d">sw01.access1</text>
-<text x="1038" y="896" font-size="12" fill="#60788e">access / vlan-office</text>
-<circle class="interface-anchor" data-port-id="sw01.access1" cx="1362" cy="884.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,921 L1408,921" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="942" font-size="13" fill="#23344d">sw01.access1</text>
+<text x="1096" y="960" font-size="12" fill="#60788e">access / vlan-office</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1096" y="978" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.access1" cx="1420" cy="974" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1096" y="996" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access1" cx="1420" cy="992" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 </g>
-<g class="interface-row" data-element-id="sw01.access2" data-owner="sw01" data-anchor-y="938.0" data-anchor-x="1362">
+<g class="interface-row member-l2-1 member-l2-2" data-element-id="sw01.access2" data-owner="sw01" data-anchor-y="1056.0" data-anchor-x="1420">
 <title>sw01.access2</title>
-<path class="row-separator" d="M1034,911 L1350,911" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="932" font-size="13" fill="#23344d">sw01.access2</text>
-<text x="1038" y="950" font-size="12" fill="#60788e">access / vlan-guest</text>
-<circle class="interface-anchor" data-port-id="sw01.access2" cx="1362" cy="938.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,1011 L1408,1011" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="1032" font-size="13" fill="#23344d">sw01.access2</text>
+<text x="1096" y="1050" font-size="12" fill="#60788e">access / vlan-guest</text>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1096" y="1068" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.access2" cx="1420" cy="1064" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1096" y="1086" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.access2" cx="1420" cy="1082" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 </g>
-<g class="interface-row" data-element-id="sw01.trunk" data-owner="sw01" data-anchor-y="992.0" data-anchor-x="1362">
+<g class="interface-row member-l2-0 member-l2-1 member-l2-2" data-element-id="sw01.trunk" data-owner="sw01" data-anchor-y="1155.0" data-anchor-x="1420">
 <title>sw01.trunk</title>
-<path class="row-separator" d="M1034,965 L1350,965" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="986" font-size="13" fill="#23344d">sw01.trunk</text>
-<text x="1038" y="1004" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
-<circle class="interface-anchor" data-port-id="sw01.trunk" cx="1362" cy="992.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,1101 L1408,1101" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="1122" font-size="13" fill="#23344d">sw01.trunk</text>
+<text x="1096" y="1140" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1096" y="1158" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="sw01.trunk" cx="1420" cy="1154" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1096" y="1176" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="sw01.trunk" cx="1420" cy="1172" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
+<text class="membership-label member-l2-2" tabindex="0" role="img" aria-label="sw01.bridge / VLAN別に転送" x="1096" y="1194" font-size="12" fill="#48794b">B1 / sw01.bridge</text>
+<circle class="membership-anchor member-l2-2" data-membership-network="sw01.bridge" data-membership-interface="sw01.trunk" cx="1420" cy="1190" r="3.5" fill="white" stroke="#48794b" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l2" tabindex="0" role="button" aria-label="HQ-GW-01 / L2">
-<rect class="device-frame" x="1503" y="783" width="340" height="140" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1519" y="809" font-size="16" fill="#23344d">HQ-GW-01</text>
-<text x="1519" y="830" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<g class="interface-row" data-element-id="gw01.trunk" data-owner="gw01" data-anchor-y="884.0" data-anchor-x="1843">
+<rect class="device-frame" x="1590" y="847" width="340" height="176" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1606" y="873" font-size="16" fill="#23344d">HQ-GW-01</text>
+<text x="1606" y="894" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
+<g class="interface-row member-l2-0 member-l2-1" data-element-id="gw01.trunk" data-owner="gw01" data-anchor-y="966.0" data-anchor-x="1930">
 <title>gw01.trunk</title>
-<path class="row-separator" d="M1515,857 L1831,857" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1519" y="878" font-size="13" fill="#23344d">gw01.trunk</text>
-<text x="1519" y="896" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
-<circle class="interface-anchor" data-port-id="gw01.trunk" cx="1843" cy="884.0" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>
+<path class="row-separator" d="M1602,921 L1918,921" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1606" y="942" font-size="13" fill="#23344d">gw01.trunk</text>
+<text x="1606" y="960" font-size="12" fill="#60788e">trunk / vlan-office, vlan-guest</text>
+<text class="membership-label member-l2-0" tabindex="0" role="img" aria-label="vlan-office / VLAN 10 / 業務LAN" x="1606" y="978" font-size="12" fill="#1676b5">V1 / vlan-office</text>
+<circle class="membership-anchor member-l2-0" data-membership-network="vlan-office" data-membership-interface="gw01.trunk" cx="1930" cy="974" r="3.5" fill="white" stroke="#1676b5" stroke-width="1.5"/>
+<text class="membership-label member-l2-1" tabindex="0" role="img" aria-label="vlan-guest / VLAN 20 / 来客LAN" x="1606" y="996" font-size="12" fill="#b56316">V2 / vlan-guest</text>
+<circle class="membership-anchor member-l2-1" data-membership-network="vlan-guest" data-membership-interface="gw01.trunk" cx="1930" cy="992" r="3.5" fill="white" stroke="#b56316" stroke-width="1.5"/>
 </g>
 </g>
-<path class="relation-branch" d="M400,884.0 L418,884.0 L418,1104" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.l2"/>
-<circle cx="418" cy="1104" r="2.8" fill="#1676b5"/>
-<path class="relation-branch" d="M1362,884.0 L1380,884.0 L1380,1104" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.access1"/>
-<circle cx="1380" cy="1104" r="2.8" fill="#1676b5"/>
-<path class="relation-branch" d="M1362,992.0 L1387,992.0 L1387,1104" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.trunk"/>
-<circle cx="1387" cy="1104" r="2.8" fill="#1676b5"/>
-<path class="relation-branch" d="M1843,884.0 L1861,884.0 L1861,1104" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.trunk"/>
-<circle cx="1861" cy="1104" r="2.8" fill="#1676b5"/>
-<path class="relation-bus" d="M411,1104 L1868,1104" fill="none" stroke="#1676b5" stroke-width="1.7" />
-<text x="40" y="1094" font-size="12" fill="#1676b5">vlan-office / VLAN 10 / 業務LAN</text>
-<path class="relation-branch" d="M881,884.0 L899,884.0 L899,1156" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.l2"/>
-<circle cx="899" cy="1156" r="2.8" fill="#b56316"/>
-<path class="relation-branch" d="M1362,938.0 L1394,938.0 L1394,1156" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.access2"/>
-<circle cx="1394" cy="1156" r="2.8" fill="#b56316"/>
-<path class="relation-branch" d="M1362,992.0 L1401,992.0 L1401,1156" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.trunk"/>
-<circle cx="1401" cy="1156" r="2.8" fill="#b56316"/>
-<path class="relation-branch" d="M1843,884.0 L1868,884.0 L1868,1156" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.trunk"/>
-<circle cx="1868" cy="1156" r="2.8" fill="#b56316"/>
-<path class="relation-bus" d="M892,1156 L1875,1156" fill="none" stroke="#b56316" stroke-width="1.7" />
-<text x="40" y="1146" font-size="12" fill="#b56316">vlan-guest / VLAN 20 / 来客LAN</text>
-<path class="relation-branch" d="M1362,884.0 L1408,884.0 L1408,1208" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access1"/>
-<circle cx="1408" cy="1208" r="2.8" fill="#48794b"/>
-<path class="relation-branch" d="M1362,938.0 L1415,938.0 L1415,1208" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access2"/>
-<circle cx="1415" cy="1208" r="2.8" fill="#48794b"/>
-<path class="relation-branch" d="M1362,992.0 L1422,992.0 L1422,1208" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.trunk"/>
-<circle cx="1422" cy="1208" r="2.8" fill="#48794b"/>
-<path class="relation-bus" d="M1401,1208 L1429,1208" fill="none" stroke="#48794b" stroke-width="1.7" />
-<text x="40" y="1198" font-size="12" fill="#48794b">sw01.bridge / VLAN別に転送</text>
+<text x="40" y="836" font-size="11" fill="#60788e">V＝VLAN / S＝サブネット / B＝機器内ブリッジ。番号・線にマウスまたはTabで所属を強調。交差部は未接続。</text>
+<g class="network-group network-l2-0" data-network-id="vlan-office" data-network-kind="vlan" tabindex="0" role="img" aria-label="V1 / vlan-office / VLAN 10 / 業務LAN / 所属：pc-a.l2, sw01.access1, sw01.trunk, gw01.trunk">
+<title>V1 / vlan-office / VLAN 10 / 業務LAN / 所属：pc-a.l2, sw01.access1, sw01.trunk, gw01.trunk</title>
+<path class="relation-casing" d="M411,1294 L1965,1294" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M411,1294 L1965,1294" fill="none" stroke="#1676b5" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M400,974 L418,974 L418,1294" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M400,974 L418,974 L418,1294" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="pc-a.l2" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="418" cy="1294" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1420,974 L1498,974 L1498,1294" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,974 L1498,974 L1498,1294" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.access1" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1498" cy="1294" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1420,1154 L1458,1154 L1458,1294" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,1154 L1458,1154 L1458,1294" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1458" cy="1294" r="2.8" fill="#1676b5"/>
+<path class="relation-casing" d="M1930,974 L1958,974 L1958,1294" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1930,974 L1958,974 L1958,1294" fill="none" stroke="#1676b5" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-office" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1958" cy="1294" r="2.8" fill="#1676b5"/>
+<text x="40" y="1284" font-size="12" fill="#1676b5">V1 / vlan-office / VLAN 10 / 業務LAN</text>
+</g>
+<g class="network-group network-l2-1" data-network-id="vlan-guest" data-network-kind="vlan" tabindex="0" role="img" aria-label="V2 / vlan-guest / VLAN 20 / 来客LAN / 所属：pc-b.l2, sw01.access2, sw01.trunk, gw01.trunk">
+<title>V2 / vlan-guest / VLAN 20 / 来客LAN / 所属：pc-b.l2, sw01.access2, sw01.trunk, gw01.trunk</title>
+<path class="relation-casing" d="M921,1360 L1955,1360" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M921,1360 L1955,1360" fill="none" stroke="#b56316" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M910,974 L928,974 L928,1360" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M910,974 L928,974 L928,1360" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="pc-b.l2" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="928" cy="1360" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1420,1064 L1478,1064 L1478,1360" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,1064 L1478,1064 L1478,1360" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.access2" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1478" cy="1360" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1420,1172 L1448,1172 L1448,1360" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,1172 L1448,1172 L1448,1360" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1448" cy="1360" r="2.8" fill="#b56316"/>
+<path class="relation-casing" d="M1930,992 L1948,992 L1948,1360" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1930,992 L1948,992 L1948,1360" fill="none" stroke="#b56316" stroke-width="1.7" data-endpoint="gw01.trunk" data-network="vlan-guest" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1948" cy="1360" r="2.8" fill="#b56316"/>
+<text x="40" y="1350" font-size="12" fill="#b56316">V2 / vlan-guest / VLAN 20 / 来客LAN</text>
+</g>
+<g class="network-group network-l2-2" data-network-id="sw01.bridge" data-network-kind="bridge" tabindex="0" role="img" aria-label="B1 / sw01.bridge / VLAN別に転送 / 所属：sw01.access1, sw01.access2, sw01.trunk">
+<title>B1 / sw01.bridge / VLAN別に転送 / 所属：sw01.access1, sw01.access2, sw01.trunk</title>
+<path class="relation-casing" d="M1431,1426 L1495,1426" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-bus" d="M1431,1426 L1495,1426" fill="none" stroke="#48794b" stroke-width="1.7"  stroke-linejoin="round"/>
+<path class="relation-casing" d="M1420,992 L1488,992 L1488,1426" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,992 L1488,992 L1488,1426" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access1" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1488" cy="1426" r="2.8" fill="#48794b"/>
+<path class="relation-casing" d="M1420,1082 L1468,1082 L1468,1426" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,1082 L1468,1082 L1468,1426" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.access2" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1468" cy="1426" r="2.8" fill="#48794b"/>
+<path class="relation-casing" d="M1420,1190 L1438,1190 L1438,1426" fill="none" stroke="#edf6ef" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true" style="stroke-width:6;pointer-events:none"/>
+<path class="relation-branch" d="M1420,1190 L1438,1190 L1438,1426" fill="none" stroke="#48794b" stroke-width="1.7" data-endpoint="sw01.trunk" data-network="sw01.bridge" stroke-linejoin="round"/>
+<circle class="network-junction" cx="1438" cy="1426" r="2.8" fill="#48794b"/>
+<text x="40" y="1416" font-size="12" fill="#48794b">B1 / sw01.bridge / VLAN別に転送</text>
+</g>
 </g>
 <g data-layer="l1">
-<rect class="layer-panel" x="20" y="1394" width="1944" height="747" rx="8" fill="#f0eff7" stroke="#f0eff7"/>
-<text x="40" y="1426" font-size="22" fill="#23344d">L1 / 物理ポート・ケーブル</text>
+<rect class="layer-panel" x="20" y="1626" width="2060" height="747" rx="8" fill="#f0eff7" stroke="#f0eff7"/>
+<text x="40" y="1658" font-size="22" fill="#23344d">L1 / 物理ポート・ケーブル</text>
 <g class="device-card" data-device="pc-a" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-PC-01 / L1">
-<rect class="device-frame" x="60" y="1516" width="340" height="260" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="76" y="1542" font-size="16" fill="#23344d">HQ-PC-01</text>
-<text x="76" y="1563" font-size="11" fill="#72869b">pc-a / endpoint</text>
-<text x="76" y="1588" font-size="12" fill="#526980">メーカー：Example Computing</text>
-<text x="76" y="1606" font-size="12" fill="#526980">型番：EC-Desktop-100</text>
-<text x="76" y="1624" font-size="12" fill="#526980">S/N：DEMO-PC-0001</text>
-<text x="76" y="1642" font-size="12" fill="#526980">拠点：本社</text>
-<text x="76" y="1660" font-size="12" fill="#526980">部屋：執務室</text>
-<text x="76" y="1678" font-size="12" fill="#526980">位置：座席A01</text>
-<g class="interface-row" data-element-id="pc-a.eth0" data-owner="pc-a" data-anchor-y="1737.0" data-anchor-x="400">
+<rect class="device-frame" x="60" y="1748" width="340" height="260" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="76" y="1774" font-size="16" fill="#23344d">HQ-PC-01</text>
+<text x="76" y="1795" font-size="11" fill="#72869b">pc-a / endpoint</text>
+<text x="76" y="1820" font-size="12" fill="#526980">メーカー：Example Computing</text>
+<text x="76" y="1838" font-size="12" fill="#526980">型番：EC-Desktop-100</text>
+<text x="76" y="1856" font-size="12" fill="#526980">S/N：DEMO-PC-0001</text>
+<text x="76" y="1874" font-size="12" fill="#526980">拠点：本社</text>
+<text x="76" y="1892" font-size="12" fill="#526980">部屋：執務室</text>
+<text x="76" y="1910" font-size="12" fill="#526980">位置：座席A01</text>
+<g class="interface-row " data-element-id="pc-a.eth0" data-owner="pc-a" data-anchor-y="1969.0" data-anchor-x="400">
 <title>pc-a.eth0</title>
-<path class="row-separator" d="M72,1710 L388,1710" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="76" y="1731" font-size="13" fill="#23344d">pc-a.eth0</text>
-<text x="76" y="1749" font-size="12" fill="#60788e">eth0</text>
-<circle class="interface-anchor" data-port-id="pc-a.eth0" cx="400" cy="1737.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
+<path class="row-separator" d="M72,1942 L388,1942" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="76" y="1963" font-size="13" fill="#23344d">pc-a.eth0</text>
+<text x="76" y="1981" font-size="12" fill="#60788e">eth0</text>
+<circle class="interface-anchor" data-port-id="pc-a.eth0" cx="400" cy="1969.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="pc-b" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-GUEST-PC-01 / L1">
-<rect class="device-frame" x="541" y="1516" width="340" height="260" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="557" y="1542" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
-<text x="557" y="1563" font-size="11" fill="#72869b">pc-b / endpoint</text>
-<text x="557" y="1588" font-size="12" fill="#526980">メーカー：Example Computing</text>
-<text x="557" y="1606" font-size="12" fill="#526980">型番：EC-Notebook-200</text>
-<text x="557" y="1624" font-size="12" fill="#526980">S/N：DEMO-PC-0002</text>
-<text x="557" y="1642" font-size="12" fill="#526980">拠点：本社</text>
-<text x="557" y="1660" font-size="12" fill="#526980">部屋：会議室</text>
-<text x="557" y="1678" font-size="12" fill="#526980">位置：来客席B01</text>
-<g class="interface-row" data-element-id="pc-b.eth0" data-owner="pc-b" data-anchor-y="1737.0" data-anchor-x="881">
+<rect class="device-frame" x="570" y="1748" width="340" height="260" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="586" y="1774" font-size="16" fill="#23344d">HQ-GUEST-PC-01</text>
+<text x="586" y="1795" font-size="11" fill="#72869b">pc-b / endpoint</text>
+<text x="586" y="1820" font-size="12" fill="#526980">メーカー：Example Computing</text>
+<text x="586" y="1838" font-size="12" fill="#526980">型番：EC-Notebook-200</text>
+<text x="586" y="1856" font-size="12" fill="#526980">S/N：DEMO-PC-0002</text>
+<text x="586" y="1874" font-size="12" fill="#526980">拠点：本社</text>
+<text x="586" y="1892" font-size="12" fill="#526980">部屋：会議室</text>
+<text x="586" y="1910" font-size="12" fill="#526980">位置：来客席B01</text>
+<g class="interface-row " data-element-id="pc-b.eth0" data-owner="pc-b" data-anchor-y="1969.0" data-anchor-x="910">
 <title>pc-b.eth0</title>
-<path class="row-separator" d="M553,1710 L869,1710" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="557" y="1731" font-size="13" fill="#23344d">pc-b.eth0</text>
-<text x="557" y="1749" font-size="12" fill="#60788e">eth0</text>
-<circle class="interface-anchor" data-port-id="pc-b.eth0" cx="881" cy="1737.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
+<path class="row-separator" d="M582,1942 L898,1942" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="586" y="1963" font-size="13" fill="#23344d">pc-b.eth0</text>
+<text x="586" y="1981" font-size="12" fill="#60788e">eth0</text>
+<circle class="interface-anchor" data-port-id="pc-b.eth0" cx="910" cy="1969.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="sw01" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-SW-01 / L1">
-<rect class="device-frame" x="1022" y="1516" width="340" height="386" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1038" y="1542" font-size="16" fill="#23344d">HQ-SW-01</text>
-<text x="1038" y="1563" font-size="11" fill="#72869b">sw01 / l2-switch</text>
-<text x="1038" y="1588" font-size="12" fill="#526980">メーカー：Example Networks</text>
-<text x="1038" y="1606" font-size="12" fill="#526980">型番：EN-SW24</text>
-<text x="1038" y="1624" font-size="12" fill="#526980">S/N：DEMO-SW-0001</text>
-<text x="1038" y="1642" font-size="12" fill="#526980">拠点：本社</text>
-<text x="1038" y="1660" font-size="12" fill="#526980">部屋：サーバー室</text>
-<text x="1038" y="1678" font-size="12" fill="#526980">ラック：R01</text>
-<text x="1038" y="1696" font-size="12" fill="#526980">U：12</text>
-<g class="interface-row" data-element-id="sw01.p1" data-owner="sw01" data-anchor-y="1755.0" data-anchor-x="1022">
+<rect class="device-frame" x="1080" y="1748" width="340" height="386" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1096" y="1774" font-size="16" fill="#23344d">HQ-SW-01</text>
+<text x="1096" y="1795" font-size="11" fill="#72869b">sw01 / l2-switch</text>
+<text x="1096" y="1820" font-size="12" fill="#526980">メーカー：Example Networks</text>
+<text x="1096" y="1838" font-size="12" fill="#526980">型番：EN-SW24</text>
+<text x="1096" y="1856" font-size="12" fill="#526980">S/N：DEMO-SW-0001</text>
+<text x="1096" y="1874" font-size="12" fill="#526980">拠点：本社</text>
+<text x="1096" y="1892" font-size="12" fill="#526980">部屋：サーバー室</text>
+<text x="1096" y="1910" font-size="12" fill="#526980">ラック：R01</text>
+<text x="1096" y="1928" font-size="12" fill="#526980">U：12</text>
+<g class="interface-row " data-element-id="sw01.p1" data-owner="sw01" data-anchor-y="1987.0" data-anchor-x="1080">
 <title>sw01.p1</title>
-<path class="row-separator" d="M1034,1728 L1350,1728" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="1749" font-size="13" fill="#23344d">sw01.p1</text>
-<text x="1038" y="1767" font-size="12" fill="#60788e">p1</text>
-<circle class="interface-anchor" data-port-id="sw01.p1" cx="1022" cy="1755.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,1960 L1408,1960" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="1981" font-size="13" fill="#23344d">sw01.p1</text>
+<text x="1096" y="1999" font-size="12" fill="#60788e">p1</text>
+<circle class="interface-anchor" data-port-id="sw01.p1" cx="1080" cy="1987.0" r="4" fill="white" stroke="#1779a5" stroke-width="1.5"/>
 </g>
-<g class="interface-row" data-element-id="sw01.p2" data-owner="sw01" data-anchor-y="1809.0" data-anchor-x="1022">
+<g class="interface-row " data-element-id="sw01.p2" data-owner="sw01" data-anchor-y="2041.0" data-anchor-x="1080">
 <title>sw01.p2</title>
-<path class="row-separator" d="M1034,1782 L1350,1782" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="1803" font-size="13" fill="#23344d">sw01.p2</text>
-<text x="1038" y="1821" font-size="12" fill="#60788e">p2</text>
-<circle class="interface-anchor" data-port-id="sw01.p2" cx="1022" cy="1809.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,2014 L1408,2014" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="2035" font-size="13" fill="#23344d">sw01.p2</text>
+<text x="1096" y="2053" font-size="12" fill="#60788e">p2</text>
+<circle class="interface-anchor" data-port-id="sw01.p2" cx="1080" cy="2041.0" r="4" fill="white" stroke="#b5681c" stroke-width="1.5"/>
 </g>
-<g class="interface-row" data-element-id="sw01.p24" data-owner="sw01" data-anchor-y="1863.0" data-anchor-x="1362">
+<g class="interface-row " data-element-id="sw01.p24" data-owner="sw01" data-anchor-y="2095.0" data-anchor-x="1420">
 <title>sw01.p24</title>
-<path class="row-separator" d="M1034,1836 L1350,1836" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1038" y="1857" font-size="13" fill="#23344d">sw01.p24</text>
-<text x="1038" y="1875" font-size="12" fill="#60788e">p24</text>
-<circle class="interface-anchor" data-port-id="sw01.p24" cx="1362" cy="1863.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
+<path class="row-separator" d="M1092,2068 L1408,2068" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1096" y="2089" font-size="13" fill="#23344d">sw01.p24</text>
+<text x="1096" y="2107" font-size="12" fill="#60788e">p24</text>
+<circle class="interface-anchor" data-port-id="sw01.p24" cx="1420" cy="2095.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
 </g>
 </g>
 <g class="device-card" data-device="gw01" data-device-layer="l1" tabindex="0" role="button" aria-label="HQ-GW-01 / L1">
-<rect class="device-frame" x="1503" y="1516" width="340" height="278" rx="8" fill="white" stroke="#9fb0c4"/>
-<text x="1519" y="1542" font-size="16" fill="#23344d">HQ-GW-01</text>
-<text x="1519" y="1563" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
-<text x="1519" y="1588" font-size="12" fill="#526980">メーカー：Example Networks</text>
-<text x="1519" y="1606" font-size="12" fill="#526980">型番：EN-GW100</text>
-<text x="1519" y="1624" font-size="12" fill="#526980">S/N：DEMO-GW-0001</text>
-<text x="1519" y="1642" font-size="12" fill="#526980">拠点：本社</text>
-<text x="1519" y="1660" font-size="12" fill="#526980">部屋：サーバー室</text>
-<text x="1519" y="1678" font-size="12" fill="#526980">ラック：R01</text>
-<text x="1519" y="1696" font-size="12" fill="#526980">U：13</text>
-<g class="interface-row" data-element-id="gw01.lan" data-owner="gw01" data-anchor-y="1755.0" data-anchor-x="1503">
+<rect class="device-frame" x="1590" y="1748" width="340" height="278" rx="8" fill="white" stroke="#9fb0c4"/>
+<text x="1606" y="1774" font-size="16" fill="#23344d">HQ-GW-01</text>
+<text x="1606" y="1795" font-size="11" fill="#72869b">gw01 / internet-gateway</text>
+<text x="1606" y="1820" font-size="12" fill="#526980">メーカー：Example Networks</text>
+<text x="1606" y="1838" font-size="12" fill="#526980">型番：EN-GW100</text>
+<text x="1606" y="1856" font-size="12" fill="#526980">S/N：DEMO-GW-0001</text>
+<text x="1606" y="1874" font-size="12" fill="#526980">拠点：本社</text>
+<text x="1606" y="1892" font-size="12" fill="#526980">部屋：サーバー室</text>
+<text x="1606" y="1910" font-size="12" fill="#526980">ラック：R01</text>
+<text x="1606" y="1928" font-size="12" fill="#526980">U：13</text>
+<g class="interface-row " data-element-id="gw01.lan" data-owner="gw01" data-anchor-y="1987.0" data-anchor-x="1590">
 <title>gw01.lan</title>
-<path class="row-separator" d="M1515,1728 L1831,1728" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
-<text x="1519" y="1749" font-size="13" fill="#23344d">gw01.lan</text>
-<text x="1519" y="1767" font-size="12" fill="#60788e">lan</text>
-<circle class="interface-anchor" data-port-id="gw01.lan" cx="1503" cy="1755.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
+<path class="row-separator" d="M1602,1960 L1918,1960" fill="none" stroke="#e0e7ee" stroke-width="1.7" />
+<text x="1606" y="1981" font-size="13" fill="#23344d">gw01.lan</text>
+<text x="1606" y="1999" font-size="12" fill="#60788e">lan</text>
+<circle class="interface-anchor" data-port-id="gw01.lan" cx="1590" cy="1987.0" r="4" fill="white" stroke="#287c58" stroke-width="1.5"/>
 </g>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-a" tabindex="0" role="img" aria-label="cable-a / pc-a.eth0 ↔ sw01.p1 / copper / 1Gbps">
 <title>cable-a / pc-a.eth0 ↔ sw01.p1 / copper / 1Gbps</title>
-<path class="physical-cable" d="M400,1737.0 L418,1737.0 L418,1452 L1004,1452 L1004,1755.0 L1022,1755.0" fill="none" stroke="#1779a5" stroke-width="1.7" data-from="pc-a.eth0" data-to="sw01.p1" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="711.0" y="1445" text-anchor="middle" font-size="11" fill="#1779a5" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C1</text>
-<text x="40" y="2032" font-size="12" fill="#1779a5">C1  cable-a  |  pc-a.eth0 ↔ sw01.p1  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M400,1969.0 L418,1969.0 L418,1684 L1062,1684 L1062,1987.0 L1080,1987.0" fill="none" stroke="#1779a5" stroke-width="1.7" data-from="pc-a.eth0" data-to="sw01.p1" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="740.0" y="1677" text-anchor="middle" font-size="11" fill="#1779a5" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C1</text>
+<text x="40" y="2264" font-size="12" fill="#1779a5">C1  cable-a  |  pc-a.eth0 ↔ sw01.p1  |  copper / 1Gbps</text>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-b" tabindex="0" role="img" aria-label="cable-b / pc-b.eth0 ↔ sw01.p2 / copper / 1Gbps">
 <title>cable-b / pc-b.eth0 ↔ sw01.p2 / copper / 1Gbps</title>
-<path class="physical-cable" d="M881,1737.0 L951.5,1737.0 L951.5,1809.0 L1022,1809.0" fill="none" stroke="#b5681c" stroke-width="1.7" data-from="pc-b.eth0" data-to="sw01.p2" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="916.25" y="1730.0" text-anchor="middle" font-size="11" fill="#b5681c" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C2</text>
-<text x="40" y="2063" font-size="12" fill="#b5681c">C2  cable-b  |  pc-b.eth0 ↔ sw01.p2  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M910,1969.0 L995.0,1969.0 L995.0,2041.0 L1080,2041.0" fill="none" stroke="#b5681c" stroke-width="1.7" data-from="pc-b.eth0" data-to="sw01.p2" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="952.5" y="1962.0" text-anchor="middle" font-size="11" fill="#b5681c" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C2</text>
+<text x="40" y="2295" font-size="12" fill="#b5681c">C2  cable-b  |  pc-b.eth0 ↔ sw01.p2  |  copper / 1Gbps</text>
 </g>
 <g class="physical-cable-group" data-cable-id="cable-uplink" tabindex="0" role="img" aria-label="cable-uplink / sw01.p24 ↔ gw01.lan / copper / 1Gbps">
 <title>cable-uplink / sw01.p24 ↔ gw01.lan / copper / 1Gbps</title>
-<path class="physical-cable" d="M1362,1863.0 L1432.5,1863.0 L1432.5,1755.0 L1503,1755.0" fill="none" stroke="#287c58" stroke-width="1.7" data-from="sw01.p24" data-to="gw01.lan" stroke-linecap="round" stroke-linejoin="round"/>
-<text class="cable-number" x="1397.25" y="1856.0" text-anchor="middle" font-size="11" fill="#287c58" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C3</text>
-<text x="40" y="2094" font-size="12" fill="#287c58">C3  cable-uplink  |  sw01.p24 ↔ gw01.lan  |  copper / 1Gbps</text>
+<path class="physical-cable" d="M1420,2095.0 L1505.0,2095.0 L1505.0,1987.0 L1590,1987.0" fill="none" stroke="#287c58" stroke-width="1.7" data-from="sw01.p24" data-to="gw01.lan" stroke-linecap="round" stroke-linejoin="round"/>
+<text class="cable-number" x="1462.5" y="2088.0" text-anchor="middle" font-size="11" fill="#287c58" paint-order="stroke" stroke="#f0eff7" stroke-width="4">C3</text>
+<text x="40" y="2326" font-size="12" fill="#287c58">C3  cable-uplink  |  sw01.p24 ↔ gw01.lan  |  copper / 1Gbps</text>
 </g>
 </g>
 <g data-binding="l3_to_l2">
-<text x="40" y="626" font-size="13" fill="#765194">層間対応 / l3_to_l2</text>
-<path class="binding-edge" d="M60,317.0 L28,317.0 L28,884.0 L60,884.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-a.ip" data-to="pc-a.l2" stroke-dasharray="5 5"/>
-<circle cx="60" cy="317.0" r="2.5" fill="#8665a6"/>
-<circle cx="60" cy="884.0" r="2.5" fill="#8665a6"/>
-<text x="68" y="648" font-size="10" fill="#765194">pc-a.ip → pc-a.l2 / vlan-office</text>
-<path class="binding-edge" d="M541,317.0 L509,317.0 L509,884.0 L541,884.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-b.ip" data-to="pc-b.l2" stroke-dasharray="5 5"/>
-<circle cx="541" cy="317.0" r="2.5" fill="#8665a6"/>
-<circle cx="541" cy="884.0" r="2.5" fill="#8665a6"/>
-<text x="549" y="648" font-size="10" fill="#765194">pc-b.ip → pc-b.l2 / vlan-guest</text>
-<path class="binding-edge" d="M1503,317.0 L1471,317.0 L1471,884.0 L1503,884.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.v10" data-to="gw01.trunk" stroke-dasharray="5 5"/>
-<circle cx="1503" cy="317.0" r="2.5" fill="#8665a6"/>
-<circle cx="1503" cy="884.0" r="2.5" fill="#8665a6"/>
-<text x="1511" y="648" font-size="10" fill="#765194">gw01.v10 → gw01.trunk / vlan-office</text>
-<path class="binding-edge" d="M1503,389.0 L1464,389.0 L1464,884.0 L1503,884.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.v20" data-to="gw01.trunk" stroke-dasharray="5 5"/>
-<circle cx="1503" cy="389.0" r="2.5" fill="#8665a6"/>
-<circle cx="1503" cy="884.0" r="2.5" fill="#8665a6"/>
-<text x="1511" y="675" font-size="10" fill="#765194">gw01.v20 → gw01.trunk / vlan-guest</text>
+<text x="40" y="690" font-size="13" fill="#765194">層間対応 / l3_to_l2</text>
+<path class="binding-edge" d="M60,326.0 L28,326.0 L28,957.0 L60,957.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-a.ip" data-to="pc-a.l2" stroke-dasharray="5 5"/>
+<circle cx="60" cy="326.0" r="2.5" fill="#8665a6"/>
+<circle cx="60" cy="957.0" r="2.5" fill="#8665a6"/>
+<text x="68" y="712" font-size="10" fill="#765194">pc-a.ip → pc-a.l2 / vlan-office</text>
+<path class="binding-edge" d="M570,326.0 L538,326.0 L538,957.0 L570,957.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-b.ip" data-to="pc-b.l2" stroke-dasharray="5 5"/>
+<circle cx="570" cy="326.0" r="2.5" fill="#8665a6"/>
+<circle cx="570" cy="957.0" r="2.5" fill="#8665a6"/>
+<text x="578" y="712" font-size="10" fill="#765194">pc-b.ip → pc-b.l2 / vlan-guest</text>
+<path class="binding-edge" d="M1590,326.0 L1558,326.0 L1558,966.0 L1590,966.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.v10" data-to="gw01.trunk" stroke-dasharray="5 5"/>
+<circle cx="1590" cy="326.0" r="2.5" fill="#8665a6"/>
+<circle cx="1590" cy="966.0" r="2.5" fill="#8665a6"/>
+<text x="1598" y="712" font-size="10" fill="#765194">gw01.v10 → gw01.trunk / vlan-office</text>
+<path class="binding-edge" d="M1590,416.0 L1551,416.0 L1551,966.0 L1590,966.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.v20" data-to="gw01.trunk" stroke-dasharray="5 5"/>
+<circle cx="1590" cy="416.0" r="2.5" fill="#8665a6"/>
+<circle cx="1590" cy="966.0" r="2.5" fill="#8665a6"/>
+<text x="1598" y="739" font-size="10" fill="#765194">gw01.v20 → gw01.trunk / vlan-guest</text>
 </g>
 <g data-binding="l2_to_l1">
-<text x="40" y="1272" font-size="13" fill="#765194">層間対応 / l2_to_l1</text>
-<path class="binding-edge" d="M60,884.0 L28,884.0 L28,1737.0 L60,1737.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-a.l2" data-to="pc-a.eth0" stroke-dasharray="5 5"/>
-<circle cx="60" cy="884.0" r="2.5" fill="#8665a6"/>
-<circle cx="60" cy="1737.0" r="2.5" fill="#8665a6"/>
-<text x="68" y="1294" font-size="10" fill="#765194">pc-a.l2 → pc-a.eth0</text>
-<path class="binding-edge" d="M541,884.0 L509,884.0 L509,1737.0 L541,1737.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-b.l2" data-to="pc-b.eth0" stroke-dasharray="5 5"/>
-<circle cx="541" cy="884.0" r="2.5" fill="#8665a6"/>
-<circle cx="541" cy="1737.0" r="2.5" fill="#8665a6"/>
-<text x="549" y="1294" font-size="10" fill="#765194">pc-b.l2 → pc-b.eth0</text>
-<path class="binding-edge" d="M1022,884.0 L990,884.0 L990,1755.0 L1022,1755.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.access1" data-to="sw01.p1" stroke-dasharray="5 5"/>
-<circle cx="1022" cy="884.0" r="2.5" fill="#8665a6"/>
-<circle cx="1022" cy="1755.0" r="2.5" fill="#8665a6"/>
-<text x="1030" y="1294" font-size="10" fill="#765194">sw01.access1 → sw01.p1</text>
-<path class="binding-edge" d="M1022,938.0 L983,938.0 L983,1809.0 L1022,1809.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.access2" data-to="sw01.p2" stroke-dasharray="5 5"/>
-<circle cx="1022" cy="938.0" r="2.5" fill="#8665a6"/>
-<circle cx="1022" cy="1809.0" r="2.5" fill="#8665a6"/>
-<text x="1030" y="1321" font-size="10" fill="#765194">sw01.access2 → sw01.p2</text>
-<path class="binding-edge" d="M1022,992.0 L976,992.0 L976,1863.0 L1022,1863.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.trunk" data-to="sw01.p24" stroke-dasharray="5 5"/>
-<circle cx="1022" cy="992.0" r="2.5" fill="#8665a6"/>
-<circle cx="1022" cy="1863.0" r="2.5" fill="#8665a6"/>
-<text x="1030" y="1348" font-size="10" fill="#765194">sw01.trunk → sw01.p24</text>
-<path class="binding-edge" d="M1503,884.0 L1471,884.0 L1471,1755.0 L1503,1755.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.trunk" data-to="gw01.lan" stroke-dasharray="5 5"/>
-<circle cx="1503" cy="884.0" r="2.5" fill="#8665a6"/>
-<circle cx="1503" cy="1755.0" r="2.5" fill="#8665a6"/>
-<text x="1511" y="1294" font-size="10" fill="#765194">gw01.trunk → gw01.lan</text>
+<text x="40" y="1504" font-size="13" fill="#765194">層間対応 / l2_to_l1</text>
+<path class="binding-edge" d="M60,957.0 L28,957.0 L28,1969.0 L60,1969.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-a.l2" data-to="pc-a.eth0" stroke-dasharray="5 5"/>
+<circle cx="60" cy="957.0" r="2.5" fill="#8665a6"/>
+<circle cx="60" cy="1969.0" r="2.5" fill="#8665a6"/>
+<text x="68" y="1526" font-size="10" fill="#765194">pc-a.l2 → pc-a.eth0</text>
+<path class="binding-edge" d="M570,957.0 L538,957.0 L538,1969.0 L570,1969.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="pc-b.l2" data-to="pc-b.eth0" stroke-dasharray="5 5"/>
+<circle cx="570" cy="957.0" r="2.5" fill="#8665a6"/>
+<circle cx="570" cy="1969.0" r="2.5" fill="#8665a6"/>
+<text x="578" y="1526" font-size="10" fill="#765194">pc-b.l2 → pc-b.eth0</text>
+<path class="binding-edge" d="M1080,966.0 L1048,966.0 L1048,1987.0 L1080,1987.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.access1" data-to="sw01.p1" stroke-dasharray="5 5"/>
+<circle cx="1080" cy="966.0" r="2.5" fill="#8665a6"/>
+<circle cx="1080" cy="1987.0" r="2.5" fill="#8665a6"/>
+<text x="1088" y="1526" font-size="10" fill="#765194">sw01.access1 → sw01.p1</text>
+<path class="binding-edge" d="M1080,1056.0 L1041,1056.0 L1041,2041.0 L1080,2041.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.access2" data-to="sw01.p2" stroke-dasharray="5 5"/>
+<circle cx="1080" cy="1056.0" r="2.5" fill="#8665a6"/>
+<circle cx="1080" cy="2041.0" r="2.5" fill="#8665a6"/>
+<text x="1088" y="1553" font-size="10" fill="#765194">sw01.access2 → sw01.p2</text>
+<path class="binding-edge" d="M1080,1155.0 L1034,1155.0 L1034,2095.0 L1080,2095.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="sw01.trunk" data-to="sw01.p24" stroke-dasharray="5 5"/>
+<circle cx="1080" cy="1155.0" r="2.5" fill="#8665a6"/>
+<circle cx="1080" cy="2095.0" r="2.5" fill="#8665a6"/>
+<text x="1088" y="1580" font-size="10" fill="#765194">sw01.trunk → sw01.p24</text>
+<path class="binding-edge" d="M1590,966.0 L1558,966.0 L1558,1987.0 L1590,1987.0" fill="none" stroke="#8665a6" stroke-width="1.7" data-from="gw01.trunk" data-to="gw01.lan" stroke-dasharray="5 5"/>
+<circle cx="1590" cy="966.0" r="2.5" fill="#8665a6"/>
+<circle cx="1590" cy="1987.0" r="2.5" fill="#8665a6"/>
+<text x="1598" y="1526" font-size="10" fill="#765194">gw01.trunk → gw01.lan</text>
 </g>
-<text x="40" y="2183" font-size="19" fill="#23344d">L3経路 / 次ホップの指定（通信許可を意味しません）</text>
-<text x="40" y="2211" font-size="13" fill="#23344d">pc-a / pc-a.ip : 0.0.0.0/0 → 192.168.10.1</text>
-<text x="40" y="2237" font-size="13" fill="#23344d">pc-b / pc-b.ip : 0.0.0.0/0 → 192.168.20.1</text>
-<text x="40" y="2281" font-size="12" fill="#23344d">注：ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。</text>
-<text x="40" y="2307" font-size="12" fill="#23344d">注：経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。</text>
-<text x="40" y="2333" font-size="12" fill="#23344d">注：VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。</text>
-<text x="40" y="2369" font-size="12" fill="#23344d">一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応</text></svg>
+<text x="40" y="2415" font-size="19" fill="#23344d">L3経路 / 次ホップの指定（通信許可を意味しません）</text>
+<text x="40" y="2443" font-size="13" fill="#23344d">pc-a / pc-a.ip : 0.0.0.0/0 → 192.168.10.1</text>
+<text x="40" y="2469" font-size="13" fill="#23344d">pc-b / pc-b.ip : 0.0.0.0/0 → 192.168.20.1</text>
+<text x="40" y="2513" font-size="12" fill="#23344d">注：ゲートウェイのWAN側、NAT、DNS、DHCP、管理IPは今回の範囲外。</text>
+<text x="40" y="2539" font-size="12" fill="#23344d">注：経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。</text>
+<text x="40" y="2565" font-size="12" fill="#23344d">注：VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。</text>
+<text x="40" y="2601" font-size="12" fill="#23344d">一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応</text></svg>

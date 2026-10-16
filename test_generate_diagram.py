@@ -118,7 +118,8 @@ class DiagramTests(unittest.TestCase):
             for branch in layer.iter():
                 if 'data-endpoint' in branch.attrib:
                     first = branch.attrib['d'].split(' L')[0][1:]
-                    self.assertEqual(float(first.split(',')[1]), nodes[(layer.attrib['data-layer'],branch.attrib['data-endpoint'])])
+                    anchor=next(e for e in layer.iter() if e.attrib.get('data-membership-interface')==branch.attrib['data-endpoint'] and e.attrib.get('data-membership-network')==branch.attrib['data-network'])
+                    self.assertEqual(tuple(map(float,first.split(','))),(float(anchor.attrib['cx']),float(anchor.attrib['cy'])))
         switch_ports = [nodes[('l1',p)] for p in ['sw01.p1','sw01.p2','sw01.p24']]
         self.assertEqual(len(set(switch_ports)),3)
         for binding in [e for e in root.iter() if 'data-binding' in e.attrib]:
@@ -201,6 +202,70 @@ class DiagramTests(unittest.TestCase):
         m['l1']['links']=[]
         root=ET.fromstring(render(m,layers=['l1']))
         self.assertFalse(any('data-cable-id' in e.attrib for e in root.iter()))
+
+    def test_network_groups_have_exact_memberships_and_separate_trunk_anchors(self):
+        for layer in ['l2','l3']:
+            root=ET.fromstring(render(self.model,layers=[layer]))
+            expected=({v['id']:{i['id'] for i in self.model['l2']['interfaces'] if v['id'] in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])} for v in self.model['l2']['vlans']} if layer=='l2' else
+                      {s['id']:{i['id'] for i in self.model['l3']['interfaces'] if i['subnet']==s['id']} for s in self.model['l3']['subnets']})
+            if layer=='l2':
+                expected.update({b['id']:set(b['members']) for b in self.model['l2']['bridges']})
+            groups=[e for e in root.iter() if 'data-network-id' in e.attrib]
+            self.assertEqual({e.attrib['data-network-id'] for e in groups},set(expected))
+            for group in groups:
+                identity=group.attrib['data-network-id']
+                branches=[e for e in group.iter() if e.attrib.get('class')=='relation-branch']
+                self.assertEqual({e.attrib['data-endpoint'] for e in branches},expected[identity])
+                self.assertEqual(group.attrib['tabindex'],'0')
+                for member in expected[identity]:
+                    self.assertIn(member,group.attrib['aria-label'])
+                self.assertIn('network-'+next(c[8:] for c in group.attrib['class'].split() if c.startswith('network-l')),root.find('{http://www.w3.org/2000/svg}style').text)
+            colors={e.attrib['stroke'] for g in groups if g.attrib['data-network-kind']!='bridge' for e in g.iter() if e.attrib.get('class')=='relation-bus'}
+            self.assertEqual(len(colors),2)
+            if layer=='l2':
+                anchors=[float(e.attrib['cy']) for e in root.iter() if e.attrib.get('data-membership-interface')=='sw01.trunk']
+                self.assertEqual(len(anchors),3)
+                self.assertEqual(len(set(anchors)),3)
+
+    def test_logical_routes_do_not_share_segments_or_pass_through_equipment(self):
+        # Independent geometry checks, including a multi-VLAN trunk and bridge.
+        for layer in ['l2','l3']:
+            root=ET.fromstring(render(self.model,layers=[layer]))
+            boxes=[tuple(float(e.attrib[k]) for k in ('x','y','width','height')) for e in root.iter() if e.attrib.get('class')=='device-frame']
+            prior=[]
+            for wire in [e for e in root.iter() if e.attrib.get('class') in ('relation-bus','relation-branch')]:
+                points=[tuple(map(float,v.split(','))) for v in wire.attrib['d'][1:].split(' L')]
+                for a,b in zip(points,points[1:]):
+                    for x,y,w,h in boxes:
+                        if a[1]==b[1]:
+                            self.assertFalse(y<a[1]<y+h and max(min(a[0],b[0]),x)<min(max(a[0],b[0]),x+w))
+                        else:
+                            self.assertFalse(x<a[0]<x+w and max(min(a[1],b[1]),y)<min(max(a[1],b[1]),y+h))
+                    for c,d in prior:
+                        for axis in [0,1]:
+                            if a[1-axis]==b[1-axis]==c[1-axis]==d[1-axis]:
+                                self.assertLessEqual(min(max(a[axis],b[axis]),max(c[axis],d[axis]))-max(min(a[axis],b[axis]),min(c[axis],d[axis])),0)
+                        # Near-card departures must not cross another vertical track.
+                        if wire.attrib.get('class')=='relation-branch' and a[1]==b[1] and c[0]==d[0]:
+                            self.assertFalse(min(a[0],b[0])<c[0]<max(a[0],b[0]) and min(c[1],d[1])<a[1]<max(c[1],d[1]))
+                    prior.append((a,b))
+
+    def test_added_empty_network_and_long_membership_labels(self):
+        long_id='vlan-'+('long-id-'*9)
+        self.model['l2']['vlans'].append({'id':long_id,'tag':30})
+        self.model['l2']['interfaces'][-1]['tagged_vlans'].append(long_id)
+        self.model['l3']['subnets'].append({'id':'unused-net','cidr':'192.168.99.0/24'})
+        root=ET.fromstring(render(self.model))
+        added=next(e for e in root.iter() if e.attrib.get('data-network-id')==long_id)
+        self.assertEqual([e.attrib['data-endpoint'] for e in added.iter() if e.attrib.get('class')=='relation-branch'],['gw01.trunk'])
+        empty=next(e for e in root.iter() if e.attrib.get('data-network-id')=='unused-net')
+        self.assertIn('所属インターフェースなし',''.join(empty.itertext()))
+        self.assertFalse(any(e.attrib.get('class')=='relation-branch' for e in empty.iter()))
+        for card in [e for e in root.iter() if e.attrib.get('class')=='device-card']:
+            frame=next(e for e in card if e.attrib.get('class')=='device-frame')
+            bottom=float(frame.attrib['y'])+float(frame.attrib['height'])
+            for label in [e for e in card.iter() if 'membership-label' in e.attrib.get('class','')]:
+                self.assertLess(float(label.attrib['y']),bottom)
 
 
 if __name__ == '__main__':
