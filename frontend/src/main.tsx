@@ -6,6 +6,9 @@ import {EditorState} from '@codemirror/state';
 import {yaml} from '@codemirror/lang-yaml';
 import {setDiagnostics} from '@codemirror/lint';
 import './style.css';
+import {isolateHistory} from '@codemirror/commands';
+import {InputSupport,assist,type Proposal} from './InputSupport';
+import {normalized,newline,editorOffset,rawOffset,edited,inverse,trackUndo,type Edit,type UndoEdit} from './sourceEdits';
 import {Help, type Sample} from './Help';
 import {ScopeControls} from './ScopeControls';
 import {emptyScope,defaultLimits,sizeLabel,type Scope,type Result,type Limits} from './scope';
@@ -18,6 +21,12 @@ const encoder = new TextEncoder();
 const LABELS = {all:'全レイヤー',l1:'L1 物理',l2:'L2 VLAN',l3:'L3 IP'};
 
 function App() {
+  const [undoState,setUndoState]=useState<UndoEdit|null>(null);
+  const undoRef=useRef<UndoEdit|null>(null);
+  const [busyUndo,setBusyUndo]=useState(false);
+  const undoBusy=useRef(false);
+  const programEdit=useRef<{target:string;changes:Edit[]}|null>(null);
+  const setUndo=(value:UndoEdit|null)=>{undoRef.current=value;setUndoState(value);};
   const [scope,setScope]=useState<Scope>(emptyScope);
   const [limits,setLimits]=useState<Limits>(defaultLimits);
   const [source,setSource] = useState('');
@@ -69,10 +78,10 @@ function App() {
     setDirty(dirtyRef.current);
   };
   const replaceSource = (value:string) => {
-    invalidate();setScope(emptyScope());setRenderEpoch(n=>n+1);
+    setUndo(null);invalidate();setScope(emptyScope());setRenderEpoch(n=>n+1);
     changeSource(value,false); saved.current=value; dirtyRef.current=false; setDirty(false);
     const ed = editor.current;
-    if(ed) ed.dispatch({changes:{from:0,to:ed.state.doc.length,insert:value}});
+    if(ed){programEdit.current={target:value,changes:[]};ed.dispatch({changes:{from:0,to:ed.state.doc.length,insert:normalized(value)},annotations:isolateHistory.of('full')});programEdit.current=null;}
   };
 
   useEffect(()=>{
@@ -81,7 +90,13 @@ function App() {
       basicSetup, yaml(),
       EditorView.contentAttributes.of({'aria-label':'YAMLエディター','spellcheck':'false'}),
       keymap.of([{key:'Mod-s',run:()=>{document.getElementById('save-yaml')?.click();return true;}}]),
-      EditorView.updateListener.of(update=>{if(update.docChanged){const next=update.state.doc.toString();if(next!==sourceRef.current) changeSource(next);}}),
+      EditorView.updateListener.of(update=>{if(update.docChanged){
+        const before=sourceRef.current;const pending=programEdit.current;
+        const changes:Edit[]=[];
+        if(pending)changes.push(...pending.changes);else update.changes.iterChanges((from,to,_c,_d,insert)=>changes.push({from:rawOffset(before,from),to:rawOffset(before,to),insert:insert.toString().replace(/\n/g,newline(before))}));
+        if(undoRef.current)setUndo(trackUndo(undoRef.current,changes));
+        const next=pending?.target??edited(before,changes);if(next!==before)changeSource(next);
+      }}),
       EditorView.theme({'&':{height:'100%',fontSize:'12px'},'.cm-scroller':{overflow:'auto',fontFamily:'ui-monospace, Consolas, monospace',lineHeight:'1.8'},'.cm-content':{padding:'14px 0'},'.cm-gutters':{background:'#f6f8fa',color:'#98a3af',borderRight:'1px solid #e7ebef'},'.cm-activeLine':{background:'#edf5f3'},'.cm-activeLineGutter':{background:'#e6efec'},'&.cm-focused':{outline:'none'}})
     ]})});
     editor.current=ed;
@@ -271,6 +286,30 @@ function App() {
   };
   const jump=(issue:Issue)=>{const ed=editor.current;if(!ed||!issue.line||issue.line>ed.state.doc.lines)return;ed.dispatch({selection:{anchor:ed.state.doc.line(issue.line).from},scrollIntoView:true});ed.focus();};
 
+
+  const dispatchEdits=(changes:Edit[],target:string)=>{
+    const ed=editor.current;if(!ed||ed.state.doc.toString()!==normalized(sourceRef.current))return false;
+    const before=sourceRef.current;programEdit.current={target,changes};
+    try{ed.dispatch({changes:changes.map(e=>({from:editorOffset(before,e.from),to:editorOffset(before,e.to),insert:normalized(e.insert)})),annotations:isolateHistory.of('full')});}finally{programEdit.current=null;}
+    return true;
+  };
+  const applyProposal=(base:string,p:Proposal)=>{
+    if(undoBusy.current||sourceRef.current!==base||edited(base,p.changes)!==p.yaml_text)return false;
+    const nextUndo=inverse(base,p.changes);
+    if(!dispatchEdits(p.changes,p.yaml_text))return false;
+    setUndo(nextUndo);setNotice('YAMLに追加しました。図面は自動更新されます。');return true;
+  };
+  const undoForm=async()=>{
+    const record=undoRef.current;if(!record||record.conflict||undoBusy.current)return;
+    const before=sourceRef.current,target=edited(before,record.edits);undoBusy.current=true;setBusyUndo(true);
+    try{
+      await assist('catalog',{yaml_text:target});
+      if(sourceRef.current!==before||undoRef.current!==record){setNotice('検証中に編集されました。もう一度取り消してください。');return;}
+      if(dispatchEdits(record.edits,target)){setUndo(null);setNotice('直前のフォーム操作を取り消しました。');}
+    }catch(e){setNotice('取り消せません。追加した機器への参照などを確認してください。'+(e instanceof Error?e.message:''));}
+    finally{undoBusy.current=false;setBusyUndo(false);}
+  };
+
   return <div className="app">
     <header className="app-header">
       <a className="brand" href="/" aria-label="LayerMap ホーム"><span className="brand-mark"><i/><i/><i/></span><span>Layer<span className="brand-light">Map</span></span><span className="version">PREVIEW</span></a>
@@ -292,6 +331,7 @@ function App() {
       <p>{samples.find(s=>s.id===sampleId)?.description}</p><button className="guide-link" onClick={()=>setHelpOpen(true)}>項目と追加手順 ↗</button>
       {sampleError&&<div className="sample-error" role="alert">{sampleError}</div>}
     </section>
+    <InputSupport source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
     <main className="workspace">
       <section className="editor-panel" aria-label="構成データ">
         <div className="panel-header"><div><span className="file-icon">≡</span> 構成データ <span className="file-type">YAML</span></div><span className={'saved '+(dirty?'unsaved':'')}>{dirty?'● 未保存':'保存済み'}</span></div>

@@ -18,3 +18,5 @@ frontend/playwright-report/
 
 !view_model.py
 !bench_scale.py
+
+!input_support.py

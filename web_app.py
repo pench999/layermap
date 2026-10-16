@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from input_support import Operation, catalog as assist_catalog, preview as assist_preview
 from generate_diagram import render
 from network_model import ModelError, load_model, MAX_YAML_BYTES
 from view_model import ViewScope, prepare_view, limits, MAX_HTTP_BYTES, MAX_RENDER_JOBS, MAX_SVG_BYTES
@@ -72,7 +73,7 @@ class RenderRequest(BaseModel):
 
 @app.exception_handler(RequestValidationError)
 async def request_error(request, exc):
-    return JSONResponse({'errors':[{'message':'描画リクエストの形式が不正です','path':'.'.join(map(str,e['loc'])), 'line':None,'column':None} for e in exc.errors()]},status_code=422)
+    return JSONResponse({'errors':[{'message':'リクエストの形式が不正です','path':'.'.join(map(str,e['loc'])), 'line':None,'column':None} for e in exc.errors()]},status_code=422)
 
 
 @app.get('/api/limits')
@@ -135,6 +136,36 @@ def draw(request: RenderRequest):
         render_slots.release()
 
 
+
+
+class AssistRequest(BaseModel):
+    model_config = ConfigDict(extra='forbid', strict=True)
+    yaml_text: str = Field(max_length=MAX_YAML_BYTES)
+
+
+class PreviewRequest(AssistRequest):
+    operation: Operation
+
+
+def assist_call(function, request):
+    if not render_slots.acquire(blocking=False):
+        return JSONResponse({'errors':[{'message':'処理中です。少し待って再試行してください。'}]},status_code=429,headers={'Retry-After':'1'})
+    try:
+        return function(request)
+    except ModelError as exc:
+        return JSONResponse({'errors':[{'message':str(exc),'path':exc.path,'line':exc.line,'column':exc.column}]},status_code=422)
+    finally:
+        render_slots.release()
+
+
+@app.post('/api/assist/catalog')
+def input_catalog(request: AssistRequest):
+    return assist_call(lambda r:assist_catalog(r.yaml_text),request)
+
+
+@app.post('/api/assist/preview')
+def input_preview(request: PreviewRequest):
+    return assist_call(lambda r:assist_preview(r.yaml_text,r.operation),request)
 
 # Serving is local and bundled; no CDN, storage service, or external fonts are used.
 DIST = ROOT/'frontend'/'dist'
