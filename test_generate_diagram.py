@@ -146,6 +146,62 @@ class DiagramTests(unittest.TestCase):
             for label in [e for e in row.iter() if e.tag.endswith('text')]:
                 self.assertLess(float(label.attrib['y']),bottom)
 
+    def test_each_l1_cable_is_one_path_between_real_port_anchors(self):
+        root=ET.fromstring(render(self.model,layers=['l1']))
+        anchors={e.attrib['data-port-id']:(float(e.attrib['cx']),float(e.attrib['cy'])) for e in root.iter() if 'data-port-id' in e.attrib}
+        groups=[e for e in root.iter() if 'data-cable-id' in e.attrib]
+        self.assertEqual(len(groups),len(self.model['l1']['links']))
+        self.assertFalse(any(e.attrib.get('class') in ('relation-bus','relation-branch') for e in root.iter()))
+        links={l['id']:l for l in self.model['l1']['links']}
+        for group in groups:
+            paths=[e for e in group.iter() if e.tag.endswith('path')]
+            self.assertEqual(len(paths),1)
+            wire=paths[0]
+            link=links[group.attrib['data-cable-id']]
+            self.assertEqual([wire.attrib['data-from'],wire.attrib['data-to']],link['endpoints'])
+            points=[tuple(map(float,p.split(','))) for p in wire.attrib['d'][1:].split(' L')]
+            self.assertEqual(points[0],anchors[link['endpoints'][0]])
+            self.assertEqual(points[-1],anchors[link['endpoints'][1]])
+            self.assertIn(link['endpoints'][0],group.attrib['aria-label'])
+            self.assertIn(link['endpoints'][1],group.attrib['aria-label'])
+
+    def test_sample_cables_do_not_cross_share_segments_or_pass_through_cards(self):
+        root=ET.fromstring(render(self.model,layers=['l1']))
+        boxes=[tuple(float(e.attrib[k]) for k in ('x','y','width','height')) for e in root.iter() if e.attrib.get('class')=='device-frame']
+        wires=[]
+        for wire in [e for e in root.iter() if e.attrib.get('class')=='physical-cable']:
+            p=[tuple(map(float,v.split(','))) for v in wire.attrib['d'][1:].split(' L')]
+            segments=list(zip(p,p[1:]))
+            for a,b in segments:
+                for x,y,w,h in boxes:
+                    if a[1]==b[1]:
+                        self.assertFalse(y<a[1]<y+h and max(min(a[0],b[0]),x)<min(max(a[0],b[0]),x+w))
+                    else:
+                        self.assertFalse(x<a[0]<x+w and max(min(a[1],b[1]),y)<min(max(a[1],b[1]),y+h))
+                for c,d in wires:
+                    if a[1]==b[1] and c[0]==d[0]:
+                        self.assertFalse(min(a[0],b[0])<c[0]<max(a[0],b[0]) and min(c[1],d[1])<a[1]<max(c[1],d[1]))
+                    elif a[0]==b[0] and c[1]==d[1]:
+                        self.assertFalse(min(c[0],d[0])<a[0]<max(c[0],d[0]) and min(a[1],b[1])<c[1]<max(a[1],b[1]))
+                    elif a[0]==b[0]==c[0]==d[0]:
+                        self.assertLessEqual(min(max(a[1],b[1]),max(c[1],d[1]))-max(min(a[1],b[1]),min(c[1],d[1])),0)
+                    elif a[1]==b[1]==c[1]==d[1]:
+                        self.assertLessEqual(min(max(a[0],b[0]),max(c[0],d[0]))-max(min(a[0],b[0]),min(c[0],d[0])),0)
+            wires.extend(segments)
+
+    def test_parallel_and_same_device_cables_have_independent_paths(self):
+        m=self.model
+        m['l1']['links']=[{'id':'loop','endpoints':['sw01.p1','sw01.p2']}, {'id':'parallel1','endpoints':['pc-a.eth0','gw01.lan']}]
+        m['l1']['ports'] += [{'id':'pc-a.extra','device':'pc-a'},{'id':'gw01.extra','device':'gw01'}]
+        m['l1']['links'].append({'id':'parallel2','endpoints':['pc-a.extra','gw01.extra']})
+        root=ET.fromstring(render(m,layers=['l1']))
+        paths=[e.attrib['d'] for e in root.iter() if e.attrib.get('class')=='physical-cable']
+        self.assertEqual(len(paths),3)
+        self.assertEqual(len(set(paths)),3)
+        m['l1']['links']=[]
+        root=ET.fromstring(render(m,layers=['l1']))
+        self.assertFalse(any('data-cable-id' in e.attrib for e in root.iter()))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -28,6 +28,95 @@ def wrap_label(value, columns=44):
     return lines
 
 
+def compact_path(points):
+    result=[]
+    for point in points:
+        if result and point==result[-1]:
+            continue
+        result.append(point)
+        while len(result)>2 and ((result[-3][0]==result[-2][0]==result[-1][0]) or (result[-3][1]==result[-2][1]==result[-1][1])):
+            result.pop(-2)
+    return result
+
+
+def segments(points):
+    return list(zip(points,points[1:]))
+
+
+def segment_conflict(first,second):
+    """Return (positive-length overlap, crossing/touch); never create junctions."""
+    (a,b),(c,d)=first,second
+    horizontal=a[1]==b[1]
+    other_horizontal=c[1]==d[1]
+    if horizontal==other_horizontal:
+        axis=0 if horizontal else 1
+        fixed=1-axis
+        if a[fixed]!=c[fixed]:
+            return (0,0)
+        overlap=min(max(a[axis],b[axis]),max(c[axis],d[axis]))-max(min(a[axis],b[axis]),min(c[axis],d[axis]))
+        return (1,0) if overlap>0 else (0,int(overlap==0))
+    if not horizontal:
+        a,b,c,d=c,d,a,b
+    cross=min(a[0],b[0])<=c[0]<=max(a[0],b[0]) and min(c[1],d[1])<=a[1]<=max(c[1],d[1])
+    return (0,int(cross))
+
+
+def hits_card(points,boxes):
+    for a,b in segments(points):
+        for left,top,right,bottom in boxes:
+            if a[1]==b[1] and top<a[1]<bottom and max(min(a[0],b[0]),left)<min(max(a[0],b[0]),right):
+                return True
+            if a[0]==b[0] and left<a[0]<right and max(min(a[1],b[1]),top)<min(max(a[1],b[1]),bottom):
+                return True
+    return False
+
+
+def route_cables(links,nodes,boxes,card_top,bottom):
+    """Greedy orthogonal routing: avoid equipment, then shared segments and crossings.
+
+    Adjacent-device cables are placed first. Remaining cables can use independent
+    upper/lower tracks. Endpoints are always the actual port coordinates.
+    """
+    palette=['#1779a5','#b5681c','#287c58','#a04a92','#6a64b0','#ad574d']
+    prior=[]
+    routes={}
+    order=sorted(range(len(links)),key=lambda i:(abs(nodes[links[i]['endpoints'][0]]['left']-nodes[links[i]['endpoints'][1]]['left']),i))
+    for track,i in enumerate(order):
+        link=links[i]
+        a,b=[nodes[p] for p in link['endpoints']]
+        pa,pb=(a['anchor_x'],a['y']),(b['anchor_x'],b['y'])
+        candidates=[]
+        if a['device']!=b['device']:
+            lo,hi=sorted([pa[0],pb[0]])
+            for fraction in [.5,.25,.75,.125,.875]:
+                mid=lo+(hi-lo)*fraction
+                candidates.append([pa,(mid,pa[1]),(mid,pb[1]),pb])
+        for extra in [0,9,18]:
+            ea=pa[0]+a['side']*(18+7*a['slot']+extra)
+            eb=pb[0]+b['side']*(18+7*b['slot']+extra)
+            for lane_y in [card_top-24-track*20,bottom+36+track*24]:
+                candidates.append([pa,(ea,pa[1]),(ea,lane_y),(eb,lane_y),(eb,pb[1]),pb])
+        choices=[]
+        for raw in candidates:
+            points=compact_path(raw)
+            if hits_card(points,boxes) or min(p[0] for p in points)<8:
+                continue
+            overlap=cross=0
+            for segment in segments(points):
+                for existing in prior:
+                    o,c=segment_conflict(segment,existing)
+                    overlap+=o
+                    cross+=c
+            length=sum(abs(b[0]-a[0])+abs(b[1]-a[1]) for a,b in segments(points))
+            choices.append(((overlap,cross,length,len(points)),points))
+        if not choices:
+            raise ModelError('L1のケーブル経路を確保できませんでした')
+        _,points=min(choices,key=lambda item:item[0])
+        prior.extend(segments(points))
+        routes[link['id']]={'points':points,'color':palette[i%len(palette)],'number':f'C{i+1}'}
+    return routes
+
+
 def render(model, layers=None, show_bindings=True):
     ix = validate(model)
     wanted = tuple(layers) if layers is not None else ('l3', 'l2', 'l1')
@@ -49,8 +138,10 @@ def render(model, layers=None, show_bindings=True):
                                  [i['id'] for i in items if v['id'] in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])],colors[v['id']]) for v in ix['l2.vlans'].values()]
             relations[layer] += [(b['id']+' / VLAN別に転送',b['members'],'#48794b') for b in ix['l2.bridges'].values()]
         else:
-            relations[layer] = [(l['id']+' / '+l.get('medium','')+' / '+l.get('speed',''),l['endpoints'],'#42556d') for l in ix['l1.links'].values()]
-    max_edges = max([max(Counter(ix[group][m]['device'] for _,members,_ in relations[layer] for m in members).values(),default=0) for layer,group,_,_ in specs]+[1])
+            relations[layer] = []  # Physical cables are independent point-to-point paths.
+    physical_links=list(ix['l1.links'].values())
+    physical_degree=Counter(ix['l1.ports'][p]['device'] for link in physical_links for p in link['endpoints'])
+    max_edges = max([max(Counter(ix[group][m]['device'] for _,members,_ in relations[layer] for m in members).values(),default=0) for layer,group,_,_ in specs]+[max(physical_degree.values(),default=1) if 'l1' in wanted else 1])
     binding_specs = [('l3','l2','l3_to_l2','l3_interface','l2_interface'),('l2','l1','l2_to_l1','l2_interface','physical_port')]
     max_bindings = max([max(Counter(ix[upper+'.interfaces'][b[ak]]['device'] for b in model['bindings'][key]).values(),default=0) for upper,lower,key,ak,bk in binding_specs if upper in wanted and lower in wanted and show_bindings]+[1])
     card_width = 340
@@ -58,6 +149,15 @@ def render(model, layers=None, show_bindings=True):
     column = card_width + 32 + max_edges*7 + left_space
     lefts = {device:left_space + n*column for n,device in enumerate(devices)}
     width = max(1450, left_space + len(devices)*column)
+    port_sides={}
+    port_colors={}
+    for i,link in enumerate(physical_links):
+        a,b=link['endpoints']
+        da,db=ix['l1.ports'][a]['device'],ix['l1.ports'][b]['device']
+        port_sides[a]=1 if lefts[da]<=lefts[db] else -1
+        port_sides[b]=1 if da==db or lefts[db]<lefts[da] else -1
+        color=['#1779a5','#b5681c','#287c58','#a04a92','#6a64b0','#ad574d'][i%6]
+        port_colors[a]=port_colors[b]=color
     svg, nodes, sections = [], {}, {}
     escape = lambda value: html.escape(str(value),quote=True)
 
@@ -109,7 +209,7 @@ def render(model, layers=None, show_bindings=True):
             if not rows:
                 height+=44
             cards[device]=(title,identity,metadata,header,rows,height)
-        card_top=top+62
+        card_top=top+62+(20*len(physical_links) if layer=='l1' else 0)
         bottom=max(card_top+c[-1] for c in cards.values())
         bus_top=bottom+45
         bus_layout=[]
@@ -119,6 +219,14 @@ def render(model, layers=None, show_bindings=True):
             by=cursor+18*len(labels)+10
             bus_layout.append((by,labels,members,color,label))
             cursor=by+24
+        cable_rows=[]
+        if layer=='l1':
+            cursor=bottom+58+24*len(physical_links)
+            for i,link in enumerate(physical_links):
+                label=f'C{i+1}  '+link['id']+'  |  '+link['endpoints'][0]+' ↔ '+link['endpoints'][1]+'  |  '+link.get('medium','')+' / '+link.get('speed','')
+                labels=wrap_label(label,min(180,int((width-80)/7)))
+                cable_rows.append((cursor,labels,link))
+                cursor+=len(labels)*18+13
         end=max(cursor,bottom+35)+16
         sections[layer]=(top,end)
         svg.append(f'<g data-layer="{layer}">')
@@ -139,32 +247,54 @@ def render(model, layers=None, show_bindings=True):
             row_top=card_top+header
             for item,title_lines,detail_lines,row_height in rows:
                 anchor=row_top+row_height/2
-                nodes[(layer,item['id'])]={'left':left,'right':right,'y':anchor,'device':device}
-                svg.append(f'<g class="interface-row" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}">')
+                side=port_sides.get(item['id'],1) if layer=='l1' else 1
+                anchor_x=right if side==1 else left
+                nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
+                svg.append(f'<g class="interface-row" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
                 svg.append(f'<title>{escape(item["id"])}</title>')
                 edge([(left+12,row_top),(right-12,row_top)],'#e0e7ee','row-separator')
                 lines_at(left+16,row_top+21,title_lines,13)
                 lines_at(left+16,row_top+21+18*len(title_lines),detail_lines,12,'#60788e')
-                svg.append(f'<circle class="interface-anchor" data-port-id="{escape(item["id"])}" cx="{right}" cy="{anchor}" r="4" fill="white" stroke="#63849a" stroke-width="1.5"/>')
+                svg.append(f'<circle class="interface-anchor" data-port-id="{escape(item["id"])}" cx="{anchor_x}" cy="{anchor}" r="4" fill="white" stroke="{port_colors.get(item["id"],"#63849a") if layer=="l1" else "#63849a"}" stroke-width="1.5"/>')
                 svg.append('</g>')
                 row_top+=row_height
             if not rows:
                 label={'l1':'物理ポートなし','l2':'L2インターフェースなし','l3':'L3インターフェースなし'}[layer]
                 text(left+16,row_top+25,label,12,'#8192a5')
             svg.append('</g>')
-        lanes=Counter()
-        for by,labels,members,color,label in bus_layout:
-            xs=[]
-            for member in members:
-                node=nodes[(layer,member)]
-                lane=node['right']+18+lanes[node['device']]*7
-                lanes[node['device']]+=1
-                edge([(node['right'],node['y']),(lane,node['y']),(lane,by)],color,'relation-branch',f'data-endpoint="{escape(member)}"')
-                xs.append(lane)
-                svg.append(f'<circle cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
-            if xs:
-                edge([(min(xs)-7,by),(max(xs)+7,by)],color,'relation-bus')
-            lines_at(40,by-10-18*(len(labels)-1),labels,12,color)
+        if layer=='l1':
+            layer_nodes={key:n for (l,key),n in nodes.items() if l=='l1'}
+            boxes=[(lefts[d],card_top,lefts[d]+card_width,card_top+cards[d][-1]) for d in devices]
+            routes=route_cables(physical_links,layer_nodes,boxes,card_top,bottom)
+            for list_y,labels,link in cable_rows:
+                routed=routes[link['id']]
+                a,b=link['endpoints']
+                description=link['id']+' / '+a+' ↔ '+b+' / '+link.get('medium','')+' / '+link.get('speed','')
+                svg.append(f'<g class="physical-cable-group" data-cable-id="{escape(link["id"])}" tabindex="0" role="img" aria-label="{escape(description)}">')
+                svg.append(f'<title>{escape(description)}</title>')
+                attrs=f'data-from="{escape(a)}" data-to="{escape(b)}" stroke-linecap="round" stroke-linejoin="round"'
+                edge(routed['points'],routed['color'],'physical-cable',attrs)
+                horizontal=[(p,q) for p,q in segments(routed['points']) if p[1]==q[1]]
+                if horizontal:
+                    p,q=max(horizontal,key=lambda pair:abs(pair[1][0]-pair[0][0]))
+                    label_x=(p[0]+q[0])/2
+                    svg.append(f'<text class="cable-number" x="{label_x}" y="{p[1]-7}" text-anchor="middle" font-size="11" fill="{routed["color"]}" paint-order="stroke" stroke="{fill}" stroke-width="4">{routed["number"]}</text>')
+                lines_at(40,list_y,labels,12,routed['color'])
+                svg.append('</g>')
+        else:
+            lanes=Counter()
+            for by,labels,members,color,label in bus_layout:
+                xs=[]
+                for member in members:
+                    node=nodes[(layer,member)]
+                    lane=node['right']+18+lanes[node['device']]*7
+                    lanes[node['device']]+=1
+                    edge([(node['right'],node['y']),(lane,node['y']),(lane,by)],color,'relation-branch',f'data-endpoint="{escape(member)}"')
+                    xs.append(lane)
+                    svg.append(f'<circle cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
+                if xs:
+                    edge([(min(xs)-7,by),(max(xs)+7,by)],color,'relation-bus')
+                lines_at(40,by-10-18*(len(labels)-1),labels,12,color)
         svg.append('</g>')
         upper_bindings=[b for upper,lower,key,ak,bk in binding_specs if upper==layer and lower in wanted and show_bindings for b in model['bindings'][key]]
         label_space=Counter()
@@ -210,7 +340,7 @@ def render(model, layers=None, show_bindings=True):
         y+=len(labels)*18+8
     text(40,y+28,'一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応',12)
     height=y+55
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 

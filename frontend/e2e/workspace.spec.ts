@@ -213,3 +213,23 @@ test('equipment frames contain distinct interfaces and support port clicks',asyn
   await expect(page.getByLabel('検証結果')).toContainText('検証済み');
   await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/grouped-l3.png',fullPage:true});
 });
+
+
+test('L1 has one direct cable path per link and focus isolates its identity',async({page})=>{
+  await page.getByRole('tab',{name:'L1 物理'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await expect(page.getByLabel('検証結果')).toContainText('検証済み');
+  await expect(page.locator('.physical-cable')).toHaveCount(3);
+  await expect(page.locator('[data-layer="l1"] .relation-bus')).toHaveCount(0);
+  const cable=page.locator('[data-cable-id="cable-a"]');
+  await expect(cable.locator('path')).toHaveCount(1);
+  await expect(cable).toHaveAttribute('aria-label',/pc-a.eth0 ↔ sw01.p1/);
+  await cable.focus();
+  await expect(page.locator('[data-cable-id="cable-b"]')).toHaveCSS('opacity','0.22');
+  await expect(cable.locator('path')).toHaveCSS('stroke-width','3.5px');
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/direct-cables.png',fullPage:true});
+  await page.getByRole('tab',{name:'L2 VLAN'}).click();
+  await expect(page.locator('[data-layer="l2"]')).toHaveCount(1);
+  await expect(page.locator('.physical-cable')).toHaveCount(0);
+  await expect(page.locator('.relation-bus').first()).toHaveAttribute('d', /^M.+ L.+/);
+});
