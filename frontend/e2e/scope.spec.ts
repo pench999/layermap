@@ -127,3 +127,43 @@ test('selected mapping line scopes its entire trunk component and empty intersec
  await expect(page.getByRole('button',{name:'YAMLを保存'})).toBeEnabled();
  await page.getByRole('button',{name:'絞り込みを解除',exact:true}).click();await expect(page.getByLabel('表示範囲の案内')).toContainText('表示範囲を絞り込んでください');
 });
+
+
+test('bundled 36-device sample loads from the screen and demonstrates real site and group filters',async({page})=>{
+ await page.getByLabel('サンプル構成').selectOption('multi-site');
+ await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();
+ await expect(page.getByLabel('検証結果')).toContainText('36 機器');
+ await expect(page.getByLabel('表示範囲の案内')).toContainText('表示範囲を絞り込んでください');
+ await expect(page.getByRole('button',{name:'SVGを書き出す'})).toBeDisabled();
+ await page.getByLabel('表示する拠点',{exact:true}).selectOption(JSON.stringify('本社'));
+ await expect(page.locator('[data-layer="l1"] .device-card')).toHaveCount(12);
+ await expect(page.getByTestId('diagram')).toContainText('HQ-GW-01');
+ await expect(page.getByTestId('diagram')).not.toContainText('OSK-GW-01');
+ await page.getByLabel('表示する機器群').selectOption(JSON.stringify('業務端末'));
+ await expect(page.locator('[data-layer="l1"] .device-card')).toHaveCount(6);
+ await expect(page.getByLabel('表示範囲')).toContainText('範囲外へつながるケーブル 6本');
+ await expect(page.getByLabel('検証結果')).toContainText('36 機器');
+ const scroller=page.locator('.cm-scroller');
+ expect(await scroller.evaluate(el=>el.scrollHeight>el.clientHeight)).toBeTruthy();
+ await scroller.evaluate(el=>{el.scrollTop=el.scrollHeight;});
+ await expect(page.locator('.cm-content')).toContainText('notes:');
+ await scroller.evaluate(el=>{el.scrollTop=0;});
+ expect(await page.evaluate(()=>document.documentElement.scrollHeight)).toBeLessThan(2400);
+ expect(await page.locator('.editor-panel').evaluate(el=>el.getBoundingClientRect().height)).toBeLessThanOrEqual(1000);
+ await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/multisite-office.png',fullPage:true});
+ await page.getByLabel('表示する機器群').selectOption(JSON.stringify('フロアA'));
+ await expect(page.locator('[data-layer="l1"] .device-card')).toHaveCount(6);
+ await expect(page.getByTestId('diagram')).toContainText('HQ-SW-01');
+ await page.getByLabel('表示する拠点',{exact:true}).selectOption('null');
+ await page.getByLabel('表示する機器群').selectOption(JSON.stringify('ネットワーク機器'));
+ await expect(page.locator('[data-layer="l1"] .device-card')).toHaveCount(9);
+ for(const code of ['HQ','OSK','FUK'])await expect(page.getByTestId('diagram')).toContainText(code+'-GW-01');
+ const download=page.waitForEvent('download');await page.getByRole('button',{name:'YAMLを保存'}).click();const yaml=await download;expect(yaml.suggestedFilename()).toBe('03-multi-site-36.yaml');
+ const stream=await yaml.createReadStream();let source='';for await(const chunk of stream!)source+=chunk;expect(source).toContain('fuk-pc09');expect(source).toContain('hq-pc01');
+ await page.getByRole('button',{name:'絞り込みを解除',exact:true}).click();
+ await expect(page.getByLabel('表示範囲の案内')).toBeVisible();
+ await page.getByLabel('サンプル構成').selectOption('base');await page.getByRole('button',{name:'サンプルを読み込む',exact:true}).click();await expect(page.getByLabel('検証結果')).toContainText('4 機器');
+ await page.getByRole('button',{name:'ヘルプ',exact:true}).click();const help=page.getByRole('dialog');await expect(help).toContainText('拠点「本社」で12台');
+ await help.getByRole('button',{name:'複数拠点・機器群（36台）を読み込む',exact:true}).click();await expect(help).toHaveCount(0);await expect(page.getByLabel('検証結果')).toContainText('36 機器');
+ await page.getByLabel('表示する拠点',{exact:true}).selectOption(JSON.stringify('大阪支社'));await expect(page.locator('[data-layer="l1"] .device-card')).toHaveCount(12);await expect(page.getByTestId('diagram')).toContainText('OSK-GW-01');
+});

@@ -95,6 +95,7 @@ SAMPLES = {
     'base': {'id':'base', 'title':'基本構成', 'description':'業務PCと来客PC。4機器・3ケーブル・2 VLAN。', 'filename':'lan-sample.yaml', 'file':ROOT/'lan-sample.yaml'},
     'add-pc': {'id':'add-pc', 'title':'機器追加版', 'description':'業務VLAN 10にHQ-PC-03を追加。5機器・4ケーブル・2 VLAN。', 'filename':'01-add-pc-vlan10.yaml', 'file':ROOT/'samples'/'01-add-pc-vlan10.yaml'},
     'add-vlan': {'id':'add-vlan', 'title':'VLAN追加版', 'description':'HQ-PC-03を新設VLAN 30へ移動。5機器・4ケーブル・3 VLAN。', 'filename':'02-add-vlan30.yaml', 'file':ROOT/'samples'/'02-add-vlan30.yaml'},
+    'multi-site': {'id':'multi-site', 'title':'複数拠点・機器群（36台）', 'description':'3拠点×12台。拠点・役割・フロアで絞り込みを試せます。最初は描画上限の案内が出ます。', 'filename':'03-multi-site-36.yaml', 'file':ROOT/'samples'/'03-multi-site-36.yaml'},
 }
 
 

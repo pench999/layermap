@@ -1,0 +1,663 @@
+# すべて架空の機器情報です。実機の設定は変更しません。
+# 試し方：画面から読み込み → 拠点「本社」→ 機器群「業務端末」。
+# 拠点「すべて」＋機器群「ネットワーク機器」でも比較できます。
+schema: "lan-example/v1"
+name: "複数拠点・機器群の絞り込み例（36台）"
+scope: "本社・大阪支社・福岡支社の独立した社内LAN。WAN側・拠点間回線は範囲外。"
+
+devices:
+  - id: "hq-gw01"
+    role: "internet-gateway"
+    name: "HQ-GW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-GW100"
+    serial_number: "FAKE-HQ-GW01"
+    groups: ["ネットワーク機器"]
+    location: {"site":"本社","room":"サーバー室"}
+  - id: "hq-sw01"
+    role: "l2-switch"
+    name: "HQ-SW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-HQ-SW01"
+    groups: ["ネットワーク機器","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-sw02"
+    role: "l2-switch"
+    name: "HQ-SW-02"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-HQ-SW02"
+    groups: ["ネットワーク機器","フロアB"]
+    location: {"site":"本社","room":"フロアB"}
+  - id: "hq-pc01"
+    role: "endpoint"
+    name: "HQ-PC-01"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC01"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-pc02"
+    role: "endpoint"
+    name: "HQ-PC-02"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC02"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-pc03"
+    role: "endpoint"
+    name: "HQ-PC-03"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC03"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-pc04"
+    role: "endpoint"
+    name: "HQ-PC-04"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC04"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-pc05"
+    role: "endpoint"
+    name: "HQ-PC-05"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC05"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"本社","room":"フロアA"}
+  - id: "hq-pc06"
+    role: "endpoint"
+    name: "HQ-PC-06"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC06"
+    groups: ["業務端末","フロアB"]
+    location: {"site":"本社","room":"フロアB"}
+  - id: "hq-pc07"
+    role: "endpoint"
+    name: "HQ-GUEST-07"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC07"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"本社","room":"フロアB"}
+  - id: "hq-pc08"
+    role: "endpoint"
+    name: "HQ-GUEST-08"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC08"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"本社","room":"フロアB"}
+  - id: "hq-pc09"
+    role: "endpoint"
+    name: "HQ-GUEST-09"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-HQ-PC09"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"本社","room":"フロアB"}
+  - id: "osk-gw01"
+    role: "internet-gateway"
+    name: "OSK-GW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-GW100"
+    serial_number: "FAKE-OSK-GW01"
+    groups: ["ネットワーク機器"]
+    location: {"site":"大阪支社","room":"サーバー室"}
+  - id: "osk-sw01"
+    role: "l2-switch"
+    name: "OSK-SW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-OSK-SW01"
+    groups: ["ネットワーク機器","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-sw02"
+    role: "l2-switch"
+    name: "OSK-SW-02"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-OSK-SW02"
+    groups: ["ネットワーク機器","フロアB"]
+    location: {"site":"大阪支社","room":"フロアB"}
+  - id: "osk-pc01"
+    role: "endpoint"
+    name: "OSK-PC-01"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC01"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-pc02"
+    role: "endpoint"
+    name: "OSK-PC-02"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC02"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-pc03"
+    role: "endpoint"
+    name: "OSK-PC-03"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC03"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-pc04"
+    role: "endpoint"
+    name: "OSK-PC-04"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC04"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-pc05"
+    role: "endpoint"
+    name: "OSK-PC-05"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC05"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"大阪支社","room":"フロアA"}
+  - id: "osk-pc06"
+    role: "endpoint"
+    name: "OSK-PC-06"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC06"
+    groups: ["業務端末","フロアB"]
+    location: {"site":"大阪支社","room":"フロアB"}
+  - id: "osk-pc07"
+    role: "endpoint"
+    name: "OSK-GUEST-07"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC07"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"大阪支社","room":"フロアB"}
+  - id: "osk-pc08"
+    role: "endpoint"
+    name: "OSK-GUEST-08"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC08"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"大阪支社","room":"フロアB"}
+  - id: "osk-pc09"
+    role: "endpoint"
+    name: "OSK-GUEST-09"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-OSK-PC09"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"大阪支社","room":"フロアB"}
+  - id: "fuk-gw01"
+    role: "internet-gateway"
+    name: "FUK-GW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-GW100"
+    serial_number: "FAKE-FUK-GW01"
+    groups: ["ネットワーク機器"]
+    location: {"site":"福岡支社","room":"サーバー室"}
+  - id: "fuk-sw01"
+    role: "l2-switch"
+    name: "FUK-SW-01"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-FUK-SW01"
+    groups: ["ネットワーク機器","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-sw02"
+    role: "l2-switch"
+    name: "FUK-SW-02"
+    manufacturer: "Example Networks"
+    model: "DEMO-SW24"
+    serial_number: "FAKE-FUK-SW02"
+    groups: ["ネットワーク機器","フロアB"]
+    location: {"site":"福岡支社","room":"フロアB"}
+  - id: "fuk-pc01"
+    role: "endpoint"
+    name: "FUK-PC-01"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC01"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-pc02"
+    role: "endpoint"
+    name: "FUK-PC-02"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC02"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-pc03"
+    role: "endpoint"
+    name: "FUK-PC-03"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC03"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-pc04"
+    role: "endpoint"
+    name: "FUK-PC-04"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC04"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-pc05"
+    role: "endpoint"
+    name: "FUK-PC-05"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC05"
+    groups: ["業務端末","フロアA"]
+    location: {"site":"福岡支社","room":"フロアA"}
+  - id: "fuk-pc06"
+    role: "endpoint"
+    name: "FUK-PC-06"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC06"
+    groups: ["業務端末","フロアB"]
+    location: {"site":"福岡支社","room":"フロアB"}
+  - id: "fuk-pc07"
+    role: "endpoint"
+    name: "FUK-GUEST-07"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC07"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"福岡支社","room":"フロアB"}
+  - id: "fuk-pc08"
+    role: "endpoint"
+    name: "FUK-GUEST-08"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC08"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"福岡支社","room":"フロアB"}
+  - id: "fuk-pc09"
+    role: "endpoint"
+    name: "FUK-GUEST-09"
+    manufacturer: "Example Computing"
+    model: "DEMO-PC100"
+    serial_number: "FAKE-FUK-PC09"
+    groups: ["来客端末","フロアB"]
+    location: {"site":"福岡支社","room":"フロアB"}
+
+l1:
+  ports:
+    - {"id":"hq-gw01.lan","device":"hq-gw01","name":"LAN1","connector":"RJ45"}
+    - {"id":"hq-sw01.p24","device":"hq-sw01","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"hq-sw01.p23","device":"hq-sw01","name":"Gi1/0/23","connector":"RJ45"}
+    - {"id":"hq-sw02.p24","device":"hq-sw02","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"hq-pc01.eth0","device":"hq-pc01","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw01.p1","device":"hq-sw01","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"hq-pc02.eth0","device":"hq-pc02","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw01.p2","device":"hq-sw01","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"hq-pc03.eth0","device":"hq-pc03","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw01.p3","device":"hq-sw01","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"hq-pc04.eth0","device":"hq-pc04","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw01.p4","device":"hq-sw01","name":"Gi1/0/4","connector":"RJ45"}
+    - {"id":"hq-pc05.eth0","device":"hq-pc05","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw01.p5","device":"hq-sw01","name":"Gi1/0/5","connector":"RJ45"}
+    - {"id":"hq-pc06.eth0","device":"hq-pc06","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw02.p1","device":"hq-sw02","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"hq-pc07.eth0","device":"hq-pc07","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw02.p2","device":"hq-sw02","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"hq-pc08.eth0","device":"hq-pc08","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw02.p3","device":"hq-sw02","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"hq-pc09.eth0","device":"hq-pc09","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"hq-sw02.p4","device":"hq-sw02","name":"Gi1/0/4","connector":"RJ45"}
+    - {"id":"osk-gw01.lan","device":"osk-gw01","name":"LAN1","connector":"RJ45"}
+    - {"id":"osk-sw01.p24","device":"osk-sw01","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"osk-sw01.p23","device":"osk-sw01","name":"Gi1/0/23","connector":"RJ45"}
+    - {"id":"osk-sw02.p24","device":"osk-sw02","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"osk-pc01.eth0","device":"osk-pc01","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw01.p1","device":"osk-sw01","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"osk-pc02.eth0","device":"osk-pc02","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw01.p2","device":"osk-sw01","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"osk-pc03.eth0","device":"osk-pc03","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw01.p3","device":"osk-sw01","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"osk-pc04.eth0","device":"osk-pc04","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw01.p4","device":"osk-sw01","name":"Gi1/0/4","connector":"RJ45"}
+    - {"id":"osk-pc05.eth0","device":"osk-pc05","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw01.p5","device":"osk-sw01","name":"Gi1/0/5","connector":"RJ45"}
+    - {"id":"osk-pc06.eth0","device":"osk-pc06","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw02.p1","device":"osk-sw02","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"osk-pc07.eth0","device":"osk-pc07","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw02.p2","device":"osk-sw02","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"osk-pc08.eth0","device":"osk-pc08","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw02.p3","device":"osk-sw02","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"osk-pc09.eth0","device":"osk-pc09","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"osk-sw02.p4","device":"osk-sw02","name":"Gi1/0/4","connector":"RJ45"}
+    - {"id":"fuk-gw01.lan","device":"fuk-gw01","name":"LAN1","connector":"RJ45"}
+    - {"id":"fuk-sw01.p24","device":"fuk-sw01","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"fuk-sw01.p23","device":"fuk-sw01","name":"Gi1/0/23","connector":"RJ45"}
+    - {"id":"fuk-sw02.p24","device":"fuk-sw02","name":"Gi1/0/24","connector":"RJ45"}
+    - {"id":"fuk-pc01.eth0","device":"fuk-pc01","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw01.p1","device":"fuk-sw01","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"fuk-pc02.eth0","device":"fuk-pc02","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw01.p2","device":"fuk-sw01","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"fuk-pc03.eth0","device":"fuk-pc03","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw01.p3","device":"fuk-sw01","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"fuk-pc04.eth0","device":"fuk-pc04","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw01.p4","device":"fuk-sw01","name":"Gi1/0/4","connector":"RJ45"}
+    - {"id":"fuk-pc05.eth0","device":"fuk-pc05","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw01.p5","device":"fuk-sw01","name":"Gi1/0/5","connector":"RJ45"}
+    - {"id":"fuk-pc06.eth0","device":"fuk-pc06","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw02.p1","device":"fuk-sw02","name":"Gi1/0/1","connector":"RJ45"}
+    - {"id":"fuk-pc07.eth0","device":"fuk-pc07","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw02.p2","device":"fuk-sw02","name":"Gi1/0/2","connector":"RJ45"}
+    - {"id":"fuk-pc08.eth0","device":"fuk-pc08","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw02.p3","device":"fuk-sw02","name":"Gi1/0/3","connector":"RJ45"}
+    - {"id":"fuk-pc09.eth0","device":"fuk-pc09","name":"Ethernet0","connector":"RJ45"}
+    - {"id":"fuk-sw02.p4","device":"fuk-sw02","name":"Gi1/0/4","connector":"RJ45"}
+  links:
+    - {"id":"hq-gateway-uplink","endpoints":["hq-gw01.lan","hq-sw01.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-switch-uplink","endpoints":["hq-sw01.p23","hq-sw02.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc01","endpoints":["hq-pc01.eth0","hq-sw01.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc02","endpoints":["hq-pc02.eth0","hq-sw01.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc03","endpoints":["hq-pc03.eth0","hq-sw01.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc04","endpoints":["hq-pc04.eth0","hq-sw01.p4"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc05","endpoints":["hq-pc05.eth0","hq-sw01.p5"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc06","endpoints":["hq-pc06.eth0","hq-sw02.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc07","endpoints":["hq-pc07.eth0","hq-sw02.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc08","endpoints":["hq-pc08.eth0","hq-sw02.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"hq-cable-pc09","endpoints":["hq-pc09.eth0","hq-sw02.p4"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-gateway-uplink","endpoints":["osk-gw01.lan","osk-sw01.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-switch-uplink","endpoints":["osk-sw01.p23","osk-sw02.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc01","endpoints":["osk-pc01.eth0","osk-sw01.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc02","endpoints":["osk-pc02.eth0","osk-sw01.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc03","endpoints":["osk-pc03.eth0","osk-sw01.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc04","endpoints":["osk-pc04.eth0","osk-sw01.p4"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc05","endpoints":["osk-pc05.eth0","osk-sw01.p5"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc06","endpoints":["osk-pc06.eth0","osk-sw02.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc07","endpoints":["osk-pc07.eth0","osk-sw02.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc08","endpoints":["osk-pc08.eth0","osk-sw02.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"osk-cable-pc09","endpoints":["osk-pc09.eth0","osk-sw02.p4"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-gateway-uplink","endpoints":["fuk-gw01.lan","fuk-sw01.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-switch-uplink","endpoints":["fuk-sw01.p23","fuk-sw02.p24"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc01","endpoints":["fuk-pc01.eth0","fuk-sw01.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc02","endpoints":["fuk-pc02.eth0","fuk-sw01.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc03","endpoints":["fuk-pc03.eth0","fuk-sw01.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc04","endpoints":["fuk-pc04.eth0","fuk-sw01.p4"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc05","endpoints":["fuk-pc05.eth0","fuk-sw01.p5"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc06","endpoints":["fuk-pc06.eth0","fuk-sw02.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc07","endpoints":["fuk-pc07.eth0","fuk-sw02.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc08","endpoints":["fuk-pc08.eth0","fuk-sw02.p3"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"fuk-cable-pc09","endpoints":["fuk-pc09.eth0","fuk-sw02.p4"],"medium":"copper","speed":"1Gbps"}
+
+l2:
+  vlans:
+    - {"id":"hq-office","tag":10,"label":"本社 業務LAN"}
+    - {"id":"hq-guest","tag":20,"label":"本社 来客LAN"}
+    - {"id":"osk-office","tag":110,"label":"大阪支社 業務LAN"}
+    - {"id":"osk-guest","tag":120,"label":"大阪支社 来客LAN"}
+    - {"id":"fuk-office","tag":210,"label":"福岡支社 業務LAN"}
+    - {"id":"fuk-guest","tag":220,"label":"福岡支社 来客LAN"}
+  interfaces:
+    - {"id":"hq-gw01.lan.l2","device":"hq-gw01","mode":"trunk","tagged_vlans":["hq-office","hq-guest"]}
+    - {"id":"hq-sw01.p24.l2","device":"hq-sw01","mode":"trunk","tagged_vlans":["hq-office","hq-guest"]}
+    - {"id":"hq-sw01.p23.l2","device":"hq-sw01","mode":"trunk","tagged_vlans":["hq-office","hq-guest"]}
+    - {"id":"hq-sw02.p24.l2","device":"hq-sw02","mode":"trunk","tagged_vlans":["hq-office","hq-guest"]}
+    - {"id":"hq-pc01.eth0.l2","device":"hq-pc01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw01.p1.l2","device":"hq-sw01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc02.eth0.l2","device":"hq-pc02","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw01.p2.l2","device":"hq-sw01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc03.eth0.l2","device":"hq-pc03","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw01.p3.l2","device":"hq-sw01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc04.eth0.l2","device":"hq-pc04","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw01.p4.l2","device":"hq-sw01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc05.eth0.l2","device":"hq-pc05","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw01.p5.l2","device":"hq-sw01","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc06.eth0.l2","device":"hq-pc06","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-sw02.p1.l2","device":"hq-sw02","mode":"access","untagged_vlan":"hq-office"}
+    - {"id":"hq-pc07.eth0.l2","device":"hq-pc07","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"hq-sw02.p2.l2","device":"hq-sw02","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"hq-pc08.eth0.l2","device":"hq-pc08","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"hq-sw02.p3.l2","device":"hq-sw02","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"hq-pc09.eth0.l2","device":"hq-pc09","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"hq-sw02.p4.l2","device":"hq-sw02","mode":"access","untagged_vlan":"hq-guest"}
+    - {"id":"osk-gw01.lan.l2","device":"osk-gw01","mode":"trunk","tagged_vlans":["osk-office","osk-guest"]}
+    - {"id":"osk-sw01.p24.l2","device":"osk-sw01","mode":"trunk","tagged_vlans":["osk-office","osk-guest"]}
+    - {"id":"osk-sw01.p23.l2","device":"osk-sw01","mode":"trunk","tagged_vlans":["osk-office","osk-guest"]}
+    - {"id":"osk-sw02.p24.l2","device":"osk-sw02","mode":"trunk","tagged_vlans":["osk-office","osk-guest"]}
+    - {"id":"osk-pc01.eth0.l2","device":"osk-pc01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw01.p1.l2","device":"osk-sw01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc02.eth0.l2","device":"osk-pc02","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw01.p2.l2","device":"osk-sw01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc03.eth0.l2","device":"osk-pc03","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw01.p3.l2","device":"osk-sw01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc04.eth0.l2","device":"osk-pc04","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw01.p4.l2","device":"osk-sw01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc05.eth0.l2","device":"osk-pc05","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw01.p5.l2","device":"osk-sw01","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc06.eth0.l2","device":"osk-pc06","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-sw02.p1.l2","device":"osk-sw02","mode":"access","untagged_vlan":"osk-office"}
+    - {"id":"osk-pc07.eth0.l2","device":"osk-pc07","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"osk-sw02.p2.l2","device":"osk-sw02","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"osk-pc08.eth0.l2","device":"osk-pc08","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"osk-sw02.p3.l2","device":"osk-sw02","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"osk-pc09.eth0.l2","device":"osk-pc09","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"osk-sw02.p4.l2","device":"osk-sw02","mode":"access","untagged_vlan":"osk-guest"}
+    - {"id":"fuk-gw01.lan.l2","device":"fuk-gw01","mode":"trunk","tagged_vlans":["fuk-office","fuk-guest"]}
+    - {"id":"fuk-sw01.p24.l2","device":"fuk-sw01","mode":"trunk","tagged_vlans":["fuk-office","fuk-guest"]}
+    - {"id":"fuk-sw01.p23.l2","device":"fuk-sw01","mode":"trunk","tagged_vlans":["fuk-office","fuk-guest"]}
+    - {"id":"fuk-sw02.p24.l2","device":"fuk-sw02","mode":"trunk","tagged_vlans":["fuk-office","fuk-guest"]}
+    - {"id":"fuk-pc01.eth0.l2","device":"fuk-pc01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw01.p1.l2","device":"fuk-sw01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc02.eth0.l2","device":"fuk-pc02","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw01.p2.l2","device":"fuk-sw01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc03.eth0.l2","device":"fuk-pc03","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw01.p3.l2","device":"fuk-sw01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc04.eth0.l2","device":"fuk-pc04","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw01.p4.l2","device":"fuk-sw01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc05.eth0.l2","device":"fuk-pc05","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw01.p5.l2","device":"fuk-sw01","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc06.eth0.l2","device":"fuk-pc06","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-sw02.p1.l2","device":"fuk-sw02","mode":"access","untagged_vlan":"fuk-office"}
+    - {"id":"fuk-pc07.eth0.l2","device":"fuk-pc07","mode":"access","untagged_vlan":"fuk-guest"}
+    - {"id":"fuk-sw02.p2.l2","device":"fuk-sw02","mode":"access","untagged_vlan":"fuk-guest"}
+    - {"id":"fuk-pc08.eth0.l2","device":"fuk-pc08","mode":"access","untagged_vlan":"fuk-guest"}
+    - {"id":"fuk-sw02.p3.l2","device":"fuk-sw02","mode":"access","untagged_vlan":"fuk-guest"}
+    - {"id":"fuk-pc09.eth0.l2","device":"fuk-pc09","mode":"access","untagged_vlan":"fuk-guest"}
+    - {"id":"fuk-sw02.p4.l2","device":"fuk-sw02","mode":"access","untagged_vlan":"fuk-guest"}
+  bridges:
+    - {"id":"hq-sw01.bridge","device":"hq-sw01","members":["hq-sw01.p24.l2","hq-sw01.p23.l2","hq-sw01.p1.l2","hq-sw01.p2.l2","hq-sw01.p3.l2","hq-sw01.p4.l2","hq-sw01.p5.l2"]}
+    - {"id":"hq-sw02.bridge","device":"hq-sw02","members":["hq-sw02.p24.l2","hq-sw02.p1.l2","hq-sw02.p2.l2","hq-sw02.p3.l2","hq-sw02.p4.l2"]}
+    - {"id":"osk-sw01.bridge","device":"osk-sw01","members":["osk-sw01.p24.l2","osk-sw01.p23.l2","osk-sw01.p1.l2","osk-sw01.p2.l2","osk-sw01.p3.l2","osk-sw01.p4.l2","osk-sw01.p5.l2"]}
+    - {"id":"osk-sw02.bridge","device":"osk-sw02","members":["osk-sw02.p24.l2","osk-sw02.p1.l2","osk-sw02.p2.l2","osk-sw02.p3.l2","osk-sw02.p4.l2"]}
+    - {"id":"fuk-sw01.bridge","device":"fuk-sw01","members":["fuk-sw01.p24.l2","fuk-sw01.p23.l2","fuk-sw01.p1.l2","fuk-sw01.p2.l2","fuk-sw01.p3.l2","fuk-sw01.p4.l2","fuk-sw01.p5.l2"]}
+    - {"id":"fuk-sw02.bridge","device":"fuk-sw02","members":["fuk-sw02.p24.l2","fuk-sw02.p1.l2","fuk-sw02.p2.l2","fuk-sw02.p3.l2","fuk-sw02.p4.l2"]}
+
+l3:
+  subnets:
+    - {"id":"hq-office","cidr":"10.1.10.0/24"}
+    - {"id":"hq-guest","cidr":"10.1.20.0/24"}
+    - {"id":"osk-office","cidr":"10.2.10.0/24"}
+    - {"id":"osk-guest","cidr":"10.2.20.0/24"}
+    - {"id":"fuk-office","cidr":"10.3.10.0/24"}
+    - {"id":"fuk-guest","cidr":"10.3.20.0/24"}
+  interfaces:
+    - {"id":"hq-gw01.office.ip","device":"hq-gw01","address":"10.1.10.1/24","subnet":"hq-office"}
+    - {"id":"hq-gw01.guest.ip","device":"hq-gw01","address":"10.1.20.1/24","subnet":"hq-guest"}
+    - {"id":"hq-pc01.ip","device":"hq-pc01","address":"10.1.10.11/24","subnet":"hq-office"}
+    - {"id":"hq-pc02.ip","device":"hq-pc02","address":"10.1.10.12/24","subnet":"hq-office"}
+    - {"id":"hq-pc03.ip","device":"hq-pc03","address":"10.1.10.13/24","subnet":"hq-office"}
+    - {"id":"hq-pc04.ip","device":"hq-pc04","address":"10.1.10.14/24","subnet":"hq-office"}
+    - {"id":"hq-pc05.ip","device":"hq-pc05","address":"10.1.10.15/24","subnet":"hq-office"}
+    - {"id":"hq-pc06.ip","device":"hq-pc06","address":"10.1.10.16/24","subnet":"hq-office"}
+    - {"id":"hq-pc07.ip","device":"hq-pc07","address":"10.1.20.17/24","subnet":"hq-guest"}
+    - {"id":"hq-pc08.ip","device":"hq-pc08","address":"10.1.20.18/24","subnet":"hq-guest"}
+    - {"id":"hq-pc09.ip","device":"hq-pc09","address":"10.1.20.19/24","subnet":"hq-guest"}
+    - {"id":"osk-gw01.office.ip","device":"osk-gw01","address":"10.2.10.1/24","subnet":"osk-office"}
+    - {"id":"osk-gw01.guest.ip","device":"osk-gw01","address":"10.2.20.1/24","subnet":"osk-guest"}
+    - {"id":"osk-pc01.ip","device":"osk-pc01","address":"10.2.10.11/24","subnet":"osk-office"}
+    - {"id":"osk-pc02.ip","device":"osk-pc02","address":"10.2.10.12/24","subnet":"osk-office"}
+    - {"id":"osk-pc03.ip","device":"osk-pc03","address":"10.2.10.13/24","subnet":"osk-office"}
+    - {"id":"osk-pc04.ip","device":"osk-pc04","address":"10.2.10.14/24","subnet":"osk-office"}
+    - {"id":"osk-pc05.ip","device":"osk-pc05","address":"10.2.10.15/24","subnet":"osk-office"}
+    - {"id":"osk-pc06.ip","device":"osk-pc06","address":"10.2.10.16/24","subnet":"osk-office"}
+    - {"id":"osk-pc07.ip","device":"osk-pc07","address":"10.2.20.17/24","subnet":"osk-guest"}
+    - {"id":"osk-pc08.ip","device":"osk-pc08","address":"10.2.20.18/24","subnet":"osk-guest"}
+    - {"id":"osk-pc09.ip","device":"osk-pc09","address":"10.2.20.19/24","subnet":"osk-guest"}
+    - {"id":"fuk-gw01.office.ip","device":"fuk-gw01","address":"10.3.10.1/24","subnet":"fuk-office"}
+    - {"id":"fuk-gw01.guest.ip","device":"fuk-gw01","address":"10.3.20.1/24","subnet":"fuk-guest"}
+    - {"id":"fuk-pc01.ip","device":"fuk-pc01","address":"10.3.10.11/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc02.ip","device":"fuk-pc02","address":"10.3.10.12/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc03.ip","device":"fuk-pc03","address":"10.3.10.13/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc04.ip","device":"fuk-pc04","address":"10.3.10.14/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc05.ip","device":"fuk-pc05","address":"10.3.10.15/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc06.ip","device":"fuk-pc06","address":"10.3.10.16/24","subnet":"fuk-office"}
+    - {"id":"fuk-pc07.ip","device":"fuk-pc07","address":"10.3.20.17/24","subnet":"fuk-guest"}
+    - {"id":"fuk-pc08.ip","device":"fuk-pc08","address":"10.3.20.18/24","subnet":"fuk-guest"}
+    - {"id":"fuk-pc09.ip","device":"fuk-pc09","address":"10.3.20.19/24","subnet":"fuk-guest"}
+  routes:
+    - {"device":"hq-pc01","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc01.ip"}
+    - {"device":"hq-pc02","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc02.ip"}
+    - {"device":"hq-pc03","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc03.ip"}
+    - {"device":"hq-pc04","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc04.ip"}
+    - {"device":"hq-pc05","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc05.ip"}
+    - {"device":"hq-pc06","destination":"0.0.0.0/0","next_hop":"10.1.10.1","interface":"hq-pc06.ip"}
+    - {"device":"hq-pc07","destination":"0.0.0.0/0","next_hop":"10.1.20.1","interface":"hq-pc07.ip"}
+    - {"device":"hq-pc08","destination":"0.0.0.0/0","next_hop":"10.1.20.1","interface":"hq-pc08.ip"}
+    - {"device":"hq-pc09","destination":"0.0.0.0/0","next_hop":"10.1.20.1","interface":"hq-pc09.ip"}
+    - {"device":"osk-pc01","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc01.ip"}
+    - {"device":"osk-pc02","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc02.ip"}
+    - {"device":"osk-pc03","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc03.ip"}
+    - {"device":"osk-pc04","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc04.ip"}
+    - {"device":"osk-pc05","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc05.ip"}
+    - {"device":"osk-pc06","destination":"0.0.0.0/0","next_hop":"10.2.10.1","interface":"osk-pc06.ip"}
+    - {"device":"osk-pc07","destination":"0.0.0.0/0","next_hop":"10.2.20.1","interface":"osk-pc07.ip"}
+    - {"device":"osk-pc08","destination":"0.0.0.0/0","next_hop":"10.2.20.1","interface":"osk-pc08.ip"}
+    - {"device":"osk-pc09","destination":"0.0.0.0/0","next_hop":"10.2.20.1","interface":"osk-pc09.ip"}
+    - {"device":"fuk-pc01","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc01.ip"}
+    - {"device":"fuk-pc02","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc02.ip"}
+    - {"device":"fuk-pc03","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc03.ip"}
+    - {"device":"fuk-pc04","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc04.ip"}
+    - {"device":"fuk-pc05","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc05.ip"}
+    - {"device":"fuk-pc06","destination":"0.0.0.0/0","next_hop":"10.3.10.1","interface":"fuk-pc06.ip"}
+    - {"device":"fuk-pc07","destination":"0.0.0.0/0","next_hop":"10.3.20.1","interface":"fuk-pc07.ip"}
+    - {"device":"fuk-pc08","destination":"0.0.0.0/0","next_hop":"10.3.20.1","interface":"fuk-pc08.ip"}
+    - {"device":"fuk-pc09","destination":"0.0.0.0/0","next_hop":"10.3.20.1","interface":"fuk-pc09.ip"}
+
+bindings:
+  l2_to_l1:
+    - {"l2_interface":"hq-gw01.lan.l2","physical_port":"hq-gw01.lan"}
+    - {"l2_interface":"hq-sw01.p24.l2","physical_port":"hq-sw01.p24"}
+    - {"l2_interface":"hq-sw01.p23.l2","physical_port":"hq-sw01.p23"}
+    - {"l2_interface":"hq-sw02.p24.l2","physical_port":"hq-sw02.p24"}
+    - {"l2_interface":"hq-pc01.eth0.l2","physical_port":"hq-pc01.eth0"}
+    - {"l2_interface":"hq-sw01.p1.l2","physical_port":"hq-sw01.p1"}
+    - {"l2_interface":"hq-pc02.eth0.l2","physical_port":"hq-pc02.eth0"}
+    - {"l2_interface":"hq-sw01.p2.l2","physical_port":"hq-sw01.p2"}
+    - {"l2_interface":"hq-pc03.eth0.l2","physical_port":"hq-pc03.eth0"}
+    - {"l2_interface":"hq-sw01.p3.l2","physical_port":"hq-sw01.p3"}
+    - {"l2_interface":"hq-pc04.eth0.l2","physical_port":"hq-pc04.eth0"}
+    - {"l2_interface":"hq-sw01.p4.l2","physical_port":"hq-sw01.p4"}
+    - {"l2_interface":"hq-pc05.eth0.l2","physical_port":"hq-pc05.eth0"}
+    - {"l2_interface":"hq-sw01.p5.l2","physical_port":"hq-sw01.p5"}
+    - {"l2_interface":"hq-pc06.eth0.l2","physical_port":"hq-pc06.eth0"}
+    - {"l2_interface":"hq-sw02.p1.l2","physical_port":"hq-sw02.p1"}
+    - {"l2_interface":"hq-pc07.eth0.l2","physical_port":"hq-pc07.eth0"}
+    - {"l2_interface":"hq-sw02.p2.l2","physical_port":"hq-sw02.p2"}
+    - {"l2_interface":"hq-pc08.eth0.l2","physical_port":"hq-pc08.eth0"}
+    - {"l2_interface":"hq-sw02.p3.l2","physical_port":"hq-sw02.p3"}
+    - {"l2_interface":"hq-pc09.eth0.l2","physical_port":"hq-pc09.eth0"}
+    - {"l2_interface":"hq-sw02.p4.l2","physical_port":"hq-sw02.p4"}
+    - {"l2_interface":"osk-gw01.lan.l2","physical_port":"osk-gw01.lan"}
+    - {"l2_interface":"osk-sw01.p24.l2","physical_port":"osk-sw01.p24"}
+    - {"l2_interface":"osk-sw01.p23.l2","physical_port":"osk-sw01.p23"}
+    - {"l2_interface":"osk-sw02.p24.l2","physical_port":"osk-sw02.p24"}
+    - {"l2_interface":"osk-pc01.eth0.l2","physical_port":"osk-pc01.eth0"}
+    - {"l2_interface":"osk-sw01.p1.l2","physical_port":"osk-sw01.p1"}
+    - {"l2_interface":"osk-pc02.eth0.l2","physical_port":"osk-pc02.eth0"}
+    - {"l2_interface":"osk-sw01.p2.l2","physical_port":"osk-sw01.p2"}
+    - {"l2_interface":"osk-pc03.eth0.l2","physical_port":"osk-pc03.eth0"}
+    - {"l2_interface":"osk-sw01.p3.l2","physical_port":"osk-sw01.p3"}
+    - {"l2_interface":"osk-pc04.eth0.l2","physical_port":"osk-pc04.eth0"}
+    - {"l2_interface":"osk-sw01.p4.l2","physical_port":"osk-sw01.p4"}
+    - {"l2_interface":"osk-pc05.eth0.l2","physical_port":"osk-pc05.eth0"}
+    - {"l2_interface":"osk-sw01.p5.l2","physical_port":"osk-sw01.p5"}
+    - {"l2_interface":"osk-pc06.eth0.l2","physical_port":"osk-pc06.eth0"}
+    - {"l2_interface":"osk-sw02.p1.l2","physical_port":"osk-sw02.p1"}
+    - {"l2_interface":"osk-pc07.eth0.l2","physical_port":"osk-pc07.eth0"}
+    - {"l2_interface":"osk-sw02.p2.l2","physical_port":"osk-sw02.p2"}
+    - {"l2_interface":"osk-pc08.eth0.l2","physical_port":"osk-pc08.eth0"}
+    - {"l2_interface":"osk-sw02.p3.l2","physical_port":"osk-sw02.p3"}
+    - {"l2_interface":"osk-pc09.eth0.l2","physical_port":"osk-pc09.eth0"}
+    - {"l2_interface":"osk-sw02.p4.l2","physical_port":"osk-sw02.p4"}
+    - {"l2_interface":"fuk-gw01.lan.l2","physical_port":"fuk-gw01.lan"}
+    - {"l2_interface":"fuk-sw01.p24.l2","physical_port":"fuk-sw01.p24"}
+    - {"l2_interface":"fuk-sw01.p23.l2","physical_port":"fuk-sw01.p23"}
+    - {"l2_interface":"fuk-sw02.p24.l2","physical_port":"fuk-sw02.p24"}
+    - {"l2_interface":"fuk-pc01.eth0.l2","physical_port":"fuk-pc01.eth0"}
+    - {"l2_interface":"fuk-sw01.p1.l2","physical_port":"fuk-sw01.p1"}
+    - {"l2_interface":"fuk-pc02.eth0.l2","physical_port":"fuk-pc02.eth0"}
+    - {"l2_interface":"fuk-sw01.p2.l2","physical_port":"fuk-sw01.p2"}
+    - {"l2_interface":"fuk-pc03.eth0.l2","physical_port":"fuk-pc03.eth0"}
+    - {"l2_interface":"fuk-sw01.p3.l2","physical_port":"fuk-sw01.p3"}
+    - {"l2_interface":"fuk-pc04.eth0.l2","physical_port":"fuk-pc04.eth0"}
+    - {"l2_interface":"fuk-sw01.p4.l2","physical_port":"fuk-sw01.p4"}
+    - {"l2_interface":"fuk-pc05.eth0.l2","physical_port":"fuk-pc05.eth0"}
+    - {"l2_interface":"fuk-sw01.p5.l2","physical_port":"fuk-sw01.p5"}
+    - {"l2_interface":"fuk-pc06.eth0.l2","physical_port":"fuk-pc06.eth0"}
+    - {"l2_interface":"fuk-sw02.p1.l2","physical_port":"fuk-sw02.p1"}
+    - {"l2_interface":"fuk-pc07.eth0.l2","physical_port":"fuk-pc07.eth0"}
+    - {"l2_interface":"fuk-sw02.p2.l2","physical_port":"fuk-sw02.p2"}
+    - {"l2_interface":"fuk-pc08.eth0.l2","physical_port":"fuk-pc08.eth0"}
+    - {"l2_interface":"fuk-sw02.p3.l2","physical_port":"fuk-sw02.p3"}
+    - {"l2_interface":"fuk-pc09.eth0.l2","physical_port":"fuk-pc09.eth0"}
+    - {"l2_interface":"fuk-sw02.p4.l2","physical_port":"fuk-sw02.p4"}
+  l3_to_l2:
+    - {"l3_interface":"hq-gw01.office.ip","l2_interface":"hq-gw01.lan.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-gw01.guest.ip","l2_interface":"hq-gw01.lan.l2","vlan":"hq-guest"}
+    - {"l3_interface":"hq-pc01.ip","l2_interface":"hq-pc01.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc02.ip","l2_interface":"hq-pc02.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc03.ip","l2_interface":"hq-pc03.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc04.ip","l2_interface":"hq-pc04.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc05.ip","l2_interface":"hq-pc05.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc06.ip","l2_interface":"hq-pc06.eth0.l2","vlan":"hq-office"}
+    - {"l3_interface":"hq-pc07.ip","l2_interface":"hq-pc07.eth0.l2","vlan":"hq-guest"}
+    - {"l3_interface":"hq-pc08.ip","l2_interface":"hq-pc08.eth0.l2","vlan":"hq-guest"}
+    - {"l3_interface":"hq-pc09.ip","l2_interface":"hq-pc09.eth0.l2","vlan":"hq-guest"}
+    - {"l3_interface":"osk-gw01.office.ip","l2_interface":"osk-gw01.lan.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-gw01.guest.ip","l2_interface":"osk-gw01.lan.l2","vlan":"osk-guest"}
+    - {"l3_interface":"osk-pc01.ip","l2_interface":"osk-pc01.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc02.ip","l2_interface":"osk-pc02.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc03.ip","l2_interface":"osk-pc03.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc04.ip","l2_interface":"osk-pc04.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc05.ip","l2_interface":"osk-pc05.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc06.ip","l2_interface":"osk-pc06.eth0.l2","vlan":"osk-office"}
+    - {"l3_interface":"osk-pc07.ip","l2_interface":"osk-pc07.eth0.l2","vlan":"osk-guest"}
+    - {"l3_interface":"osk-pc08.ip","l2_interface":"osk-pc08.eth0.l2","vlan":"osk-guest"}
+    - {"l3_interface":"osk-pc09.ip","l2_interface":"osk-pc09.eth0.l2","vlan":"osk-guest"}
+    - {"l3_interface":"fuk-gw01.office.ip","l2_interface":"fuk-gw01.lan.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-gw01.guest.ip","l2_interface":"fuk-gw01.lan.l2","vlan":"fuk-guest"}
+    - {"l3_interface":"fuk-pc01.ip","l2_interface":"fuk-pc01.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc02.ip","l2_interface":"fuk-pc02.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc03.ip","l2_interface":"fuk-pc03.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc04.ip","l2_interface":"fuk-pc04.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc05.ip","l2_interface":"fuk-pc05.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc06.ip","l2_interface":"fuk-pc06.eth0.l2","vlan":"fuk-office"}
+    - {"l3_interface":"fuk-pc07.ip","l2_interface":"fuk-pc07.eth0.l2","vlan":"fuk-guest"}
+    - {"l3_interface":"fuk-pc08.ip","l2_interface":"fuk-pc08.eth0.l2","vlan":"fuk-guest"}
+    - {"l3_interface":"fuk-pc09.ip","l2_interface":"fuk-pc09.eth0.l2","vlan":"fuk-guest"}
+
+notes:
+  - "機器情報はすべて架空です。3拠点×12台＝36台のため、全体表示では描画上限の案内が出ます。"
+  - "表示範囲の拠点で「本社」を選ぶと12台、さらに機器群「業務端末」を選ぶと6台になります。"
+  - "拠点をすべてへ戻し、機器群「ネットワーク機器」を選ぶと3拠点の9台を比較できます。"
+  - "フロアA・フロアBは役割別の機器群と重複する所属の例です。絞り込みで範囲外となるケーブルは画面の一覧で確認できます。"
+  - "各拠点は別のVLAN・IPサブネットです。WAN側・NAT・拠点間回線・通信の許可設定は定義していません。"

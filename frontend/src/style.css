@@ -87,3 +87,6 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 .workspace{height:auto;min-height:0}.preview-panel{min-height:780px}.scope-controls,.preview-toolbar,.preview-info{flex-shrink:0}.viewport{min-height:400px}.empty-state{min-height:400px}.binding-selection{flex-wrap:wrap}@media(max-width:760px){.preview-panel{height:auto;min-height:820px}.editor-panel{height:380px}.viewport{min-height:420px}}
 
 .viewport{flex:1 1 480px;height:480px;max-height:640px}
+
+/* A multi-line inventory must scroll inside CodeMirror, not grow the grid. */
+@media(min-width:761px){.editor-panel{height:900px}}

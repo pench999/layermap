@@ -99,8 +99,8 @@ class WebTests(unittest.TestCase):
 
     def test_bundled_sample_catalog_and_rendering(self):
         catalog = self.client.get('/api/samples').json()['samples']
-        self.assertEqual([s['id'] for s in catalog], ['base','add-pc','add-vlan'])
-        expected = {'base':(4,3,2), 'add-pc':(5,4,2), 'add-vlan':(5,4,3)}
+        self.assertEqual([s['id'] for s in catalog], ['base','add-pc','add-vlan','multi-site'])
+        expected = {'base':(4,3,2), 'add-pc':(5,4,2), 'add-vlan':(5,4,3), 'multi-site':(36,33,6)}
         for item in catalog:
             self.assertNotIn('file',item)
             response = self.client.get('/api/samples/'+item['id'])
@@ -111,11 +111,39 @@ class WebTests(unittest.TestCase):
             self.assertEqual(rendered.status_code,200,rendered.text)
             counts = rendered.json()['counts']
             self.assertEqual((counts['devices'],counts['links'],counts['vlans']),expected[item['id']])
-            ET.fromstring(rendered.json()['svg'])
+            if item['id']=='multi-site':
+                self.assertEqual(rendered.json()['display']['status'],'too_large')
+                self.assertEqual(rendered.json()['svg'],'')
+            else:
+                ET.fromstring(rendered.json()['svg'])
 
     def test_sample_id_is_allowlisted(self):
         for sample_id in ['missing','.env','web_app.py']:
             self.assertEqual(self.client.get('/api/samples/'+sample_id).status_code,404)
+
+
+
+    def test_multi_site_sample_filters_and_overlapping_groups(self):
+        source=self.client.get('/api/samples/multi-site').json()['yaml_text']
+        model=load_model(source)
+        self.assertEqual(len(model['devices']),36)
+        for scope,count in [({'site':'本社'},12),({'site':'大阪支社'},12),({'site':'福岡支社'},12),
+                            ({'group':'ネットワーク機器'},9),({'group':'業務端末'},18),({'group':'来客端末'},9),
+                            ({'site':'本社','group':'業務端末'},6),({'site':'本社','group':'フロアA'},6),
+                            ({'site':'本社','group':'ネットワーク機器'},3)]:
+            response=self.request(source,scope=scope)
+            self.assertEqual(response.status_code,200,response.text)
+            data=response.json()
+            self.assertEqual(data['display']['status'],'ready',data['display'])
+            self.assertEqual(data['display']['counts']['devices'],count)
+            self.assertEqual(data['counts']['devices'],36)
+            ET.fromstring(data['svg'])
+        data=self.request(source,scope={'site':'本社','group':'業務端末'}).json()
+        self.assertEqual(data['display']['boundary_links']['total'],6)
+        self.assertEqual(set(data['catalog']['sites']),{'本社','大阪支社','福岡支社'})
+        self.assertIn('フロアA',data['catalog']['groups'])
+        by_id={d['id']:d for d in model['devices']}
+        self.assertEqual(by_id['hq-pc01']['groups'],['業務端末','フロアA'])
 
 
 if __name__ == '__main__':
