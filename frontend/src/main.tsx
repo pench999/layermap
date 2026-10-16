@@ -7,6 +7,7 @@ import {yaml} from '@codemirror/lang-yaml';
 import {setDiagnostics} from '@codemirror/lint';
 import './style.css';
 import {Help, type Sample} from './Help';
+import {endpointKey,traceFromSvg,type Endpoint,type Trace} from './trace';
 
 type Issue = {message:string; path:string; line:number|null; column:number|null};
 type Result = {svg:string; devices:{id:string;name:string}[]; counts:{devices:number;links:number;vlans:number}};
@@ -26,6 +27,9 @@ function App() {
   const [notice,setNotice] = useState('');
   const [selected,setSelected] = useState('');
   const [selectedBinding,setSelectedBinding] = useState<{key:string;label:string}|null>(null);
+  const [selectedTrace,setSelectedTrace] = useState<Trace|null>(null);
+  const pendingTrace = useRef<{root:Endpoint;source:string}|null>(null);
+  const traceJumpPending = useRef(false);
   const [zoom,setZoom] = useState(0.6);
   const [dirty,setDirty] = useState(false);
   const dirtyRef = useRef(false);
@@ -48,9 +52,9 @@ function App() {
   const fitPending = useRef(true);
   const sourceRef = useRef('');
   const clearBinding = () => {
-    setSelectedBinding(null);
+    setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row'))focused.blur();
   };
   const invalidate = () => { clearBinding(); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
@@ -95,10 +99,13 @@ function App() {
         const response=await fetch('/api/render',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({yaml_text:source,view,show_bindings:bindings}),signal:controller.signal});
         const body=await response.json();
         if(revision!==sequence.current)return;
-        if(!response.ok){setIssues(body.errors??[{message:'描画できませんでした',path:'',line:null,column:null}]);setPhase('invalid');return;}
+        if(!response.ok){pendingTrace.current=null;setIssues(body.errors??[{message:'描画できませんでした',path:'',line:null,column:null}]);setPhase('invalid');return;}
+        const restore=pendingTrace.current;
         clearBinding();setResult(body);setIssues([]);setPhase('valid');
+        if(restore&&restore.source===source&&view==='all'&&bindings){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(body.svg,restore.root));}
       } catch(error) {
         if(controller.signal.aborted || revision!==sequence.current)return;
+        pendingTrace.current=null;
         setIssues([{message:error instanceof Error && error.message.includes('KiB')?error.message:'サーバーへ接続できません。編集内容を保存して、接続を確認してください。',path:'',line:null,column:null}]);setPhase('invalid');
       }
     },500);
@@ -129,6 +136,29 @@ function App() {
   },[result,selectedBinding]);
 
   useEffect(()=>{
+    const svg=canvas.current?.querySelector('svg');
+    svg?.classList.toggle('trace-active',!!selectedTrace);
+    const nodes=new Set(selectedTrace?.nodes.map(endpointKey)??[]);
+    const edges=new Set(selectedTrace?.edges.map(edge=>edge.key)??[]);
+    const root=selectedTrace?endpointKey(selectedTrace.root):null;
+    canvas.current?.querySelectorAll<SVGGElement>('.interface-row').forEach(row=>{
+      const layer=row.closest('[data-layer]')?.getAttribute('data-layer') as Endpoint['layer'];
+      const key=endpointKey({layer,id:row.dataset.elementId??''});
+      row.classList.toggle('trace-row',nodes.has(key));
+      row.classList.toggle('trace-root',key===root);
+      row.setAttribute('aria-pressed',String(key===root));
+    });
+    canvas.current?.querySelectorAll<SVGGElement>('.binding-group,.binding-badge').forEach(group=>group.classList.toggle('trace-edge',edges.has(group.dataset.bindingKey??'')));
+  },[result,selectedTrace]);
+
+  useEffect(()=>{
+    if(!traceJumpPending.current||!selectedTrace)return;
+    let settled=0;
+    const frame=window.requestAnimationFrame(()=>{settled=window.requestAnimationFrame(()=>{showTraceNode(selectedTrace.root);traceJumpPending.current=false;});});
+    return ()=>{window.cancelAnimationFrame(frame);window.cancelAnimationFrame(settled);};
+  },[result,selectedTrace,zoom]);
+
+  useEffect(()=>{
     const warn=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();}};
     window.addEventListener('beforeunload',warn);return ()=>window.removeEventListener('beforeunload',warn);
   },[dirty]);
@@ -157,6 +187,19 @@ function App() {
       return false;
     }finally{sampleBusy.current=false;setSampleLoading(false);}
   };
+  const startTrace=(root:Endpoint,row:SVGGElement)=>{
+    if(selectedTrace&&endpointKey(selectedTrace.root)===endpointKey(root)){clearBinding();return;}
+    clearBinding();setSelected('');
+    if(view!=='all'||!bindings){
+      invalidate();
+      pendingTrace.current={root,source:sourceRef.current};
+      latest.current.view='all';latest.current.bindings=true;
+      setView('all');setBindings(true);fitPending.current=true;
+      return;
+    }
+    if(result){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(result.svg,root));}
+    row.focus({preventScroll:true});
+  };
   const selectElement=(target:EventTarget|null)=>{
     const element=target as Element|null;
     const mapping=element?.closest?.<SVGGElement>('.binding-group,.binding-badge');
@@ -164,22 +207,46 @@ function App() {
       const key=mapping.dataset.bindingKey!;
       if(selectedBinding?.key===key)clearBinding();
       else{
-        setSelected('');
+        clearBinding();setSelected('');
         setSelectedBinding({key,label:mapping.getAttribute('aria-label')??key});
         mapping.focus({preventScroll:true});
       }
+      return;
+    }
+    const row=element?.closest?.<SVGGElement>('.interface-row');
+    if(row){
+      const layer=row.closest('[data-layer]')?.getAttribute('data-layer') as Endpoint['layer'];
+      startTrace({layer,id:row.dataset.elementId!},row);
       return;
     }
     clearBinding();
     const group=element?.closest?.('[data-device]');
     if(group){const id=group.getAttribute('data-device')??'';setSelected(previous=>previous===id?'':id);}
   };
+  const revealRow=(row:Element|null|undefined)=>{
+    const pane=viewport.current;if(!pane||!row)return;
+    // SVG scrollIntoView can use unscaled coordinates inside the transformed
+    // canvas. Move the HTML viewport using the actual screen-space rectangle.
+    pane.scrollIntoView({block:'nearest',inline:'nearest'});
+    const box=row.getBoundingClientRect(),frame=pane.getBoundingClientRect();
+    const top=box.top<frame.top+8||box.bottom>frame.bottom-8?pane.scrollTop+(box.top+box.bottom-frame.top-frame.bottom)/2:pane.scrollTop;
+    const left=box.left<frame.left+8||box.right>frame.right-8?pane.scrollLeft+(box.left+box.right-frame.left-frame.right)/2:pane.scrollLeft;
+    pane.scrollTo({top,left,behavior:'instant'});
+  };
   const showBindingEnd=(upper:boolean)=>{
     if(!selectedBinding||!canvas.current)return;
     const group=Array.from(canvas.current.querySelectorAll<SVGGElement>('.binding-group')).find(g=>g.dataset.bindingKey===selectedBinding.key);
     const layer=group?.querySelector('.binding-edge')?.getAttribute(upper?'data-from-layer':'data-to-layer');
     const row=canvas.current.querySelector('[data-layer="'+layer+'"] .binding-row-'+selectedBinding.key);
-    row?.scrollIntoView({block:'center',inline:'center'});
+    revealRow(row);
+  };
+  const showTraceNode=(node:Endpoint)=>{
+    const row=Array.from(canvas.current?.querySelectorAll<SVGGElement>('.interface-row')??[]).find(row=>row.dataset.elementId===node.id&&row.closest('[data-layer]')?.getAttribute('data-layer')===node.layer);
+    revealRow(row);
+  };
+  const showTraceEdge=(key:string)=>{
+    const group=Array.from(canvas.current?.querySelectorAll<SVGGElement>('.binding-group')??[]).find(group=>group.dataset.bindingKey===key);
+    if(group)selectElement(group);
   };
   const jump=(issue:Issue)=>{const ed=editor.current;if(!ed||!issue.line||issue.line>ed.state.doc.lines)return;ed.dispatch({selection:{anchor:ed.state.doc.line(issue.line).from},scrollIntoView:true});ed.focus();};
 
@@ -216,8 +283,16 @@ function App() {
           <div className="tabs" role="tablist" aria-label="表示レイヤー">{(Object.keys(LABELS) as View[]).map(v=><button key={v} role="tab" aria-selected={view===v} className={view===v?'active':''} onClick={()=>{if(v!==view){invalidate();latest.current.view=v;setView(v);fitPending.current=true;}}}>{LABELS[v]}</button>)}</div>
           <label className="toggle-label"><input type="checkbox" checked={bindings} disabled={view!=='all'} onChange={e=>{invalidate();latest.current.bindings=e.target.checked;setBindings(e.target.checked);}}/><span className="toggle-track"/> 層間対応</label>
         </div>
-        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
         {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}
+        {selectedTrace&&<section className="trace-selection" aria-label="層間対応の追跡">
+          <div className="trace-heading"><strong aria-live="polite">起点 {selectedTrace.root.layer.toUpperCase()} / {selectedTrace.root.id} · {selectedTrace.nodes.length}行・{selectedTrace.edges.length}対応</strong><button onClick={clearBinding}>追跡の強調を解除</button></div>
+          <p>層間対応を双方向に追跡。同じポートを共有する対応も含み、通信可能性を意味しません。</p>
+          <details className="trace-details" open key={endpointKey(selectedTrace.root)}><summary>関連する行と対応（行名で移動・対応名で個別に強調）</summary>
+            <div className="trace-node-list">{(['l1','l2','l3'] as const).map(layer=><div key={layer}><strong>{layer.toUpperCase()}（{selectedTrace.nodes.filter(n=>n.layer===layer).length}行）</strong>{selectedTrace.nodes.filter(n=>n.layer===layer).map(node=><button key={endpointKey(node)} className={endpointKey(node)===endpointKey(selectedTrace.root)?'trace-origin':''} onClick={()=>showTraceNode(node)}>{node.id}{endpointKey(node)===endpointKey(selectedTrace.root)?'（起点）':''} · 対応{node.degree}件</button>)}</div>)}</div>
+            {selectedTrace.edges.length===0?<p>この行には層間対応の定義がありません。</p>:<div className="trace-edge-list" aria-label="追跡した対応一覧">{selectedTrace.edges.map(edge=><button key={edge.key} onClick={()=>showTraceEdge(edge.key)}>{edge.label}</button>)}</div>}
+          </details>
+        </section>}
         <div className="viewport" ref={viewport}>
           {phase!=='valid'&&result&&<div className={'stale-banner '+(phase==='invalid'?'error':'')} role="status">{phase==='invalid'?'現在のYAMLは未反映です。最後に正常生成した図を表示しています。':'更新待ち · 最後に正常生成した図を表示しています。'}</div>}
           {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}

@@ -200,10 +200,11 @@ test('equipment frames contain distinct interfaces and support port clicks',asyn
   await page.getByRole('tab',{name:'L1 物理'}).click();
   await expect(page.locator('[data-layer]')).toHaveCount(1);
   await expect(page.getByLabel('検証結果')).toContainText('検証済み');
-  await page.locator('[data-element-id="sw01.p2"]').click();
-  await expect(page.getByLabel('機器の強調表示')).toHaveValue('sw01');
-  await expect(page.locator('.selected-device')).toHaveCount(1);
   await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/grouped-l1.png',fullPage:true});
+  await page.locator('[data-element-id="sw01.p2"]').click();
+  await expect(page.getByLabel('層間対応の追跡')).toContainText('sw01.p2');
+  await expect(page.locator('.trace-root')).toHaveAttribute('data-element-id','sw01.p2');
+  await expect(page.locator('.selected-device')).toHaveCount(0);
   await page.getByRole('tab',{name:'L2 VLAN'}).click();
   await expect(page.locator('[data-layer="l2"]')).toHaveCount(1);
   await expect(page.getByLabel('検証結果')).toContainText('検証済み');
@@ -394,4 +395,104 @@ test('exported SVG highlights mapping endpoints without application scripts',asy
   await expect(standalone.locator('[data-element-id="pc-a.ip"]')).toHaveCSS('opacity','0.18');
   await standalone.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/mapping-svg.png',fullPage:true});
   await standalone.close();
+});
+
+
+test('row tracing follows both adjacent layers without following VLAN buses or cables',async({page})=>{
+  await page.locator('[data-layer="l3"] [data-element-id="pc-a.ip"]').click();
+  const panel=page.getByLabel('層間対応の追跡');
+  await expect(panel).toContainText('3行・2対応');
+  await expect(page.locator('.trace-row')).toHaveCount(3);
+  await expect(page.locator('.binding-group.trace-edge')).toHaveCount(2);
+  await expect(page.locator('.trace-root')).toHaveAttribute('data-element-id','pc-a.ip');
+  for(const id of ['pc-a.ip','pc-a.l2','pc-a.eth0'])await expect(page.locator('[data-element-id="'+id+'"]')).toHaveCSS('opacity','1');
+  await expect(page.locator('[data-element-id="sw01.access1"]')).toHaveCSS('opacity','0.18');
+  await expect(page.locator('[data-element-id="sw01.p1"]')).toHaveCSS('opacity','0.18');
+  await page.locator('.binding-group[data-binding-key="map-3"] text').first().hover();
+  await expect(page.locator('[data-element-id="pc-a.ip"]')).toHaveCSS('opacity','1');
+  await expect(page.locator('[data-element-id="gw01.v20"]')).toHaveCSS('opacity','0.18');
+  await panel.getByRole('button',{name:/^pc-a.eth0 /}).click();
+  await expect(page.locator('[data-element-id="pc-a.eth0"]')).toBeInViewport();
+  await page.keyboard.press('Escape');
+  await expect(panel).toHaveCount(0);
+  await expect(page.locator('.trace-row')).toHaveCount(0);
+});
+
+test('a trunk selected from L1 reveals all layers and both VLAN branches',async({page})=>{
+  await page.getByRole('tab',{name:'L1 物理'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await page.locator('[data-element-id="gw01.lan"]').click();
+  const panel=page.getByLabel('層間対応の追跡');
+  await expect(panel).toContainText('4行・3対応');
+  await expect(page.locator('[data-layer]')).toHaveCount(3);
+  await expect(page.locator('.trace-row')).toHaveCount(4);
+  await expect(page.locator('.binding-group.trace-edge')).toHaveCount(3);
+  await expect(page.locator('.trace-root')).toHaveAttribute('data-element-id','gw01.lan');
+  await expect(page.locator('.trace-root')).toBeInViewport();
+  await expect(panel).toContainText('gw01.trunk · 対応3件');
+  await expect(panel.getByLabel('追跡した対応一覧')).toContainText('vlan-office');
+  await expect(panel.getByLabel('追跡した対応一覧')).toContainText('vlan-guest');
+  await panel.getByRole('button',{name:/^gw01.v20 /}).click();
+  await expect(page.locator('[data-element-id="gw01.v20"]')).toBeInViewport();
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/trace-desktop.png',fullPage:true});
+  await panel.getByRole('button',{name:/^M4 \/ L3:/}).click();
+  await expect(panel).toHaveCount(0);
+  await expect(page.getByLabel('選択した層間対応')).toContainText('gw01.v20');
+  await expect(page.locator('.trace-row')).toHaveCount(0);
+  await expect(page.locator('.selected-binding')).toHaveCount(3);
+  await page.keyboard.press('Escape');
+  await page.locator('[data-element-id="gw01.trunk"]').click();
+  await expect(panel).toContainText('4行・3対応');
+  await page.locator('[data-element-id="gw01.trunk"]').click();
+  await expect(panel).toHaveCount(0);
+});
+
+test('unbound ports show one row and tracing turns hidden bindings back on',async({page,request})=>{
+  const source=(await (await request.get('/api/sample')).json()).yaml_text;
+  await page.getByRole('textbox',{name:'YAMLエディター'}).fill(source.replace('  links:','    - {id: spare-port, device: pc-a}\n  links:'));
+  await expect(page.getByTestId('diagram')).toContainText('spare-port');
+  await page.locator('[data-element-id="spare-port"]').click();
+  await expect(page.getByLabel('層間対応の追跡')).toContainText('1行・0対応');
+  await expect(page.getByLabel('層間対応の追跡')).toContainText('層間対応の定義がありません');
+  await expect(page.locator('.trace-row')).toHaveCount(1);
+  await page.getByRole('checkbox',{name:'層間対応'}).uncheck({force:true});
+  await expect(page.locator('.binding-group')).toHaveCount(0);
+  await expect(page.getByLabel('層間対応の追跡')).toHaveCount(0);
+  await page.locator('[data-layer="l2"] [data-element-id="gw01.trunk"]').click();
+  await expect(page.getByLabel('層間対応の追跡')).toContainText('4行・3対応');
+  await expect(page.getByRole('checkbox',{name:'層間対応'})).toBeChecked();
+  await page.getByLabel('機器の強調表示').selectOption('sw01');
+  await expect(page.getByLabel('層間対応の追跡')).toHaveCount(0);
+  await expect(page.locator('.selected-device')).toHaveCount(3);
+});
+
+test('editing during automatic trace view switching discards the pending origin',async({page,request})=>{
+  const source=(await (await request.get('/api/sample')).json()).yaml_text;
+  await page.getByRole('tab',{name:'L1 物理'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await page.route('**/api/render',async route=>{
+    const body=route.request().postDataJSON();
+    if(body.view==='all'&&!body.yaml_text.includes('TRACE-EDIT'))await new Promise(resolve=>setTimeout(resolve,1200));
+    try{await route.continue();}catch{}
+  });
+  await page.locator('[data-element-id="gw01.lan"]').click();
+  await page.getByRole('textbox',{name:'YAMLエディター'}).fill(source.replace('HQ-PC-01','TRACE-EDIT'));
+  await expect(page.getByTestId('diagram')).toContainText('TRACE-EDIT');
+  await expect(page.getByLabel('層間対応の追跡')).toHaveCount(0);
+  await expect(page.locator('.trace-row')).toHaveCount(0);
+});
+
+test('keyboard row tracing is usable on a mobile viewport',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  const row=page.locator('[data-layer="l2"] [data-element-id="gw01.trunk"]');
+  await row.focus();await page.keyboard.press('Enter');
+  const panel=page.getByLabel('層間対応の追跡');
+  await expect(panel).toContainText('4行・3対応');
+  await expect(row).toHaveAttribute('aria-pressed','true');
+  await panel.getByRole('button',{name:/^gw01.v10 /}).click();
+  await expect(page.locator('[data-element-id="gw01.v10"]')).toBeInViewport();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/trace-mobile.png',fullPage:true});
+  await panel.getByRole('button',{name:'追跡の強調を解除'}).click();
+  await expect(panel).toHaveCount(0);
 });

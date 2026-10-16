@@ -322,6 +322,19 @@ class DiagramTests(unittest.TestCase):
             hidden=ET.fromstring(render(self.model,**options))
             self.assertFalse(any('binding-group' in e.attrib.get('class','').split() or 'binding-badge' in e.attrib.get('class','').split() for e in hidden.iter()))
 
+    def test_rows_expose_layer_qualified_keyboard_trace_targets(self):
+        root=ET.fromstring(render(self.model))
+        for layer in [e for e in root.iter() if 'data-layer' in e.attrib]:
+            for row in [e for e in layer.iter() if 'data-element-id' in e.attrib]:
+                hit=next(e for e in row if e.attrib.get('class')=='interface-hit')
+                self.assertGreater(float(hit.attrib['width']),0)
+                self.assertGreater(float(hit.attrib['height']),0)
+                self.assertEqual(row.attrib['role'],'button')
+                self.assertEqual(row.attrib['tabindex'],'0')
+                self.assertEqual(row.attrib['aria-pressed'],'false')
+                self.assertIn(layer.attrib['data-layer'].upper(),row.attrib['aria-label'])
+                self.assertIn(row.attrib['data-element-id'],row.attrib['aria-label'])
+
 
 if __name__ == '__main__':
     unittest.main()

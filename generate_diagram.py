@@ -291,7 +291,8 @@ def render(model, layers=None, show_bindings=True):
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
                 member_classes=' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
-                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                rect(left+5,row_top+3,card_width-10,row_height-6,'transparent','none','interface-hit')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'#f1eafa','#8665a6','binding-row-highlight')
                 svg.append(f'<title>{escape(item["id"])}</title>')
                 edge([(left+12,row_top),(right-12,row_top)],'#e0e7ee','row-separator')
@@ -436,7 +437,7 @@ def render(model, layers=None, show_bindings=True):
             # SVG-only hover/focus also works in exported diagrams. In the web
             # app a clicked selection stays active until cleared or redrawn.
             candidate=f'.binding-{key}:is(:hover,:focus)'
-            transient=f'svg:not(:has(.selected-binding)):has({candidate}):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-{key})))'
+            transient=f'svg:not(.trace-active):not(:has(.selected-binding)):has({candidate}):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-{key})))'
             persistent=f'svg:has(.binding-{key}.selected-binding)'
             trigger=f':is({persistent},{transient})'
             binding_styles.append(f'{trigger} .interface-row'+'{opacity:.18!important}')
@@ -464,7 +465,7 @@ def render(model, layers=None, show_bindings=True):
     height=y+55
     network_css=''.join(network_styles)
     binding_css=''.join(binding_styles)
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}.interface-hit{{pointer-events:all}}.interface-row{{cursor:pointer;outline:none}}.interface-row:focus>.binding-row-highlight{{display:block;stroke:#177b69;stroke-width:2}}svg.trace-active .interface-row{{opacity:.18!important}}svg.trace-active .interface-row.trace-row{{opacity:1!important}}svg.trace-active .trace-row .binding-row-highlight{{display:block;stroke-width:2;stroke:#8665a6}}svg.trace-active .trace-root .binding-row-highlight{{fill:#e4f5ee;stroke:#177b69;stroke-width:3}}svg.trace-active .binding-group{{opacity:.12!important}}svg.trace-active .binding-group.trace-edge{{opacity:1!important}}svg.trace-active .trace-edge .binding-edge{{stroke:#6f359e;stroke-width:3.5}}svg.trace-active .binding-badge.trace-edge text{{font-weight:bold}}svg.trace-active :is(.network-group,.physical-cable-group){{opacity:.12!important}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 
