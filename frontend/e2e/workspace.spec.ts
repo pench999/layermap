@@ -279,3 +279,119 @@ test('trunk memberships use distinct anchors and added VLAN updates logical grou
   await expect(page.locator('[data-network-kind="vlan"]')).toHaveCount(3);
   await expect(page.locator('[data-network-id="vlan-lab"]')).toHaveCount(1);
 });
+
+
+test('mapping selection pins its line and both endpoint rows and supports clearing',async({page})=>{
+  const badge=page.locator('[data-layer="l3"] .binding-badge[data-binding-key="map-2"]');
+  await page.getByLabel('機器の強調表示').selectOption('sw01');
+  await badge.click();
+  await expect(page.getByLabel('選択した層間対応')).toContainText('gw01.v10 ↔ L2: gw01.trunk');
+  await expect(page.getByLabel('機器の強調表示')).toHaveValue('');
+  await expect(page.locator('.selected-binding')).toHaveCount(3);
+  const selected=page.locator('.binding-group[data-binding-key="map-2"]');
+  await expect(selected).toHaveAttribute('aria-pressed','true');
+  await expect(selected.locator('.binding-edge')).toHaveCSS('stroke-width','3.5px');
+  for(const endpoint of ['gw01.v10','gw01.trunk']){
+    const row=page.locator('[data-element-id="'+endpoint+'"]');
+    await expect(row).toHaveCSS('opacity','1');
+    await expect(row.locator('.binding-row-highlight')).toHaveCSS('display','block');
+  }
+  await expect(page.locator('[data-element-id="pc-a.ip"]')).toHaveCSS('opacity','0.18');
+  await page.getByRole('button',{name:'下位の行へ'}).click();
+  await expect(page.locator('[data-element-id="gw01.trunk"]')).toBeInViewport();
+  await page.keyboard.press('Escape');
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await selected.focus();
+  await page.keyboard.press('Enter');
+  await page.getByRole('button',{name:'上位の行へ'}).click();
+  await expect(page.locator('[data-element-id="gw01.v10"]')).toBeInViewport();
+  await page.getByRole('button',{name:'全体表示'}).click();
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/mapping-desktop.png',fullPage:true});
+  await page.locator('.binding-group[data-binding-key="map-0"] text').first().hover();
+  await expect(selected).toHaveCSS('opacity','1');
+  await expect(page.locator('.binding-group[data-binding-key="map-0"]')).toHaveCSS('opacity','0.12');
+  await page.getByRole('button',{name:'対応の強調を解除'}).click();
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await expect(page.locator('.selected-binding')).toHaveCount(0);
+  await selected.focus();
+  await page.keyboard.press('Enter');
+  await expect(selected).toHaveAttribute('aria-pressed','true');
+  await page.keyboard.press('Escape');
+  await expect(selected).toHaveAttribute('aria-pressed','false');
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await selected.focus();
+  await page.keyboard.press('Space');
+  await expect(selected).toHaveAttribute('aria-pressed','true');
+  await page.keyboard.press('Space');
+  await expect(selected).toHaveAttribute('aria-pressed','false');
+});
+
+test('mapping lines are clickable and selection clears when data or views change',async({page,request})=>{
+  const group=page.locator('.binding-group[data-binding-key="map-0"]');
+  await group.locator('text').first().scrollIntoViewIfNeeded();
+  const point=await group.locator('.binding-hit').evaluate(el=>{
+    const path=el as SVGPathElement;
+    const matrix=path.getScreenCTM()!;
+    const viewport=document.querySelector('.viewport')!.getBoundingClientRect();
+    for(let n=1;n<100;n++){
+      const p=path.getPointAtLength(path.getTotalLength()*n/100).matrixTransform(matrix);
+      if(p.x>viewport.left+8&&p.x<viewport.right-8&&p.y>viewport.top+8&&p.y<viewport.bottom-8&&document.elementFromPoint(p.x,p.y)?.closest('.binding-group')?.getAttribute('data-binding-key')==='map-0')return {x:p.x,y:p.y};
+    }
+    return null;
+  });
+  expect(point).not.toBeNull();
+  await page.mouse.click(point!.x,point!.y);
+  await expect(page.getByLabel('選択した層間対応')).toContainText('pc-a.ip');
+  await page.getByRole('tab',{name:'L2 VLAN'}).click();
+  await expect(page.locator('[data-layer]')).toHaveCount(1);
+  await expect(page.locator('.binding-group')).toHaveCount(0);
+  await expect(page.locator('.binding-badge')).toHaveCount(0);
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await page.getByRole('tab',{name:'全レイヤー'}).click();
+  await expect(page.locator('.binding-group')).toHaveCount(10);
+  await group.locator('text').first().click();
+  const source=(await (await request.get('/api/sample')).json()).yaml_text;
+  await page.route('**/api/render',async route=>{
+    if(route.request().postData()!.includes('MAPPING-EDIT'))await new Promise(resolve=>setTimeout(resolve,1000));
+    await route.continue();
+  });
+  await page.getByRole('textbox',{name:'YAMLエディター'}).fill(source.replace('HQ-PC-01','MAPPING-EDIT'));
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  // A selection made against the stale preview must not attach to a new map.
+  await group.locator('text').first().click();
+  await expect(page.getByLabel('選択した層間対応')).toContainText('pc-a.ip');
+  await expect(page.getByTestId('diagram')).toContainText('MAPPING-EDIT');
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await expect(page.locator('.selected-binding')).toHaveCount(0);
+  await page.getByRole('checkbox',{name:'層間対応'}).uncheck({force:true});
+  await expect(page.locator('.binding-group')).toHaveCount(0);
+  await expect(page.locator('.binding-badge')).toHaveCount(0);
+});
+
+test('mapping endpoint labels and selection remain available on mobile',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.locator('.binding-group[data-binding-key="map-2"] text').first().click();
+  await expect(page.getByLabel('選択した層間対応')).toContainText('gw01.v10');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBeTruthy();
+  await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/mapping-mobile.png',fullPage:true});
+  await page.getByRole('button',{name:'対応の強調を解除'}).click();
+});
+
+
+test('exported SVG highlights mapping endpoints without application scripts',async({page})=>{
+  const downloading=page.waitForEvent('download');
+  await page.getByRole('button',{name:'SVGを書き出す'}).click();
+  const download=await downloading;
+  const stream=await download.createReadStream();
+  let svg='';for await(const chunk of stream!)svg+=chunk;
+  const size=svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/)!;
+  const standalone=await page.context().newPage();
+  await standalone.setViewportSize({width:Math.ceil(Number(size[1]))+32,height:Math.min(3400,Math.ceil(Number(size[2]))+32)});
+  await standalone.setContent(svg);
+  await standalone.locator('.binding-group[data-binding-key="map-2"]').focus();
+  await expect(standalone.locator('[data-element-id="gw01.v10"] .binding-row-highlight')).toHaveCSS('display','block');
+  await expect(standalone.locator('[data-element-id="gw01.trunk"] .binding-row-highlight')).toHaveCSS('display','block');
+  await expect(standalone.locator('[data-element-id="pc-a.ip"]')).toHaveCSS('opacity','0.18');
+  await standalone.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/mapping-svg.png',fullPage:true});
+  await standalone.close();
+});

@@ -25,6 +25,7 @@ function App() {
   const [phase,setPhase] = useState<'loading'|'pending'|'valid'|'invalid'>('loading');
   const [notice,setNotice] = useState('');
   const [selected,setSelected] = useState('');
+  const [selectedBinding,setSelectedBinding] = useState<{key:string;label:string}|null>(null);
   const [zoom,setZoom] = useState(0.6);
   const [dirty,setDirty] = useState(false);
   const dirtyRef = useRef(false);
@@ -46,7 +47,12 @@ function App() {
   const saved = useRef('');
   const fitPending = useRef(true);
   const sourceRef = useRef('');
-  const invalidate = () => { sequence.current++; currentController.current?.abort(); setPhase('pending'); };
+  const clearBinding = () => {
+    setSelectedBinding(null);
+    const focused=document.activeElement as HTMLElement|null;
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge'))focused.blur();
+  };
+  const invalidate = () => { clearBinding(); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
     if(value!==sourceRef.current){
       invalidate(); sourceRef.current = value; latest.current.source=value;
@@ -90,7 +96,7 @@ function App() {
         const body=await response.json();
         if(revision!==sequence.current)return;
         if(!response.ok){setIssues(body.errors??[{message:'描画できませんでした',path:'',line:null,column:null}]);setPhase('invalid');return;}
-        setResult(body);setIssues([]);setPhase('valid');
+        clearBinding();setResult(body);setIssues([]);setPhase('valid');
       } catch(error) {
         if(controller.signal.aborted || revision!==sequence.current)return;
         setIssues([{message:error instanceof Error && error.message.includes('KiB')?error.message:'サーバーへ接続できません。編集内容を保存して、接続を確認してください。',path:'',line:null,column:null}]);setPhase('invalid');
@@ -113,6 +119,14 @@ function App() {
     if(selected && !result.devices.some(d=>d.id===selected))setSelected('');
     if(fitPending.current && viewport.current){setZoom(Math.min(1,(viewport.current.clientWidth-64)/dimensions.width));fitPending.current=false;}
   },[result,selected]);
+
+  useEffect(()=>{
+    canvas.current?.querySelectorAll<SVGGElement>('[data-binding-key][role="button"]').forEach(group=>{
+      const active=group.dataset.bindingKey===selectedBinding?.key;
+      group.classList.toggle('selected-binding',active);
+      group.setAttribute('aria-pressed',String(active));
+    });
+  },[result,selectedBinding]);
 
   useEffect(()=>{
     const warn=(e:BeforeUnloadEvent)=>{if(dirty){e.preventDefault();}};
@@ -143,7 +157,30 @@ function App() {
       return false;
     }finally{sampleBusy.current=false;setSampleLoading(false);}
   };
-  const selectElement=(target:EventTarget|null)=>{const group=(target as Element)?.closest?.('[data-device]');if(group){const id=group.getAttribute('data-device')??'';setSelected(previous=>previous===id?'':id);}};
+  const selectElement=(target:EventTarget|null)=>{
+    const element=target as Element|null;
+    const mapping=element?.closest?.<SVGGElement>('.binding-group,.binding-badge');
+    if(mapping){
+      const key=mapping.dataset.bindingKey!;
+      if(selectedBinding?.key===key)clearBinding();
+      else{
+        setSelected('');
+        setSelectedBinding({key,label:mapping.getAttribute('aria-label')??key});
+        mapping.focus({preventScroll:true});
+      }
+      return;
+    }
+    clearBinding();
+    const group=element?.closest?.('[data-device]');
+    if(group){const id=group.getAttribute('data-device')??'';setSelected(previous=>previous===id?'':id);}
+  };
+  const showBindingEnd=(upper:boolean)=>{
+    if(!selectedBinding||!canvas.current)return;
+    const group=Array.from(canvas.current.querySelectorAll<SVGGElement>('.binding-group')).find(g=>g.dataset.bindingKey===selectedBinding.key);
+    const layer=group?.querySelector('.binding-edge')?.getAttribute(upper?'data-from-layer':'data-to-layer');
+    const row=canvas.current.querySelector('[data-layer="'+layer+'"] .binding-row-'+selectedBinding.key);
+    row?.scrollIntoView({block:'center',inline:'center'});
+  };
   const jump=(issue:Issue)=>{const ed=editor.current;if(!ed||!issue.line||issue.line>ed.state.doc.lines)return;ed.dispatch({selection:{anchor:ed.state.doc.line(issue.line).from},scrollIntoView:true});ed.focus();};
 
   return <div className="app">
@@ -174,17 +211,18 @@ function App() {
         <div className="editor" ref={editorMount}/>
         <div className="editor-bottom"><span>UTF-8</span><span>256 KiBまで · Ctrl / ⌘ + S で保存</span></div>
       </section>
-      <section className="preview-panel" aria-label="ネットワーク図">
+      <section className="preview-panel" aria-label="ネットワーク図" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();clearBinding();}}}>
         <div className="preview-toolbar">
           <div className="tabs" role="tablist" aria-label="表示レイヤー">{(Object.keys(LABELS) as View[]).map(v=><button key={v} role="tab" aria-selected={view===v} className={view===v?'active':''} onClick={()=>{if(v!==view){invalidate();latest.current.view=v;setView(v);fitPending.current=true;}}}>{LABELS[v]}</button>)}</div>
           <label className="toggle-label"><input type="checkbox" checked={bindings} disabled={view!=='all'} onChange={e=>{invalidate();latest.current.bindings=e.target.checked;setBindings(e.target.checked);}}/><span className="toggle-track"/> 層間対応</label>
         </div>
-        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>setSelected(e.target.value)}><option value="">すべて表示</option>{result?.devices.map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}
         <div className="viewport" ref={viewport}>
           {phase!=='valid'&&result&&<div className={'stale-banner '+(phase==='invalid'?'error':'')} role="status">{phase==='invalid'?'現在のYAMLは未反映です。最後に正常生成した図を表示しています。':'更新待ち · 最後に正常生成した図を表示しています。'}</div>}
           {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}
         </div>
-        <div className="preview-bottom"><div className="legend"><span><i className="line-solid"/>レイヤー内の関係</span><span><i className="line-dash"/>層間の対応</span></div><div className="zoom-controls"><button aria-label="縮小" onClick={()=>setZoom(z=>Math.max(.1,z-.1))}>−</button><span>{Math.round(zoom*100)}%</span><button aria-label="拡大" onClick={()=>setZoom(z=>Math.min(2,z+.1))}>＋</button><button onClick={fit}>全体表示</button></div></div>
+        <div className="preview-bottom"><div className="legend"><span><i className="line-solid"/>レイヤー内の関係</span><span><i className="line-dash"/>層間の対応（選択可）</span></div><div className="zoom-controls"><button aria-label="縮小" onClick={()=>setZoom(z=>Math.max(.1,z-.1))}>−</button><span>{Math.round(zoom*100)}%</span><button aria-label="拡大" onClick={()=>setZoom(z=>Math.min(2,z+.1))}>＋</button><button onClick={fit}>全体表示</button></div></div>
       </section>
     </main>
     <section className={'validation '+phase} aria-live="polite" aria-label="検証結果"><div className="validation-title"><span className="status-icon">{phase==='valid'?'✓':phase==='invalid'?'!':'◌'}</span><strong>{phase==='valid'?'検証済み':phase==='invalid'?'入力を確認してください':phase==='loading'?'読み込み中':'更新待ち'}</strong>{phase==='valid'&&result&&<span className="counts">{result.counts.devices} 機器 <b>·</b> {result.counts.links} ケーブル <b>·</b> {result.counts.vlans} VLAN</span>}<span className="validation-hint">{phase==='valid'?'最新のYAMLを図面に反映しました':'編集が止まると自動で検証します'}</span></div>{issues.map((issue,n)=><button className="issue" key={n} onClick={()=>jump(issue)}>{issue.line&&<span>{issue.line}行{issue.column?':'+issue.column:''}</span>}<code>{issue.path}</code>{issue.message}</button>)}</section>

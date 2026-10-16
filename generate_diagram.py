@@ -160,9 +160,29 @@ def render(model, layers=None, show_bindings=True):
     physical_degree=Counter(ix['l1.ports'][p]['device'] for link in physical_links for p in link['endpoints'])
     max_edges = max([max(Counter(ix[group][m]['device'] for _,members,_ in relations[layer] for m in members).values(),default=0) for layer,group,_,_ in specs]+[max(physical_degree.values(),default=1) if 'l1' in wanted else 1])
     binding_specs = [('l3','l2','l3_to_l2','l3_interface','l2_interface'),('l2','l1','l2_to_l1','l2_interface','physical_port')]
-    max_bindings = max([max(Counter(ix[upper+'.interfaces'][b[ak]]['device'] for b in model['bindings'][key]).values(),default=0) for upper,lower,key,ak,bk in binding_specs if upper in wanted and lower in wanted and show_bindings]+[1])
+    binding_records, row_bindings = [], {}
+    if show_bindings:
+        for upper,lower,kind,ak,bk in binding_specs:
+            if upper not in wanted or lower not in wanted:
+                continue
+            for original in model['bindings'][kind]:
+                number='M'+str(len(binding_records)+1)
+                record={'key':'map-'+str(len(binding_records)), 'number':number,
+                        'upper':upper, 'lower':lower, 'kind':kind,
+                        'source':original[ak], 'target':original[bk],
+                        'vlan':original.get('vlan'), 'device':ix[upper+'.interfaces'][original[ak]]['device']}
+                record['label']=number+' / '+upper.upper()+': '+record['source']+' ↔ '+lower.upper()+': '+record['target']+(' / VLAN '+record['vlan'] if record['vlan'] else '')
+                binding_records.append(record)
+                row_bindings.setdefault((upper,record['source']),[]).append(record)
+                row_bindings.setdefault((lower,record['target']),[]).append(record)
+    def binding_badge(record,layer):
+        upper=layer==record['upper']
+        other=record['lower'] if upper else record['upper']
+        target=record['target'] if upper else record['source']
+        return record['number']+(' ↓ ' if upper else ' ↑ ')+other.upper()+' / '+target+(' / '+record['vlan'] if record['vlan'] else '')
+    max_bindings = max(Counter(b['device'] for b in binding_records).values(),default=0)
     card_width = 340
-    left_space = max(60, 32 + max_bindings*7)
+    left_space = max(60, 34 + max_bindings*20)
     column = card_width + 40 + max_edges*10 + left_space
     lefts = {device:left_space + n*column for n,device in enumerate(devices)}
     width = max(1450, left_space + len(devices)*column)
@@ -177,6 +197,7 @@ def render(model, layers=None, show_bindings=True):
         port_colors[a]=port_colors[b]=color
     svg, nodes, sections = [], {}, {}
     membership_anchors, network_styles = {}, []
+    binding_anchors, binding_labels, binding_styles = {}, {}, []
     escape = lambda value: html.escape(str(value),quote=True)
 
     def text(x,y,value,size=14,color='#23344d'):
@@ -221,7 +242,7 @@ def render(model, layers=None, show_bindings=True):
                     details.append('connector / '+item['connector'])
                 title_lines=wrap_label(item['id'],43)
                 detail_lines=[part for detail in details for part in wrap_label(detail,46)]
-                height=18*(len(title_lines)+len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[])))+18
+                height=18*(len(title_lines)+len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[]))+sum(len(wrap_label(binding_badge(b,layer),46)) for b in row_bindings.get((layer,item['id']),[])))+18
                 rows.append((item,title_lines,detail_lines,height))
             height=header+sum(row[3] for row in rows)+12
             if not rows:
@@ -249,7 +270,8 @@ def render(model, layers=None, show_bindings=True):
         sections[layer]=(top,end)
         svg.append(f'<g data-layer="{layer}">')
         rect(20,top,width-40,end-top,fill,fill,'layer-panel')
-        text(40,top+32,heading,22)
+        heading_x=left_space+16 if binding_records else 40
+        text(heading_x,top+32,heading,22)
         for device,(title,identity,metadata,header,rows,height) in cards.items():
             left=lefts[device]
             right=left+card_width
@@ -268,8 +290,9 @@ def render(model, layers=None, show_bindings=True):
                 side=port_sides.get(item['id'],1) if layer=='l1' else 1
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
-                member_classes=' '.join('member-'+net['key'] for net in memberships.get((layer,item['id']),[]))
+                member_classes=' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
                 svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                rect(left+5,row_top+3,card_width-10,row_height-6,'#f1eafa','#8665a6','binding-row-highlight')
                 svg.append(f'<title>{escape(item["id"])}</title>')
                 edge([(left+12,row_top),(right-12,row_top)],'#e0e7ee','row-separator')
                 lines_at(left+16,row_top+21,title_lines,13)
@@ -283,6 +306,15 @@ def render(model, layers=None, show_bindings=True):
                         svg.append(f'<text class="membership-label member-{net["key"]}" tabindex="0" role="img" aria-label="{escape(net["label"])}" x="{left+16}" y="{member_y+4+line_no*18}" font-size="12" fill="{net["color"]}">{escape(line)}</text>')
                     member_top+=18*len(member_lines)
                     svg.append(f'<circle class="membership-anchor member-{net["key"]}" data-membership-network="{escape(net["id"])}" data-membership-interface="{escape(item["id"])}" cx="{right}" cy="{member_y}" r="3.5" fill="white" stroke="{net["color"]}" stroke-width="1.5"/>')
+                for record in row_bindings.get((layer,item['id']),[]):
+                    badge_lines=wrap_label(binding_badge(record,layer),46)
+                    badge_y=member_top-4
+                    binding_anchors[(record['key'],layer)]=(left,badge_y)
+                    svg.append(f'<g class="binding-badge binding-{record["key"]}" data-binding-key="{record["key"]}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(record["label"])}">')
+                    lines_at(left+16,badge_y+4,badge_lines,11,'#765194',18)
+                    svg.append(f'<circle class="binding-anchor" data-binding-key="{record["key"]}" data-binding-layer="{layer}" data-binding-element="{escape(item["id"])}" cx="{left}" cy="{badge_y}" r="3.5" fill="white" stroke="#8665a6"/>')
+                    svg.append('</g>')
+                    member_top+=18*len(badge_lines)
                 if layer=='l1':
                     svg.append(f'<circle class="interface-anchor" data-port-id="{escape(item["id"])}" cx="{anchor_x}" cy="{anchor}" r="4" fill="white" stroke="{port_colors.get(item["id"],"#63849a") if layer=="l1" else "#63849a"}" stroke-width="1.5"/>')
                 svg.append('</g>')
@@ -323,7 +355,7 @@ def render(model, layers=None, show_bindings=True):
             for device,entries in departures.items():
                 for rank,(sy,key,member) in enumerate(sorted(entries,reverse=True)):
                     lanes[(key,member)]=lefts[device]+card_width+18+rank*10
-            text(40,top+51,'V＝VLAN / S＝サブネット / B＝機器内ブリッジ。番号・線にマウスまたはTabで所属を強調。交差部は未接続。',11,'#60788e')
+            text(heading_x,top+51,'V＝VLAN / S＝サブネット / B＝機器内ブリッジ（VLAN別に転送）',10,'#60788e')
             for by,labels,net in bus_layout:
                 key,color=net['key'],net['color']
                 description=net['number']+' / '+net['label']+' / 所属：'+(', '.join(net['members']) or 'なし')
@@ -355,36 +387,67 @@ def render(model, layers=None, show_bindings=True):
                 network_styles.append(f'{trigger} {scope} .network-{key} :is(.relation-branch,.relation-bus)'+'{stroke-width:3}')
                 network_styles.append(f'{trigger} {scope} :is(.membership-label,.membership-anchor):not(.member-{key})'+'{opacity:.22}')
         svg.append('</g>')
-        upper_bindings=[b for upper,lower,key,ak,bk in binding_specs if upper==layer and lower in wanted and show_bindings for b in model['bindings'][key]]
+        outgoing=[b for b in binding_records if b['upper']==layer]
         label_space=Counter()
-        for binding in upper_bindings:
-            ak='l3_interface' if layer=='l3' else 'l2_interface'
-            bk='l2_interface' if layer=='l3' else 'physical_port'
-            label=binding[ak]+' → '+binding[bk]+(' / '+binding['vlan'] if 'vlan' in binding else '')
-            label_space[ix[group][binding[ak]]['device']]+=len(wrap_label(label,46))*15+12
-        y=end+(65+max(label_space.values()) if label_space else 35)
-    if show_bindings:
-        for upper,lower,key,ak,bk in binding_specs:
-            if upper not in sections or lower not in sections:
-                continue
-            svg.append(f'<g data-binding="{key}">')
-            text(40,sections[upper][1]+24,'層間対応 / '+key,13,'#765194')
-            counts=Counter()
-            label_offsets=Counter()
-            for binding in model['bindings'][key]:
-                a,b=nodes[(upper,binding[ak])],nodes[(lower,binding[bk])]
-                device=a['device']
-                lane=a['left']-32-counts[device]*7
-                label=binding[ak]+' → '+binding[bk]+(' / '+binding['vlan'] if 'vlan' in binding else '')
-                attrs=f'data-from="{escape(binding[ak])}" data-to="{escape(binding[bk])}" stroke-dasharray="5 5"'
-                edge([(a['left'],a['y']),(lane,a['y']),(lane,b['y']),(b['left'],b['y'])],'#8665a6','binding-edge',attrs)
-                for node in (a,b):
-                    svg.append(f'<circle cx="{node["left"]}" cy="{node["y"]}" r="2.5" fill="#8665a6"/>')
-                labels=wrap_label(label,46)
-                lines_at(a['left']+8,sections[upper][1]+46+label_offsets[device],labels,10,'#765194',15)
-                label_offsets[device]+=len(labels)*15+12
-                counts[device]+=1
+        per_device=Counter()
+        for record in outgoing:
+            device=record['device']
+            labels=wrap_label(record['label'],46)
+            binding_labels[record['key']]=(end+52+label_space[device],labels)
+            label_space[device]+=len(labels)*15+15
+            per_device[device]+=1
+        y=end+max(35,70+max(label_space.values(),default=0),85+12*max(per_device.values(),default=0)) if outgoing else end+35
+    # Keep source and target legs in separate tracks; fan out near the rows in
+    # their vertical order and put unavoidable crossings in the interlayer gap.
+    routed={}
+    offsets=Counter()
+    for upper,lower,kind,ak,bk in binding_specs:
+        records=[b for b in binding_records if b['kind']==kind]
+        for device in devices:
+            group=[b for b in records if b['device']==device]
+            origin=lefts[device]-20
+            source_order=sorted(group,key=lambda b:binding_anchors[(b['key'],upper)][1],reverse=True)
+            target_order=sorted(group,key=lambda b:binding_anchors[(b['key'],lower)][1])
+            source_lanes={b['key']:origin-(offsets[device]+n)*10 for n,b in enumerate(source_order)}
+            target_lanes={b['key']:origin-(offsets[device]+len(group)+n)*10 for n,b in enumerate(target_order)}
+            for n,record in enumerate(group):
+                key=record['key']
+                a=binding_anchors[(key,upper)]
+                b=binding_anchors[(key,lower)]
+                gap=sections[upper][1]+54+n*12
+                routed[key]=compact_path([a,(source_lanes[key],a[1]),(source_lanes[key],gap),(target_lanes[key],gap),(target_lanes[key],b[1]),b])
+            offsets[device]+=2*len(group)
+    for upper,lower,kind,ak,bk in binding_specs:
+        if not any(b['kind']==kind for b in binding_records):
+            continue
+        svg.append(f'<g data-binding="{kind}">')
+        text(left_space+8,sections[upper][1]+24,'層間対応 / '+kind+' / M番号・線を選択して両端を強調',12,'#765194')
+        for record in [b for b in binding_records if b['kind']==kind]:
+            key=record['key']
+            svg.append(f'<g class="binding-group binding-{key}" data-binding-key="{key}" data-binding-kind="{kind}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(record["label"])}">')
+            svg.append(f'<title>{escape(record["label"])}</title>')
+            edge(routed[key],'#f8fafc','binding-casing','style="stroke-width:6;pointer-events:none" aria-hidden="true" stroke-linejoin="round"')
+            edge(routed[key],'transparent','binding-hit','style="stroke-width:14;pointer-events:stroke" aria-hidden="true"')
+            attrs=f'data-binding-key="{key}" data-from="{escape(record["source"])}" data-to="{escape(record["target"])}" data-from-layer="{upper}" data-to-layer="{lower}" stroke-dasharray="5 5" stroke-linejoin="round"'
+            edge(routed[key],'#8665a6','binding-edge',attrs)
+            list_y,labels=binding_labels[key]
+            lines_at(lefts[record['device']]+8,list_y,labels,10,'#765194',15)
             svg.append('</g>')
+            # SVG-only hover/focus also works in exported diagrams. In the web
+            # app a clicked selection stays active until cleared or redrawn.
+            candidate=f'.binding-{key}:is(:hover,:focus)'
+            transient=f'svg:not(:has(.selected-binding)):has({candidate}):not(:has(:is(.binding-group,.binding-badge):hover:not(.binding-{key})))'
+            persistent=f'svg:has(.binding-{key}.selected-binding)'
+            trigger=f':is({persistent},{transient})'
+            binding_styles.append(f'{trigger} .interface-row'+'{opacity:.18!important}')
+            binding_styles.append(f'{trigger} .binding-row-{key}'+'{opacity:1!important}')
+            binding_styles.append(f'{trigger} .binding-row-{key} .binding-row-highlight'+'{display:block;stroke-width:2}')
+            binding_styles.append(f'{trigger} .binding-group:not(.binding-{key})'+'{opacity:.12}')
+            binding_styles.append(f'{trigger} .binding-group.binding-{key}'+'{opacity:1}')
+            binding_styles.append(f'{trigger} .binding-group.binding-{key} .binding-edge'+'{stroke-width:3.5;stroke:#6f359e}')
+            binding_styles.append(f'{trigger} .binding-badge.binding-{key} text'+'{font-weight:bold}')
+            binding_styles.append(f'{trigger} :is(.network-group,.physical-cable-group)'+'{opacity:.12!important}')
+        svg.append('</g>')
     y=max(end for top,end in sections.values())+42
     if 'l3' in wanted:
         text(40,y,'L3経路 / 次ホップの指定（通信許可を意味しません）',19)
@@ -400,7 +463,8 @@ def render(model, layers=None, show_bindings=True):
     text(40,y+28,'一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応',12)
     height=y+55
     network_css=''.join(network_styles)
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    binding_css=''.join(binding_styles)
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 

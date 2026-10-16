@@ -58,3 +58,8 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 .diagram .selected-device > rect.device-frame { stroke:#05987b; stroke-width:3; }
 .diagram .interface-row:hover text { fill:#177b69; }
 .diagram .interface-row:hover .interface-anchor { fill:#b7eadb; stroke:#177b69; }
+
+.binding-selection { display:flex; align-items:center; gap:12px; padding:9px 14px; border-bottom:1px solid #e2d6ec; background:#f6f0fb; color:#704a8a; flex-shrink:0; font-size:11px; }
+.binding-selection span { flex:1; min-width:0; overflow-wrap:anywhere; }
+.binding-selection button { padding:5px 8px; font-size:10px; color:#704a8a; flex-shrink:0; }
+@media(max-width:760px) { .binding-selection { flex-wrap:wrap; } .binding-selection span { flex-basis:100%; } }

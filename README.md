@@ -107,6 +107,8 @@ docker compose run --rm generate python generate_diagram.py lan-sample.yaml -o /
 
 出力は `artifacts/lan-sample.svg` です。実行ユーザーのUID/GIDが1000以外の場合は、Compose起動時に `LOCAL_UID` と `LOCAL_GID` を設定してください。
 
+層間対応はM番号と紫の破線で示します。対応ごとに両端の行内に番号付き接続点を設け、入口・出口の経路を分離しています。線・行内番号・対応一覧をクリック、またはTabで移動してEnter/Spaceで選ぶと、その線と両端の行をまとめて強調します。選択後は「上位の行へ」「下位の行へ」で両端へ移動できます。選択はマウスを外しても保持され、同じ対応を再選択・Escape・「対応の強調を解除」で解除できます。YAML編集、表示切り替え、機器選択でも解除されます。SVG単体ではマウスまたはTabフォーカスで強調できます。交差は未接続で、複雑な構成で交差ゼロを保証するものではありません。
+
 ## 構成と制約
 
 - `network_model.py`：型・参照・VLAN・IP・経路の検証と、行番号付きYAML読み込み。

@@ -101,7 +101,7 @@ class DiagramTests(unittest.TestCase):
                 matches = [e for e in cards if e.attrib['data-device'] == device['id']]
                 self.assertEqual(len(matches),1)
                 card = matches[0]
-                self.assertEqual(len([e for e in card.iter() if e.tag.endswith('rect')]),1)
+                self.assertEqual(len([e for e in card.iter() if e.attrib.get('class')=='device-frame']),1)
                 expected = {i['id'] for i in self.model[layer][key] if i['device']==device['id']}
                 self.assertEqual({e.attrib['data-element-id'] for e in card.iter() if 'data-element-id' in e.attrib}, expected)
         l1 = next(e for e in root.iter() if e.attrib.get('data-device-layer')=='l1' and e.attrib.get('data-device')=='sw01')
@@ -126,8 +126,10 @@ class DiagramTests(unittest.TestCase):
             upper, lower = ('l3','l2') if binding.attrib['data-binding']=='l3_to_l2' else ('l2','l1')
             for edge in [e for e in binding.iter() if 'data-from' in e.attrib]:
                 points = edge.attrib['d'][1:].split(' L')
-                self.assertEqual(float(points[0].split(',')[1]),nodes[(upper,edge.attrib['data-from'])])
-                self.assertEqual(float(points[-1].split(',')[1]),nodes[(lower,edge.attrib['data-to'])])
+                for layer,identity,point in [(upper,edge.attrib['data-from'],points[0]),(lower,edge.attrib['data-to'],points[-1])]:
+                    anchor=next(e for e in root.iter() if e.attrib.get('class')=='binding-anchor' and e.attrib.get('data-binding-key')==edge.attrib['data-binding-key'] and e.attrib.get('data-binding-layer')==layer)
+                    self.assertEqual(anchor.attrib['data-binding-element'],identity)
+                    self.assertEqual(tuple(map(float,point.split(','))),(float(anchor.attrib['cx']),float(anchor.attrib['cy'])))
 
     def test_frame_grows_for_many_ports_and_wrapped_metadata(self):
         baseline = ET.fromstring(render(self.model,layers=['l1']))
@@ -266,6 +268,59 @@ class DiagramTests(unittest.TestCase):
             bottom=float(frame.attrib['y'])+float(frame.attrib['height'])
             for label in [e for e in card.iter() if 'membership-label' in e.attrib.get('class','')]:
                 self.assertLess(float(label.attrib['y']),bottom)
+
+    def test_bindings_connect_exact_rows_with_unique_anchors_and_labels(self):
+        root=ET.fromstring(render(self.model))
+        groups=[e for e in root.iter() if 'binding-group' in e.attrib.get('class','').split()]
+        expected=[('l3','l2',b['l3_interface'],b['l2_interface']) for b in self.model['bindings']['l3_to_l2']]+[('l2','l1',b['l2_interface'],b['physical_port']) for b in self.model['bindings']['l2_to_l1']]
+        self.assertEqual(len(groups),len(expected))
+        anchor_positions=[]
+        for n,(group,(upper,lower,source,target)) in enumerate(zip(groups,expected)):
+            key=group.attrib['data-binding-key']
+            self.assertIn('M'+str(n+1)+' / ',group.attrib['aria-label'])
+            self.assertIn(source,group.attrib['aria-label'])
+            self.assertIn(target,group.attrib['aria-label'])
+            self.assertEqual(group.attrib['role'],'button')
+            edge=next(e for e in group if e.attrib.get('class')=='binding-edge')
+            self.assertEqual((edge.attrib['data-from-layer'],edge.attrib['data-to-layer'],edge.attrib['data-from'],edge.attrib['data-to']),(upper,lower,source,target))
+            rows=[e for e in root.iter() if 'binding-row-'+key in e.attrib.get('class','').split()]
+            self.assertEqual({e.attrib['data-element-id'] for e in rows},{source,target})
+            self.assertEqual(len(rows),2)
+            for row in rows:
+                anchor=next(e for e in row.iter() if e.attrib.get('class')=='binding-anchor' and e.attrib['data-binding-key']==key)
+                position=(float(anchor.attrib['cx']),float(anchor.attrib['cy']))
+                self.assertNotIn(position,anchor_positions)
+                anchor_positions.append(position)
+                background=next(e for e in row if e.attrib.get('class')=='binding-row-highlight')
+                self.assertLess(float(background.attrib['y']),position[1])
+                self.assertGreater(float(background.attrib['y'])+float(background.attrib['height']),position[1])
+        trunk=next(e for e in root.iter() if e.attrib.get('data-element-id')=='gw01.trunk')
+        self.assertEqual(len([e for e in trunk.iter() if e.attrib.get('class')=='binding-anchor']),3)
+
+    def test_binding_routes_are_orthogonal_without_shared_segments_or_card_hits(self):
+        from generate_diagram import hits_card, segment_conflict
+        root=ET.fromstring(render(self.model))
+        boxes=[(float(e.attrib['x']),float(e.attrib['y']),float(e.attrib['x'])+float(e.attrib['width']),float(e.attrib['y'])+float(e.attrib['height'])) for e in root.iter() if e.attrib.get('class')=='device-frame']
+        prior=[]
+        for edge in [e for e in root.iter() if e.attrib.get('class')=='binding-edge']:
+            points=[tuple(map(float,v.split(','))) for v in edge.attrib['d'][1:].split(' L')]
+            self.assertFalse(hits_card(points,boxes))
+            for a,b in zip(points,points[1:]):
+                self.assertTrue(a[0]==b[0] or a[1]==b[1])
+                self.assertGreaterEqual(min(a[0],b[0]),20)
+                for existing in prior:
+                    self.assertEqual(segment_conflict((a,b),existing)[0],0)
+                prior.append((a,b))
+
+    def test_many_to_one_binding_anchors_and_hidden_views(self):
+        self.model['bindings']['l2_to_l1'][3]['physical_port']='sw01.p1'
+        root=ET.fromstring(render(self.model))
+        anchors=[e for e in root.iter() if e.attrib.get('class')=='binding-anchor' and e.attrib['data-binding-element']=='sw01.p1']
+        self.assertEqual(len(anchors),2)
+        self.assertEqual(len({e.attrib['cy'] for e in anchors}),2)
+        for options in [dict(show_bindings=False),dict(layers=['l1']),dict(layers=['l2']),dict(layers=['l3'])]:
+            hidden=ET.fromstring(render(self.model,**options))
+            self.assertFalse(any('binding-group' in e.attrib.get('class','').split() or 'binding-badge' in e.attrib.get('class','').split() for e in hidden.iter()))
 
 
 if __name__ == '__main__':
