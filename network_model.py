@@ -26,7 +26,29 @@ class Record(BaseModel):
     model_config = ConfigDict(extra='forbid', strict=True)
 
 
+class StackMember(Record):
+    device: Id
+    number: int = Field(ge=1, le=64)
+
+
+class Aggregation(Record):
+    kind: Literal['bond','team','lag']
+    mode: Literal['lacp','static','active_backup']
+    primary_port: Id | None = None
+
+
+class MlagDomain(Record):
+    id: Id
+    name: Text
+    peers: list[Id] = Field(min_length=2, max_length=2)
+    peer_links: list[Id] = Field(default_factory=list, max_length=64)
+    interface_pairs: list[Annotated[list[Id], Field(min_length=2, max_length=2)]] = Field(default_factory=list, max_length=128)
+
+
 class Device(Record):
+    kind: Literal['physical','stack'] = 'physical'
+    members: list[StackMember] = Field(default_factory=list, max_length=64)
+    stack_links: list[Id] = Field(default_factory=list, max_length=128)
     id: Id
     role: Text = 'device'
     label: Text | None = None
@@ -84,9 +106,10 @@ class Vlan(Record):
 
 
 class L2Interface(Record):
+    aggregation: Aggregation | None = None
     id: Id
     device: Id
-    mode: Literal['access', 'trunk', 'svi']
+    mode: Literal['access', 'trunk', 'svi', 'routed']
     vlan: Id | None = None
     untagged_vlan: Id | None = None
     tagged_vlans: list[Id] = Field(default_factory=list, max_length=64)
@@ -137,7 +160,7 @@ class L2Binding(Record):
 class L3Binding(Record):
     l3_interface: Id
     l2_interface: Id
-    vlan: Id
+    vlan: Id | None = None
 
 
 class Bindings(Record):
@@ -169,6 +192,7 @@ class Network(Record):
     l1: L1
     l2: L2
     l3: L3
+    mlag_domains: list[MlagDomain] = Field(default_factory=list, max_length=128)
     vpn_connections: list[VpnConnection] = Field(default_factory=list, max_length=128)
     bindings: Bindings
     notes: list[Annotated[str, Field(max_length=500)]] = Field(default_factory=list, max_length=20)
@@ -187,10 +211,11 @@ def validate(data):
     except ValidationError as exc:
         error = exc.errors(include_input=False)[0]
         raise ModelError(error['msg'], model_path(error['loc'])) from None
-    groups = {'devices': data['devices'], 'vpn_connections': data['vpn_connections']}
+    groups = {'devices': data['devices'], 'vpn_connections': data['vpn_connections'], 'mlag_domains':data['mlag_domains']}
     for layer, names in [('l1', ['ports', 'links', 'connections']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces'])]:
         groups.update({f'{layer}.{n}': data[layer][n] for n in names})
     count = sum(len(v) for v in groups.values()) + len(data['l3']['routes']) + sum(len(v) for v in data['bindings'].values())
+    count += sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in data['devices'])+sum(len(d['peers'])+len(d['peer_links'])+sum(len(pair) for pair in d['interface_pairs']) for d in data['mlag_domains'])
     if count > MAX_ELEMENTS:
         raise ModelError(f'要素数は合計{MAX_ELEMENTS}以下にしてください')
     ix, positions = {}, {}
@@ -202,6 +227,9 @@ def validate(data):
                 raise ModelError('IDが重複しています', p+'.id')
             ix[group][item['id']] = item
             positions[(group, item['id'])] = p
+
+    from redundancy import validate_equipment, validate_aggregations, stack_members
+    validate_equipment(data,ix)
 
     def ref(value, group, p):
         if value not in ix[group]:
@@ -255,7 +283,9 @@ def validate(data):
                 raise ModelError('確認日時はタイムゾーン付きISO 8601形式にしてください',p+'.observed_at') from None
     for n, item in enumerate(data['l2']['interfaces']):
         p = f'l2.interfaces[{n}]'
-        if item['mode'] == 'svi':
+        if item['mode'] == 'routed':
+            if item.get('vlan') or item.get('untagged_vlan') or item['tagged_vlans']:raise ModelError('routedにはVLANを指定しません',p)
+        elif item['mode'] == 'svi':
             if not item.get('vlan') or item.get('untagged_vlan') or item['tagged_vlans']:
                 raise ModelError('SVIにはvlanのみを指定してください',p)
             ref(item['vlan'],'l2.vlans',p+'.vlan')
@@ -276,6 +306,7 @@ def validate(data):
             p = f'l2.bridges[{n}].members[{j}]'
             if ref(member, 'l2.interfaces', p)['device'] != bridge['device']:
                 raise ModelError('ブリッジのメンバーは同じ機器に所属する必要があります', p)
+            if ix['l2.interfaces'][member]['mode']=='routed':raise ModelError('routedインターフェースをbridgeへ所属させることはできません',p)
             bridge_memberships.setdefault(member,[]).append(bridge)
     svi_domains=set()
     for item in data['l2']['interfaces']:
@@ -308,17 +339,18 @@ def validate(data):
         a = ref(b['l2_interface'], 'l2.interfaces', p+'.l2_interface')
         if a['mode']=='svi':raise ModelError('SVIを物理ポートへ対応付けることはできません',p+'.l2_interface')
         port = ref(b['physical_port'], 'l1.ports', p+'.physical_port')
-        if b['l2_interface'] in bound2 or a['device'] != port['device']:
+        if (b['l2_interface'] in bound2 and not a.get('aggregation')) or port['device'] not in stack_members(a['device'],ix):
             raise ModelError('L2対応が重複しているか、物理ポートの機器が異なります', p)
         bound2.add(b['l2_interface'])
     for n, b in enumerate(data['bindings']['l3_to_l2']):
         p = f'bindings.l3_to_l2[{n}]'
         a = ref(b['l3_interface'], 'l3.interfaces', p+'.l3_interface')
         lower = ref(b['l2_interface'], 'l2.interfaces', p+'.l2_interface')
-        ref(b['vlan'], 'l2.vlans', p+'.vlan')
-        allowed = interface_vlans(lower)
-        if b['vlan'] not in allowed:
-            raise ModelError('対応先のL2インターフェースでこのVLANは使用されていません', p+'.vlan')
+        if lower['mode']=='routed':
+            if b.get('vlan'):raise ModelError('routedへのL3対応にはvlanを指定しません',p+'.vlan')
+        else:
+            ref(b.get('vlan'), 'l2.vlans', p+'.vlan')
+            if b.get('vlan') not in interface_vlans(lower):raise ModelError('対応先のL2インターフェースでこのVLANは使用されていません', p+'.vlan')
         if b['l3_interface'] in bound3 or a['device'] != lower['device']:
             raise ModelError('L3対応が重複しているか、L2インターフェースの機器が異なります', p)
         bound3.add(b['l3_interface'])
@@ -337,6 +369,7 @@ def validate(data):
             raise ModelError('経路のアドレスが不正です', p) from None
         if iface['device'] != r['device'] or hop.version != dest.version or hop not in ipaddress.ip_interface(iface['address']).network:
             raise ModelError('経路の機器または次ホップがインターフェースと一致しません', p)
+    validate_aggregations(data,ix)
     from vpn_model import validate_vpns
     validate_vpns(data, ix)
     return ix

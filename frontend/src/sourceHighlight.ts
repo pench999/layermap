@@ -21,6 +21,7 @@ const sourceMeasures=new WeakMap<EditorView,number>();
 const sourceY=Symbol('source-y'),sourceX=Symbol('source-x');
 export function targetForElement(element:Element|null,canvas:Element|null):SourceTarget|null{
  if(!element)return null;
+ const domain=element.closest<SVGGElement>('.equipment-domain');if(domain)return {section:'mlag_domains',id:domain.dataset.domainId!};
  const vpn=element.closest<SVGGElement>('.vpn-group');if(vpn)return {section:'vpn_connections',id:vpn.dataset.vpnId!};
  const binding=element.closest<SVGGElement>('.binding-group,.binding-badge');
  if(binding){const group=Array.from(canvas?.querySelectorAll<SVGGElement>('.binding-group')??[]).find(g=>g.dataset.bindingKey===binding.dataset.bindingKey);const edge=group?.querySelector('.binding-edge');if(!edge)return null;return edge.getAttribute('data-from-layer')==='l3'?{section:'bindings.l3_to_l2',match:{l3_interface:edge.getAttribute('data-from')!,l2_interface:edge.getAttribute('data-to')!}}:{section:'bindings.l2_to_l1',match:{l2_interface:edge.getAttribute('data-from')!,physical_port:edge.getAttribute('data-to')!}};}

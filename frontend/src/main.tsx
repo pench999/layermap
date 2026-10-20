@@ -76,7 +76,7 @@ function App() {
   const clearBinding = () => {
     setSelectedExtra(null);setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint,.equipment-domain'))focused.blur();
   };
   const invalidate = () => { clearBinding(); setSelected(''); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
@@ -158,7 +158,7 @@ function App() {
   useEffect(()=>{
     if(!canvas.current || !result)return;
     const nodes=canvas.current.querySelectorAll<SVGGElement>('g[data-device]');
-    nodes.forEach(n=>{n.classList.toggle('selected-device',!!selected && n.dataset.device===selected);n.classList.toggle('other-device',!!selected && n.dataset.device!==selected);});
+    nodes.forEach(n=>{n.classList.toggle('selected-device',!!selected && (n.dataset.device===selected||n.dataset.stackId===selected));n.classList.toggle('other-device',!!selected && n.dataset.device!==selected&&n.dataset.stackId!==selected);});
     if(selected && !result.visible_devices.includes(selected))setSelected('');
     if(result.svg && fitPending.current && viewport.current){setZoom(Math.min(1,(viewport.current.clientWidth-64)/dimensions.width));fitPending.current=false;}
   },[result,selected]);
@@ -254,6 +254,7 @@ function App() {
       setView('all');setBindings(true);fitPending.current=true;
       return;
     }
+    if(phase==='pending')pendingTrace.current={root,source:sourceRef.current};
     if(result){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(result.svg,root));}
     row.focus({preventScroll:true});
   };
@@ -303,13 +304,13 @@ function App() {
     if(group){const id=group.getAttribute('data-device')??'';setSelected(previous=>previous===id?'':id);}
   };
   const selectElement=(target:EventTarget|null)=>{
-    // A layer-only redraw can safely queue the existing row trace. Source
+    // A redraw of the same YAML can safely queue the existing row trace. Source
     // mapping stays disabled until that redraw finishes. Edited YAML cannot.
     if(phase==='pending'&&resultSource.current===sourceRef.current&&(target as Element|null)?.closest?.('.interface-row')){selectDiagramElement(target);return;}
     if(phase!=='valid'||resultSource.current!==sourceRef.current){setNotice('現在のYAMLの検証・描画が完了してから選択してください。');return;}
     const element=target as Element|null;
     const reference=targetForElement(element,canvas.current);
-    const extra=reference&&['l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets'].includes(reference.section)?reference:null;
+    const extra=reference&&['mlag_domains','l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets'].includes(reference.section)?reference:null;
     const same=JSON.stringify(extra)===JSON.stringify(selectedExtra);
     selectDiagramElement(target);
     if(extra){setSelected('');setSelectedExtra(same?null:extra);}
@@ -320,10 +321,13 @@ function App() {
     selectedVpn?{section:'vpn_connections',id:selectedVpn.id}:selected?{section:'devices',id:selected}:selectedExtra;
   const sourceLink=useSourceHighlight(editor,source,sourceTarget,phase==='valid'&&resultSource.current===source);
   useEffect(()=>{
-    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint').forEach(group=>{
+    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint,.equipment-domain').forEach(group=>{
       const active=!!selectedExtra&&JSON.stringify(targetForElement(group,canvas.current))===JSON.stringify(selectedExtra);
       group.setAttribute('role','button');group.setAttribute('tabindex',phase==='valid'?'0':'-1');group.setAttribute('aria-pressed',String(active));group.setAttribute('aria-disabled',String(phase!=='valid'));group.classList.toggle('yaml-linked',active);
     });
+    const domain=Array.from(canvas.current?.querySelectorAll<SVGGElement>('.equipment-domain')??[]).find(g=>g.dataset.domainId===selectedExtra?.id&&selectedExtra?.section==='mlag_domains');
+    const peers=new Set<string>(domain?JSON.parse(domain.dataset.domainDevices??'[]'):[]);
+    canvas.current?.querySelectorAll<SVGGElement>('.device-card').forEach(g=>g.classList.toggle('domain-selected',peers.has(g.dataset.device??'')));
   },[result,selectedExtra,phase]);
   const revealRow=(row:Element|null|undefined)=>{
     const pane=viewport.current;if(!pane||!row)return;

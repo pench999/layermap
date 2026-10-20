@@ -109,3 +109,7 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 
 /* Keep document actions usable when the header wraps. */
 .app-header{height:auto;min-height:76px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}.file-actions{flex-wrap:wrap}@media(max-width:760px){.file-actions button{flex:1 1 calc(33.333% - 6px)}}
+
+.diagram .equipment-domain{cursor:pointer}.diagram .equipment-domain:is(:focus,.yaml-linked) .domain-frame{stroke:#916321;stroke-width:3}.diagram .equipment-domain:focus{outline:none}
+
+.diagram .device-card.domain-selected>.device-frame{stroke:#a7772c;stroke-width:3}

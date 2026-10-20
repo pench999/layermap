@@ -1,3 +1,4 @@
+from redundancy import stack_members, stack_owners
 """Whole-model validation is separate from a bounded, explicit drawing projection."""
 from collections import Counter, defaultdict, deque
 from typing import Literal
@@ -39,14 +40,14 @@ def limits():
 def element_count(model):
     return (len(model['devices'])+sum(len(model[layer][key]) for layer,keys in
             [('l1',['ports','links']),('l2',['vlans','interfaces','bridges']),('l3',['subnets','interfaces'])] for key in keys)
-            +len(model.get('vpn_connections',[]))+len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
+            +len(model.get('mlag_domains',[]))+sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in model['devices'])+sum(len(d['peers'])+len(d.get('peer_links',[]))+sum(len(pair) for pair in d.get('interface_pairs',[])) for d in model.get('mlag_domains',[]))+len(model.get('vpn_connections',[]))+len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
 
 
 def display_stats(model, layers=None, show_bindings=True):
     wanted=set(layers or ['l1','l2','l3'])
     rows=sum(len(model[layer]['ports' if layer=='l1' else 'interfaces']) for layer in wanted)
     groups=connections=0
-    elements=len(model['devices'])
+    elements=len(model['devices'])+len(model.get('mlag_domains',[]))+sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in model['devices'])+sum(len(d['peers'])+len(d.get('peer_links',[]))+sum(len(pair) for pair in d.get('interface_pairs',[])) for d in model.get('mlag_domains',[]))
     if 'l1' in wanted:
         connections+=len(model['l1']['links'])+len(model['l1'].get('connections',[]))
         rows+=sum(sum('port' not in e for e in c['endpoints']) for c in model['l1'].get('connections',[]))
@@ -134,7 +135,16 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
     if nodes is not None:
         owners={ix['l1.ports' if layer=='l1' else layer+'.interfaces'][identity]['device'] for layer,identity in nodes}
         chosen=[d for d in chosen if d['id'] in owners]
-    owners={d['id'] for d in chosen}
+    # A logical stack and its physical chassis are one explicit display unit.
+    expanded={d['id'] for d in chosen};stack_context=[]
+    for d in all_devices:
+        if d.get('kind')!='stack':continue
+        unit={d['id']}|stack_members(d['id'],ix)
+        if unit&expanded:
+            if not unit<=expanded:stack_context.append(d['id'])
+            expanded.update(unit)
+    chosen=[d for d in all_devices if d['id'] in expanded]
+    owners=expanded
     def items(layer,key):
         return [dict(i) for i in ix[layer+'.'+key].values() if i['device'] in owners and (nodes is None or (layer,i['id']) in nodes)]
     ports=items('l1','ports');l2=items('l2','interfaces');l3=items('l3','interfaces')
@@ -161,6 +171,7 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
             members=[m for m in bridge['members'] if m in l2_ids]
             if members or not scoped:bridges.append(dict(bridge,members=members))
     notes=[]
+    if stack_context:notes.append('STACKの物理メンバーと論理機器を表示範囲に含めています: '+', '.join(stack_context))
     if scoped:
         notes.insert(0,'表示範囲を絞り込んでいます。構成全体のYAMLは保持されています。')
         if boundary:notes.insert(1,f'範囲外に接続する{"L1接続" if ix["l1.connections"] else "ケーブル"}{len(boundary)}本は図から省略しています。接続先は画面の範囲外接続一覧で確認してください。')
@@ -172,6 +183,13 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
        'bindings':{'l2_to_l1':[b for b in model['bindings']['l2_to_l1'] if b['l2_interface'] in l2_ids and b['physical_port'] in port_ids],
                    'l3_to_l2':[b for b in model['bindings']['l3_to_l2'] if b['l3_interface'] in l3_ids and b['l2_interface'] in l2_ids]},
        'notes':list(model.get('notes',[]))}
+    link_ids={l['id'] for l in links}
+    projected['devices']=[dict(d,stack_links=[lid for lid in d.get('stack_links',[]) if lid in link_ids]) for d in chosen]
+    projected['mlag_domains']=[]
+    for domain in ix['mlag_domains'].values():
+        if set(domain['peers'])<=owners:
+            projected['mlag_domains'].append(dict(domain,peer_links=[lid for lid in domain['peer_links'] if lid in link_ids],interface_pairs=[pair for pair in domain['interface_pairs'] if set(pair)<=l2_ids]))
+        elif set(domain['peers'])&owners:notes.append('範囲外のpeerがあるためMLAGドメイン '+domain['id']+' の関係表示を省略しています。各機器は独立して表示します。')
     visible_vpns=[];hidden_vpns=[]
     for vpn in ix['vpn_connections'].values():
         if scope.vpn_id and vpn['id']!=scope.vpn_id:continue

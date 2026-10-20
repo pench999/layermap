@@ -271,3 +271,15 @@ POST /api/source/locate は yaml_text と target（section + id、層間対応�
 ### 空の構成から始める
 
 画面上部の「新規作成」は、未保存の編集を確認してから、有効な空のYAML（`devices: []`とL1/L2/L3/層間対応の空リスト）を作成します。図面・選択・絞り込み・表示レイヤー・倍率・Undo履歴・統合/VPNの保持ファイルも初期化し、`untitled.yaml`を未保存として扱います。VLAN未定義時の機器追加ウィザードはL1から開始します。元のファイルへ書き込みません。再読み込み時は従来どおり基本サンプルです。
+
+### Bond / Team / LAG / STACK / MLAG
+
+画面のサンプル「Bond・Team・LAG・STACK・MLAG」（samples/11-aggregation-stack-mlag.yaml）で比較できます。詳細は画面のヘルプに記載しています。
+
+- L2 IFのaggregation: {kind: bond|team|lag, mode: lacp|static|active_backup}を定義し、bindings.l2_to_l1で同じIFから複数の物理ポートへ対応付けます。primary_portはactive_backupの任意の優先設定であり稼働状態ではありません。集約ポートを他のL2 IFと共有できません。SVIとの併用は不可です。
+- STACKはdevicesにkind: stackの論理機器を追加し、membersで物理機器IDとnumberを指定します。メーカー・シリアル等とL1は物理筐体に、L2/L3/bridgeは論理STACKに記述します。stack_linksは実際のL1ケーブルIDです。物理筐体を保持し、表示レイヤーに応じて論理枠へ集約します。
+- MLAGは最上位mlag_domainsにid/name/peers/peer_links/interface_pairsを定義します。各peerのLAG・bridge・SVI・IPは独立して保持します。STACKとは別モデルです。関係枠の選択で両peerとYAMLを確認できます。
+- 論理IFの選択から複数のL1メンバーへ層間追跡できます。ケーブルやMLAGペアを通って別機器の通信経路を推定しません。STACKは表示単位として関連筐体を含め、片側だけのMLAGは関係枠の省略を明示します。統合時はすべての新しい参照を拠点IDで変換します。
+- 既存YAMLは変更不要です。機器数には論理STACKも含み、追加の所属・ペア参照も要素予算へ計上します。専用の新規入力はYAMLを使い、既存フォームは通常の物理機器・接続に対応します。稼働監視、帯域/HA保証、STP、keepalive、LACP active/passive、ハッシュ方式、筐体個別OOB管理の専用モデルは含みません。
+
+L3 LAGはL2 IFをmode: routed（VLANなし）で定義し、bindings.l3_to_l2のvlanを省略してIPを対応付けられます。routedをbridgeへ所属させることはできません。

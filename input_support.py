@@ -36,13 +36,15 @@ Operation = Annotated[DeviceOperation | ConnectionOperation, Field(discriminator
 def catalog(source):
     model,ix=load_model(source,with_index=True)
     occupied={e['port'] for c in all_l1_connections(ix) if c['kind']=='wired' for e in c['endpoints'] if 'port' in e}
-    return {'devices':[{'id':d['id'],'name':d.get('name') or d['id'],'role':d['role']} for d in ix['devices'].values()],
+    return {'devices':[{'id':d['id'],'name':d.get('name') or d['id'],'role':d['role']} for d in ix['devices'].values() if d.get('kind')!='stack'],
             'ports':[dict(p,occupied=p['id'] in occupied) for p in ix['l1.ports'].values()],
             'vlans':list(ix['l2.vlans'].values()),'subnets':list(ix['l3.subnets'].values())}
 
 
 def device_additions(op,ix):
+    if op.device.kind!='physical':raise ModelError('STACK・集約IF・MLAGはYAMLで定義してください','device.kind')
     d=op.device.model_dump(exclude_none=True)
+    for key in ['kind','members','stack_links']:d.pop(key,None)
     if d['id'] in ix['devices']:raise ModelError('この機器IDは既に使われています','device.id')
     role=d['role'];identity=d['id']
     if role not in ['endpoint','l2-switch','access-point','internet-gateway']:

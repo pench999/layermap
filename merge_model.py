@@ -12,7 +12,7 @@ from view_model import element_count
 MAX_MERGE_FILES=16
 MAX_ISSUES=200
 MAX_ISSUE_ITEMS=30
-SECTIONS=[('devices',),('l1','ports'),('l1','links'),('l1','connections'),('l2','vlans'),('l2','interfaces'),('l2','bridges'),('l3','subnets'),('l3','interfaces')]
+SECTIONS=[('mlag_domains',),('devices',),('l1','ports'),('l1','links'),('l1','connections'),('l2','vlans'),('l2','interfaces'),('l2','bridges'),('l3','subnets'),('l3','interfaces')]
 
 class MergeSource(Record):
     site_id: str = Field(min_length=1,max_length=32)
@@ -45,7 +45,7 @@ def merge_preview(request):
         if devices>MAX_DEVICES or elements>MAX_ELEMENTS:
             raise ModelError(f'統合後の構成は{MAX_DEVICES}機器・{MAX_ELEMENTS}要素以下にしてください（現在{devices}機器・{elements}要素）','sources')
         inputs.append((source,model))
-    merged={'schema':'lan-example/v1','name':'複数拠点の統合構成','scope':'拠点ごとの構成を並列に保持。拠点間接続は別の接続定義で指定。','devices':[],
+    merged={'schema':'lan-example/v1','name':'複数拠点の統合構成','scope':'拠点ごとの構成を並列に保持。拠点間接続は別の接続定義で指定。','devices':[],'mlag_domains':[],
             'l1':{'ports':[],'links':[],'connections':[]},'l2':{'vlans':[],'interfaces':[],'bridges':[]},
             'l3':{'subnets':[],'interfaces':[],'routes':[]},'bindings':{'l2_to_l1':[],'l3_to_l2':[]},
             'notes':['拠点ID::元IDで識別。元ファイルのコメント・書式は統合元ダウンロードで保持します。','拠点間接続は自動追加しません。同じVLAN番号・IP・サブネットでも拠点ごとの定義を維持します。']}
@@ -73,16 +73,23 @@ def merge_preview(request):
                 original_ids[(kind,old)].append(site)
                 if 'device' in item:item['device']=rename(item['device'])
         for d in model['devices']:
+            for member in d.get('members',[]):member['device']=rename(member['device'])
+            if 'stack_links' in d:d['stack_links']=[rename(lid) for lid in d['stack_links']]
             d.setdefault('location',{})['site']=site
             ref=dict(site_id=site,filename=source.filename,id=d['id'])
             if d.get('serial_number'):serials[d['serial_number']].append(ref)
             if d.get('name'):names[d['name']].append(ref)
+        for domain in model.get('mlag_domains',[]):
+            domain['peers']=[rename(peer) for peer in domain['peers']]
+            domain['peer_links']=[rename(lid) for lid in domain.get('peer_links',[])]
+            domain['interface_pairs']=[[rename(i) for i in pair] for pair in domain.get('interface_pairs',[])]
         for link in model['l1']['links']:link['endpoints']=[rename(p) for p in link['endpoints']]
         for connection in model['l1'].get('connections',[]):
             for endpoint in connection['endpoints']:
                 for key in ['port','device']:
                     if key in endpoint:endpoint[key]=rename(endpoint[key])
         for item in model['l2']['interfaces']:
+            if (item.get('aggregation') or {}).get('primary_port'):item['aggregation']['primary_port']=rename(item['aggregation']['primary_port'])
             for key in ['vlan','untagged_vlan']:
                 if item.get(key):item[key]=rename(item[key])
             if 'tagged_vlans' in item:item['tagged_vlans']=[rename(v) for v in item['tagged_vlans']]
@@ -96,7 +103,8 @@ def merge_preview(request):
             for key in ['device','interface']:item[key]=rename(item[key])
         for key,refs in [('l2_to_l1',['l2_interface','physical_port']),('l3_to_l2',['l3_interface','l2_interface','vlan'])]:
             for binding in model['bindings'][key]:
-                for ref in refs:binding[ref]=rename(binding[ref])
+                for ref in refs:
+                    if binding.get(ref):binding[ref]=rename(binding[ref])
             merged['bindings'][key].extend(model['bindings'][key])
         for item in model['l2']['vlans']:
             vlan_tags[item['tag']].append(dict(site_id=site,filename=source.filename,id=item['id']))

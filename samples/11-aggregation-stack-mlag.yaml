@@ -1,0 +1,106 @@
+# 集約IFのメンバーは bindings.l2_to_l1 に物理ポートを1本ずつ記述します。
+# STACKはkind: stackの論理機器、MLAGはmlag_domainsで別々の機器を関連付けます。
+schema: "lan-example/v1"
+name: "Bond・Team・LAG・STACK・MLAGの比較"
+scope: "本社: 物理7台 + 論理STACK1台。設定の記録であり稼働状態は推定しません。"
+devices:
+  - {"id":"srv-bond","role":"endpoint","name":"SRV-BOND","manufacturer":"Example Server","model":"DEMO","serial_number":"DEMO-SN-1","location":{"site":"hq","rack":"R1"},"groups":["hosts"]}
+  - {"id":"srv-team","role":"endpoint","name":"SRV-TEAM","manufacturer":"Example Server","model":"DEMO","serial_number":"DEMO-SN-2","location":{"site":"hq","rack":"R1"},"groups":["hosts"]}
+  - {"id":"srv-mlag","role":"endpoint","name":"SRV-MLAG","manufacturer":"Example Server","model":"DEMO","serial_number":"DEMO-SN-3","location":{"site":"hq","rack":"R1"},"groups":["hosts"]}
+  - {"id":"sw1","role":"l2-switch","name":"SW1","manufacturer":"Example Switch","model":"DEMO","serial_number":"DEMO-SN-4","location":{"site":"hq","rack":"R1"},"groups":["switches"]}
+  - {"id":"sw2","role":"l2-switch","name":"SW2","manufacturer":"Example Switch","model":"DEMO","serial_number":"DEMO-SN-5","location":{"site":"hq","rack":"R1"},"groups":["switches"]}
+  - {"id":"leaf1","role":"l2-switch","name":"LEAF1","manufacturer":"Example Switch","model":"DEMO","serial_number":"DEMO-SN-6","location":{"site":"hq","rack":"R1"},"groups":["switches"]}
+  - {"id":"leaf2","role":"l2-switch","name":"LEAF2","manufacturer":"Example Switch","model":"DEMO","serial_number":"DEMO-SN-7","location":{"site":"hq","rack":"R1"},"groups":["switches"]}
+  - {"id":"stack01","kind":"stack","role":"l2-switch","name":"HQ-STACK","location":{"site":"hq"},"groups":["switches"],"members":[{"device":"sw1","number":1},{"device":"sw2","number":2}],"stack_links":["stack-ring-a","stack-ring-b"]}
+l1:
+  ports:
+    - {"id":"srv-bond.eth0","device":"srv-bond","name":"eth0"}
+    - {"id":"srv-bond.eth1","device":"srv-bond","name":"eth1"}
+    - {"id":"srv-team.eth0","device":"srv-team","name":"eth0"}
+    - {"id":"srv-team.eth1","device":"srv-team","name":"eth1"}
+    - {"id":"srv-mlag.eth0","device":"srv-mlag","name":"eth0"}
+    - {"id":"srv-mlag.eth1","device":"srv-mlag","name":"eth1"}
+    - {"id":"sw1.p1","device":"sw1","name":"p1"}
+    - {"id":"sw1.stack1","device":"sw1","name":"stack1"}
+    - {"id":"sw1.stack2","device":"sw1","name":"stack2"}
+    - {"id":"sw2.p1","device":"sw2","name":"p1"}
+    - {"id":"sw2.stack1","device":"sw2","name":"stack1"}
+    - {"id":"sw2.stack2","device":"sw2","name":"stack2"}
+    - {"id":"leaf1.p1","device":"leaf1","name":"p1"}
+    - {"id":"leaf1.p2","device":"leaf1","name":"p2"}
+    - {"id":"leaf1.peer","device":"leaf1","name":"peer"}
+    - {"id":"leaf2.p1","device":"leaf2","name":"p1"}
+    - {"id":"leaf2.p2","device":"leaf2","name":"p2"}
+    - {"id":"leaf2.peer","device":"leaf2","name":"peer"}
+  links:
+    - {"id":"bond-a","endpoints":["srv-bond.eth0","sw1.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"bond-b","endpoints":["srv-bond.eth1","sw2.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"stack-ring-a","endpoints":["sw1.stack1","sw2.stack2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"stack-ring-b","endpoints":["sw1.stack2","sw2.stack1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"team-a","endpoints":["srv-team.eth0","leaf1.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"team-b","endpoints":["srv-team.eth1","leaf2.p2"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"mlag-a","endpoints":["srv-mlag.eth0","leaf1.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"mlag-b","endpoints":["srv-mlag.eth1","leaf2.p1"],"medium":"copper","speed":"1Gbps"}
+    - {"id":"mlag-peer","endpoints":["leaf1.peer","leaf2.peer"],"medium":"copper","speed":"1Gbps"}
+  connections: []
+l2:
+  vlans:
+    - {"id":"v10","tag":10,"label":"業務・管理"}
+    - {"id":"v20","tag":20,"label":"検証"}
+  interfaces:
+    - {"id":"srv-bond.bond0","device":"srv-bond","mode":"trunk","tagged_vlans":["v10","v20"],"aggregation":{"kind":"bond","mode":"lacp"}}
+    - {"id":"stack01.po1","device":"stack01","mode":"trunk","tagged_vlans":["v10","v20"],"aggregation":{"kind":"lag","mode":"lacp"}}
+    - {"id":"srv-team.team0","device":"srv-team","mode":"access","untagged_vlan":"v10","aggregation":{"kind":"team","mode":"active_backup","primary_port":"srv-team.eth0"}}
+    - {"id":"srv-mlag.bond0","device":"srv-mlag","mode":"access","untagged_vlan":"v10","aggregation":{"kind":"bond","mode":"lacp"}}
+    - {"id":"leaf1.po11","device":"leaf1","mode":"access","untagged_vlan":"v10","aggregation":{"kind":"lag","mode":"lacp"}}
+    - {"id":"leaf1.p2","device":"leaf1","mode":"access","untagged_vlan":"v10"}
+    - {"id":"leaf1.svi10","device":"leaf1","mode":"svi","vlan":"v10"}
+    - {"id":"leaf2.po11","device":"leaf2","mode":"access","untagged_vlan":"v10","aggregation":{"kind":"lag","mode":"lacp"}}
+    - {"id":"leaf2.p2","device":"leaf2","mode":"access","untagged_vlan":"v10"}
+    - {"id":"leaf2.svi10","device":"leaf2","mode":"svi","vlan":"v10"}
+    - {"id":"stack01.svi10","device":"stack01","mode":"svi","vlan":"v10"}
+  bridges:
+    - {"id":"stack01.bridge","device":"stack01","members":["stack01.po1","stack01.svi10"]}
+    - {"id":"leaf1.bridge","device":"leaf1","members":["leaf1.po11","leaf1.p2","leaf1.svi10"]}
+    - {"id":"leaf2.bridge","device":"leaf2","members":["leaf2.po11","leaf2.p2","leaf2.svi10"]}
+l3:
+  subnets:
+    - {"id":"net10","cidr":"192.168.10.0/24"}
+    - {"id":"net20","cidr":"192.168.20.0/24"}
+  interfaces:
+    - {"id":"srv-bond.ip10","device":"srv-bond","address":"192.168.10.10/24","subnet":"net10"}
+    - {"id":"srv-bond.ip20","device":"srv-bond","address":"192.168.20.10/24","subnet":"net20"}
+    - {"id":"srv-team.ip10","device":"srv-team","address":"192.168.10.20/24","subnet":"net10"}
+    - {"id":"srv-mlag.ip10","device":"srv-mlag","address":"192.168.10.30/24","subnet":"net10"}
+    - {"id":"stack01.mgmt","device":"stack01","address":"192.168.10.2/24","subnet":"net10"}
+    - {"id":"leaf1.mgmt","device":"leaf1","address":"192.168.10.3/24","subnet":"net10"}
+    - {"id":"leaf2.mgmt","device":"leaf2","address":"192.168.10.4/24","subnet":"net10"}
+  routes: []
+bindings:
+  l2_to_l1:
+    - {"l2_interface":"srv-bond.bond0","physical_port":"srv-bond.eth0"}
+    - {"l2_interface":"srv-bond.bond0","physical_port":"srv-bond.eth1"}
+    - {"l2_interface":"stack01.po1","physical_port":"sw1.p1"}
+    - {"l2_interface":"stack01.po1","physical_port":"sw2.p1"}
+    - {"l2_interface":"srv-team.team0","physical_port":"srv-team.eth0"}
+    - {"l2_interface":"srv-team.team0","physical_port":"srv-team.eth1"}
+    - {"l2_interface":"srv-mlag.bond0","physical_port":"srv-mlag.eth0"}
+    - {"l2_interface":"srv-mlag.bond0","physical_port":"srv-mlag.eth1"}
+    - {"l2_interface":"leaf1.po11","physical_port":"leaf1.p1"}
+    - {"l2_interface":"leaf1.p2","physical_port":"leaf1.p2"}
+    - {"l2_interface":"leaf2.po11","physical_port":"leaf2.p1"}
+    - {"l2_interface":"leaf2.p2","physical_port":"leaf2.p2"}
+  l3_to_l2:
+    - {"l3_interface":"srv-bond.ip10","l2_interface":"srv-bond.bond0","vlan":"v10"}
+    - {"l3_interface":"srv-bond.ip20","l2_interface":"srv-bond.bond0","vlan":"v20"}
+    - {"l3_interface":"srv-team.ip10","l2_interface":"srv-team.team0","vlan":"v10"}
+    - {"l3_interface":"srv-mlag.ip10","l2_interface":"srv-mlag.bond0","vlan":"v10"}
+    - {"l3_interface":"stack01.mgmt","l2_interface":"stack01.svi10","vlan":"v10"}
+    - {"l3_interface":"leaf1.mgmt","l2_interface":"leaf1.svi10","vlan":"v10"}
+    - {"l3_interface":"leaf2.mgmt","l2_interface":"leaf2.svi10","vlan":"v10"}
+mlag_domains:
+  - {"id":"mlag01","name":"LEAF MLAG（独立管理）","peers":["leaf1","leaf2"],"peer_links":["mlag-peer"],"interface_pairs":[["leaf1.po11","leaf2.po11"]]}
+notes:
+  - "bond0のLACPとteam0のactive_backupを比較。primary_portは設定上の優先で、現在の使用ポートではありません。"
+  - "STACKはL1で筐体別、L2/L3で論理機器に集約。MLAGのpeerは各レイヤーで独立した機器として表示。"
+  - "STACK専用接続とMLAG peer-linkは実際の物理ケーブルとして記録。VLAN・peer-linkから通信可否を推定しません。"

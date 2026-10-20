@@ -4,9 +4,9 @@ from typing import Literal
 from pydantic import Field
 from network_model import Record, Id, ModelError, MAX_YAML_BYTES, BoundedLoader, load_model
 
-Section=Literal['devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
+Section=Literal['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
 MAX_SOURCE_LOCATIONS=1000
-SECTIONS=['devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
+SECTIONS=['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
 class SourceTarget(Record):
     section: Section
     id: Id | None = None
@@ -58,12 +58,24 @@ def locate_source(request):
     for entry in records:
         section=entry['key'][0];node=entry['node']
         if section in ['l1.ports','l2.interfaces','l2.bridges','l3.interfaces']:scalar(entry,'device','devices')
+        if section=='devices':
+            sequence(entry,'stack_links','l1.links')
+            nodes=child(node,'members')
+            if isinstance(nodes,yaml.SequenceNode):
+                for j,member in enumerate(nodes.value):add(entry,child(member,'device'),'devices',f'members[{j}].device')
+        if section=='mlag_domains':
+            sequence(entry,'peers','devices');sequence(entry,'peer_links','l1.links')
+            pairs=child(node,'interface_pairs')
+            if isinstance(pairs,yaml.SequenceNode):
+                for j,pair in enumerate(pairs.value):
+                    for k,value in enumerate(pair.value):add(entry,value,'l2.interfaces',f'interface_pairs[{j}][{k}]')
         if section=='l1.links':sequence(entry,'endpoints','l1.ports')
         if section=='l1.connections':
             ends=child(node,'endpoints')
             for j,e in enumerate(ends.value):
                 for field,group in [('port','l1.ports'),('device','devices')]:add(entry,child(e,field),group,f'endpoints[{j}].'+field)
         if section=='l2.interfaces':
+            add(entry,child(child(node,'aggregation'),'primary_port'),'l1.ports','aggregation.primary_port')
             for field in ['vlan','untagged_vlan']:scalar(entry,field,'l2.vlans')
             sequence(entry,'tagged_vlans','l2.vlans')
         if section=='l2.bridges':sequence(entry,'members','l2.interfaces')

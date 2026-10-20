@@ -26,3 +26,5 @@ frontend/playwright-report/
 !vpn_model.py
 
 !source_map.py
+
+!redundancy.py

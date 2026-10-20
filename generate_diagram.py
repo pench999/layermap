@@ -3,6 +3,7 @@ import argparse
 import html
 import json
 from vpn_model import vpn_members
+from redundancy import stack_owners, layer_devices
 import sys
 import time
 import unicodedata
@@ -145,6 +146,12 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         raise ModelError('表示するレイヤーはl1・l2・l3から選択してください')
     require_display_budget(model, wanted, show_bindings)
     devices = list(ix['devices'])
+    chassis_stacks=stack_owners(ix)
+    stack_link_ids={lid for d in ix['devices'].values() for lid in d.get('stack_links',[])}
+    mlag_link_ids={lid for domain in ix['mlag_domains'].values() for lid in domain['peer_links']}
+    domain_labels={peer:[] for peer in devices}
+    for domain in ix['mlag_domains'].values():
+        for peer in domain['peers']:domain_labels[peer].append('MLAG / '+domain['name']+' / 独立管理')
     specs = [('l3','l3.interfaces','L3 / IPインターフェース・サブネット','#eaf3fc'),
              ('l2','l2.interfaces','L2 / VLAN・ブリッジ','#edf6ef'),
              ('l1','l1.ports','L1 / 物理ポート・ケーブル','#f0eff7')]
@@ -212,8 +219,11 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
     card_width = 340
     left_space = max(60, 34 + max_bindings*20)
     column = card_width + 40 + max_edges*10 + left_space
-    lefts = {device:left_space + n*column for n,device in enumerate(devices)}
-    width = max(1450, left_space + len(devices)*column)
+    physical=layer_devices(ix,'l1')
+    lefts = {device:left_space + n*column for n,device in enumerate(physical)}
+    for d in ix['devices'].values():
+        if d.get('kind')=='stack':lefts[d['id']]=min(lefts[m['device']] for m in d['members'])
+    width = max(1450, left_space + len(physical)*column)
     port_sides={}
     port_colors={}
     for i,link in enumerate(physical_links):
@@ -292,11 +302,19 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
     for layer,group,heading,fill in specs:
         top = y
         cards = {}
-        for device in devices:
+        visible_cards=layer_devices(ix,layer)
+        for device in visible_cards:
             d = ix['devices'][device]
             title = wrap_label(d.get('name',device),38)
             identity = wrap_label(device+' / '+d.get('role','device'),46)
-            metadata = []
+            metadata = list(domain_labels[device])
+            if d.get('kind')=='stack':
+                identity=wrap_label(device+' / STACK（論理機器）',46)
+                metadata += [part for member in d['members'] for part in wrap_label('Member '+str(member['number'])+' / '+member['device'],44)]
+            if device in chassis_stacks:
+                stack=ix['devices'][chassis_stacks[device]]
+                member=next(m for m in stack['members'] if m['device']==device)
+                metadata+=wrap_label('STACK / '+stack['id']+' / Member '+str(member['number']),44)
             if layer=='l1':
                 for label,key in [('メーカー','manufacturer'),('型番','model'),('S/N','serial_number')]:
                     metadata += wrap_label(label+'：'+str(d.get(key,'未設定')),44)
@@ -311,11 +329,16 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 # Lead with the operational value, retaining stable reference IDs below.
                 if layer=='l1':
                     primary=item.get('name') or item['id'].split('.')[-1]
-                    details=[item['id']]+(['Wi-Fi 無線インターフェース'] if item.get('kind')=='wifi' else [])
+                    details=[item['id']]+(['STACK専用接続'] if any(item['id'] in ix['l1.links'][lid]['endpoints'] for lid in stack_link_ids) else ['MLAG peer-link'] if any(item['id'] in ix['l1.links'][lid]['endpoints'] for lid in mlag_link_ids) else [])+(['Wi-Fi 無線インターフェース'] if item.get('kind')=='wifi' else [])
                 elif layer=='l2':
                     vlan_refs=interface_vlans(item)
-                    primary='VLAN '+(', '.join(str(ix['l2.vlans'][v]['tag']) for v in vlan_refs) or 'なし')
-                    details=[item['id'],'SVI / 論理VLAN IF・物理ポートなし' if item['mode']=='svi' else item['mode']+(' / untagged' if item['mode']=='access' else ' / tagged')]
+                    primary='routed / VLANなし' if item['mode']=='routed' else 'VLAN '+(', '.join(str(ix['l2.vlans'][v]['tag']) for v in vlan_refs) or 'なし')
+                    details=[item['id'],'SVI / 論理VLAN IF・物理ポートなし' if item['mode']=='svi' else 'routed / IPを直接対応付け' if item['mode']=='routed' else item['mode']+(' / untagged' if item['mode']=='access' else ' / tagged')]
+                    if item.get('aggregation'):
+                        agg=item['aggregation'];ports=[b['physical_port'] for b in model['bindings']['l2_to_l1'] if b['l2_interface']==item['id']]
+                        details+=[agg['kind']+' / '+agg['mode']+' / '+str(len(ports))+' physical ports']
+                        if agg.get('primary_port'):details.append('優先ポート（設定） / '+agg['primary_port'])
+                        details+=[ix['l1.ports'][p]['device']+' / '+(ix['l1.ports'][p].get('name') or p) for p in ports]
                 else:
                     primary=item['address']
                     details=[item['id'],'subnet / '+item['subnet']]
@@ -332,7 +355,12 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             if not rows:
                 height+=44
             cards[device]=(title,identity,metadata,header,rows,height)
-        card_top=top+62+(20*(len(physical_links)+len(extra_connections)) if layer=='l1' else 0)
+        domain_lines=[]
+        for domain in ix['mlag_domains'].values():
+            label='MLAG / '+domain['name']+' / 独立したpeer: '+' ↔ '.join(domain['peers'])+' / pairs: '+(', '.join(' ↔ '.join(pair) for pair in domain['interface_pairs']) or '未記載')
+            domain_lines.append((domain,wrap_label(label,max(60,int((width-120)/8)))))
+        domain_height=sum(22+18*len(lines) for _,lines in domain_lines)
+        card_top=top+62+domain_height+(20*(len(physical_links)+len(extra_connections)) if layer=='l1' else 0)
         bottom=max((card_top+c[-1] for c in cards.values()),default=card_top+44)
         bus_top=bottom+45
         bus_layout=[]
@@ -354,7 +382,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         if layer=='l1':
             cursor=route_bottom+58+24*(len(physical_links)+len(extra_connections))
             for i,link in enumerate(physical_links):
-                label=f'C{i+1}  '+link['id']+'  |  '+link['endpoints'][0]+' ↔ '+link['endpoints'][1]+'  |  '+link.get('medium','')+' / '+link.get('speed','')
+                label=f'C{i+1}  '+('STACK / ' if link['id'] in stack_link_ids else 'MLAG peer-link / ' if link['id'] in mlag_link_ids else '')+link['id']+'  |  '+link['endpoints'][0]+' ↔ '+link['endpoints'][1]+'  |  '+link.get('medium','')+' / '+link.get('speed','')
                 labels=wrap_label(label,min(180,int((width-80)/7)))
                 cable_rows.append((cursor,labels,link))
                 cursor+=len(labels)*18+13
@@ -368,11 +396,17 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         heading_x=left_space+16 if binding_records else 40
         text(heading_x,top+32,heading.replace('ケーブル','有線・Wi-Fi接続') if layer=='l1' and extra_connections else heading,22)
         if layer=='l1' and extra_connections:text(heading_x,top+51,'有線＝実線 / Wi-Fi＝波線 / 橙色・?＝未確認（有線は一点鎖線）/ 紫破線＝層間対応',11,'#60788e')
+        domain_y=top+52
+        for domain,labels in domain_lines:
+            h=18*len(labels)+16
+            svg.append(f'<g class="equipment-domain" data-domain-id="{escape(domain["id"])}" data-domain-devices="{escape(json.dumps(domain["peers"]))}" tabindex="0" role="button" aria-label="{escape(domain["name"]+" / MLAG / 独立管理")}">')
+            rect(40,domain_y,width-80,h,'#fff6e9','#c39753','domain-frame')
+            lines_at(52,domain_y+21,labels,12,'#856026',18);svg.append('</g>');domain_y+=h+6
         for device,(title,identity,metadata,header,rows,height) in cards.items():
             left=lefts[device]
             right=left+card_width
             name=ix['devices'][device].get('name',device)
-            svg.append(f'<g class="device-card" data-vpn-device="{" ".join(str(n) for n in vpn_devices.get(device,[]))}" data-device="{escape(device)}" data-device-layer="{layer}" tabindex="0" role="button" aria-label="{escape(name)} / {layer.upper()}">')
+            svg.append(f'<g class="device-card" data-vpn-device="{" ".join(str(n) for n in vpn_devices.get(device,[]))}" data-device="{escape(device)}" data-device-layer="{layer}" data-stack-id="{escape(device if ix['devices'][device].get('kind')=='stack' else chassis_stacks.get(device,''))}" tabindex="0" role="button" aria-label="{escape(name)} / {layer.upper()}">')
             rect(left,card_top,card_width,height,css='device-frame')
             baseline=card_top+26
             lines_at(left+16,baseline,title,16,step=21)
@@ -437,7 +471,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             svg.append('</g>')
         if layer=='l1':
             layer_nodes={key:n for (l,key),n in nodes.items() if l=='l1'}
-            boxes=[(lefts[d],card_top,lefts[d]+card_width,card_top+cards[d][-1]) for d in devices]
+            boxes=[(lefts[d],card_top,lefts[d]+card_width,card_top+cards[d][-1]) for d in cards]
             for i,c,j,uy,unknown_height,unknown_labels in unknown_layout:
                 known=c['endpoints'][1-j];owner=endpoint_owner(known,ix)
                 x=lefts[owner]+16
@@ -458,7 +492,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             for list_y,labels,link in cable_rows:
                 routed=routes[link['id']]
                 a,b=link['endpoints']
-                description=link['id']+' / '+a+' ↔ '+b+' / '+link.get('medium','')+' / '+link.get('speed','')
+                description=('STACK / ' if link['id'] in stack_link_ids else 'MLAG peer-link / ' if link['id'] in mlag_link_ids else '')+link['id']+' / '+a+' ↔ '+b+' / '+link.get('medium','')+' / '+link.get('speed','')
                 svg.append(f'<g class="physical-cable-group" data-cable-id="{escape(link["id"])}" tabindex="0" role="img" aria-label="{escape(description)}">')
                 svg.append(f'<title>{escape(description)}</title>')
                 attrs=f'data-from="{escape(a)}" data-to="{escape(b)}" stroke-linecap="round" stroke-linejoin="round"'
@@ -467,7 +501,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 if horizontal:
                     p,q=max(horizontal,key=lambda pair:abs(pair[1][0]-pair[0][0]))
                     label_x=(p[0]+q[0])/2
-                    svg.append(f'<text class="cable-number" x="{label_x}" y="{p[1]-7}" text-anchor="middle" font-size="11" fill="{routed["color"]}" paint-order="stroke" stroke="{fill}" stroke-width="4">{routed["number"]}</text>')
+                    svg.append(f'<text class="cable-number" x="{label_x}" y="{p[1]-7}" text-anchor="middle" font-size="11" fill="{routed["color"]}" paint-order="stroke" stroke="{fill}" stroke-width="4">{routed["number"]}{' / STACK' if link['id'] in stack_link_ids else ' / MLAG peer' if link['id'] in mlag_link_ids else ''}</text>')
                 lines_at(40,list_y,labels,12,routed['color'])
                 svg.append('</g>')
             for i,(list_y,labels,c) in enumerate(extra_rows):
@@ -552,7 +586,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             source_order=sorted(group,key=lambda b:binding_anchors[(b['key'],upper)][1],reverse=True)
             target_order=sorted(group,key=lambda b:binding_anchors[(b['key'],lower)][1])
             source_lanes={b['key']:origin-(offsets[device]+n)*10 for n,b in enumerate(source_order)}
-            target_lanes={b['key']:origin-(offsets[device]+len(group)+n)*10 for n,b in enumerate(target_order)}
+            target_lanes={b['key']:lefts[nodes[(lower,b['target'])]['device']]-20-(offsets[device]+len(group)+n)*10 for n,b in enumerate(target_order)}
             for n,record in enumerate(group):
                 key=record['key']
                 a=binding_anchors[(key,upper)]
