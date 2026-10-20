@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from source_map import SourceRequest, locate_source
 from vpn_model import VpnRequest, preview_vpn
 from merge_model import MergeRequest, merge_preview
 from input_support import Operation, catalog as assist_catalog, preview as assist_preview
@@ -173,6 +174,11 @@ def input_preview(request: PreviewRequest):
 @app.post('/api/merge/preview')
 def preview_merge(request: MergeRequest):
     return assist_call(merge_preview,request)
+
+
+@app.post('/api/source/locate')
+def source_locations(request: SourceRequest):
+    return assist_call(locate_source,request)
 
 
 @app.post('/api/vpn/preview')

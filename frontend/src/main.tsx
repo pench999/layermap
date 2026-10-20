@@ -14,6 +14,7 @@ import {MergeWorkspace} from './MergeWorkspace';
 import {Help, type Sample} from './Help';
 import {ScopeControls} from './ScopeControls';
 import {emptyScope,defaultLimits,sizeLabel,type Scope,type Result,type Limits} from './scope';
+import {sourceMarks,targetForElement,useSourceHighlight,type SourceTarget} from './sourceHighlight';
 import {endpointKey,traceFromSvg,type Endpoint,type Trace} from './trace';
 
 type Issue = {message:string; path:string; line:number|null; column:number|null};
@@ -39,6 +40,8 @@ function App() {
   const [issues,setIssues] = useState<Issue[]>([]);
   const [phase,setPhase] = useState<'loading'|'pending'|'valid'|'invalid'>('loading');
   const [notice,setNotice] = useState('');
+  const [selectedExtra,setSelectedExtra]=useState<SourceTarget|null>(null);
+  const resultSource=useRef('');
   const [selected,setSelected] = useState('');
   const [selectedBinding,setSelectedBinding] = useState<{key:string;label:string}|null>(null);
   const [selectedVpn,setSelectedVpn]=useState<{id:string;label:string}|null>(null);
@@ -67,11 +70,11 @@ function App() {
   const fitPending = useRef(true);
   const sourceRef = useRef('');
   const clearBinding = () => {
-    setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
+    setSelectedExtra(null);setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint'))focused.blur();
   };
-  const invalidate = () => { clearBinding(); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
+  const invalidate = () => { clearBinding(); setSelected(''); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
     if(value!==sourceRef.current){
       invalidate(); sourceRef.current = value; latest.current.source=value;
@@ -90,7 +93,7 @@ function App() {
   useEffect(()=>{
     if(!editorMount.current) return;
     const ed = new EditorView({parent:editorMount.current,state:EditorState.create({doc:'',extensions:[
-      basicSetup, yaml(),
+      basicSetup, yaml(), sourceMarks,
       EditorView.contentAttributes.of({'aria-label':'YAMLエディター','spellcheck':'false'}),
       keymap.of([{key:'Mod-s',run:()=>{document.getElementById('save-yaml')?.click();return true;}}]),
       EditorView.updateListener.of(update=>{if(update.docChanged){
@@ -128,7 +131,7 @@ function App() {
         if(revision!==sequence.current)return;
         if(!response.ok){pendingTrace.current=null;setIssues(body.errors??[{message:'描画できませんでした',path:'',line:null,column:null}]);setPhase('invalid');return;}
         const restore=pendingTrace.current;
-        clearBinding();setResult(body);setLimits(body.limits);setIssues([]);setPhase('valid');
+        clearBinding();resultSource.current=source;setResult(body);setLimits(body.limits);setIssues([]);setPhase('valid');
         if(restore&&restore.source===source&&view==='all'&&bindings){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(body.svg,restore.root));}
       } catch(error) {
         if(controller.signal.aborted || revision!==sequence.current)return;
@@ -252,7 +255,7 @@ function App() {
     svg.querySelectorAll<SVGGElement>('.interface-row').forEach(row=>{const layer=row.closest('[data-layer]')?.getAttribute('data-layer') as Endpoint['layer'];row.classList.toggle('vpn-related',nodes.has(endpointKey({layer,id:row.dataset.elementId!})));});
     svg.querySelectorAll<SVGGElement>('.binding-group,.binding-badge').forEach(g=>g.classList.toggle('vpn-related',edges.has(g.dataset.bindingKey!)));
   },[result,selectedVpn]);
-  const selectElement=(target:EventTarget|null)=>{
+  const selectDiagramElement=(target:EventTarget|null)=>{
     const element=target as Element|null;
     const vpn=element?.closest?.<SVGGElement>('.vpn-group');
     if(vpn){const id=vpn.dataset.vpnId!;const active=selectedVpn?.id===id;clearBinding();setSelected('');if(!active){setSelectedVpn({id,label:vpn.getAttribute('aria-label')??id});vpn.focus({preventScroll:true});}return;}
@@ -277,6 +280,29 @@ function App() {
     const group=element?.closest?.('[data-device]');
     if(group){const id=group.getAttribute('data-device')??'';setSelected(previous=>previous===id?'':id);}
   };
+  const selectElement=(target:EventTarget|null)=>{
+    // A layer-only redraw can safely queue the existing row trace. Source
+    // mapping stays disabled until that redraw finishes. Edited YAML cannot.
+    if(phase==='pending'&&resultSource.current===sourceRef.current&&(target as Element|null)?.closest?.('.interface-row')){selectDiagramElement(target);return;}
+    if(phase!=='valid'||resultSource.current!==sourceRef.current){setNotice('現在のYAMLの検証・描画が完了してから選択してください。');return;}
+    const element=target as Element|null;
+    const reference=targetForElement(element,canvas.current);
+    const extra=reference&&['l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets'].includes(reference.section)?reference:null;
+    const same=JSON.stringify(extra)===JSON.stringify(selectedExtra);
+    selectDiagramElement(target);
+    if(extra){setSelected('');setSelectedExtra(same?null:extra);}
+    else if(!reference)setSelected('');
+  };
+  const sourceTarget:SourceTarget|null=selectedTrace?{section:selectedTrace.root.layer==='l1'?'l1.ports':selectedTrace.root.layer+'.interfaces',id:selectedTrace.root.id}:
+    selectedBinding?targetForElement(Array.from(canvas.current?.querySelectorAll<SVGGElement>('.binding-group')??[]).find(g=>g.dataset.bindingKey===selectedBinding.key)??null,canvas.current):
+    selectedVpn?{section:'vpn_connections',id:selectedVpn.id}:selected?{section:'devices',id:selected}:selectedExtra;
+  const sourceLink=useSourceHighlight(editor,source,sourceTarget,phase==='valid'&&resultSource.current===source);
+  useEffect(()=>{
+    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint').forEach(group=>{
+      const active=!!selectedExtra&&JSON.stringify(targetForElement(group,canvas.current))===JSON.stringify(selectedExtra);
+      group.setAttribute('role','button');group.setAttribute('tabindex',phase==='valid'?'0':'-1');group.setAttribute('aria-pressed',String(active));group.setAttribute('aria-disabled',String(phase!=='valid'));group.classList.toggle('yaml-linked',active);
+    });
+  },[result,selectedExtra,phase]);
   const revealRow=(row:Element|null|undefined)=>{
     const pane=viewport.current;if(!pane||!row)return;
     // SVG scrollIntoView can use unscaled coordinates inside the transformed
@@ -370,16 +396,25 @@ function App() {
       <section className="editor-panel" aria-label="構成データ">
         <div className="panel-header"><div><span className="file-icon">≡</span> 構成データ <span className="file-type">YAML</span></div><span className={'saved '+(dirty?'unsaved':'')}>{dirty?'● 未保存':'保存済み'}</span></div>
         <div className="filename-row"><span>{filename}</span><span>{encoder.encode(source).length.toLocaleString()} bytes</span></div>
+        <section className={'yaml-source-nav'+(sourceTarget&&phase==='valid'?' has-source':'')} aria-label="図面とYAMLの対応">
+          {phase!=='valid'?<p>検証・描画の完了まで、図面からのYAML対応表示を停止しています。</p>:sourceLink.pending?<p role="status">YAMLの定義と関連参照を確認中…</p>:sourceLink.error?<p role="alert">{sourceLink.error}</p>:sourceLink.report?<>
+            <div className="yaml-source-heading"><strong>{sourceLink.report.label}</strong><button onClick={()=>{clearBinding();setSelected('');}}>YAMLの強調を解除</button></div>
+            <p><span className="yaml-definition-key">濃色＝選択した定義</span> / <span className="yaml-reference-key">淡色＝参照・参照先の定義</span></p>
+            <div className="yaml-source-controls"><button aria-label="YAMLの前の箇所" onClick={()=>sourceLink.move(sourceLink.current-1)}>前へ</button><span>{sourceLink.current+1} / {sourceLink.report.locations.length} 箇所</span><button aria-label="YAMLの次の箇所" onClick={()=>sourceLink.move(sourceLink.current+1)}>次へ</button><button onClick={()=>sourceLink.move(0)}>定義へ</button></div>
+            <p className="yaml-source-position" aria-live="polite">{sourceLink.report.locations[sourceLink.current]?.line}行 / {sourceLink.report.locations[sourceLink.current]?.path}</p>
+            {sourceLink.report.truncated&&<p>全{sourceLink.report.total}箇所中、先頭{sourceLink.report.limit}箇所を表示しています。</p>}
+          </>:<p>図面で要素を選ぶと、定義と関連参照を強調します。</p>}
+        </section>
         <div className="editor" ref={editorMount}/>
         <div className="editor-bottom"><span>UTF-8</span><span>{sizeLabel(limits.yaml_bytes)}まで · Ctrl / ⌘ + S で保存</span></div>
       </section>
-      <section className="preview-panel" aria-label="ネットワーク図" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();clearBinding();}}}>
+      <section className="preview-panel" aria-label="ネットワーク図" onKeyDown={e=>{if(e.key==='Escape'){e.preventDefault();clearBinding();setSelected('');}}}>
         <div className="preview-toolbar">
           <div className="tabs" role="tablist" aria-label="表示レイヤー">{(Object.keys(LABELS) as View[]).map(v=><button key={v} role="tab" aria-selected={view===v} className={view===v?'active':''} onClick={()=>{if(v!==view){invalidate();latest.current.view=v;setView(v);fitPending.current=true;}}}>{LABELS[v]}</button>)}</div>
           <label className="toggle-label"><input type="checkbox" checked={bindings} disabled={view!=='all'} onChange={e=>{invalidate();latest.current.bindings=e.target.checked;setBindings(e.target.checked);}}/><span className="toggle-track"/> 層間対応</label>
         </div>
         <ScopeControls scope={scope} result={result} limits={limits} pending={phase!=='valid'} onChange={changeScope} onFocus={focusScope}/>
-        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.filter(d=>result.visible_devices.includes(d.id)).map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span>{phase==='valid'&&sourceTarget&&<button className="yaml-reveal" disabled={!sourceLink.report} onClick={()=>sourceLink.move(0,true)}>YAMLの定義へ</button>}<label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.filter(d=>result.visible_devices.includes(d.id)).map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
         {!!result?.catalog.vpns?.length&&<div className="vpn-scope"><label>VPNの表示範囲 <select aria-label="VPNの表示範囲" value={scope.vpn_id??''} onChange={e=>{changeScope({...emptyScope(),vpn_id:e.target.value||null});if(e.target.value){setView('all');setBindings(true);}}}><option value="">すべての構成</option>{result.catalog.vpns.map(v=><option value={v.id} key={v.id}>{v.name}</option>)}</select></label><span>拠点フィルターで片端が隠れるVPNは図から省略します。</span></div>}
         {selectedVpn&&<div className="binding-selection" role="status" aria-label="選択したVPN"><span>{selectedVpn.label} / 対象サブネットの行と層間対応を強調</span><button onClick={clearBinding}>VPNの強調を解除</button></div>}
         {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={focusSelectedBinding}>この対応の関連行だけを表示</button><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}

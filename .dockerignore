@@ -24,3 +24,5 @@ frontend/playwright-report/
 !merge_model.py
 
 !vpn_model.py
+
+!source_map.py

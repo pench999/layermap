@@ -358,9 +358,10 @@ test('mapping lines are clickable and selection clears when data or views change
   });
   await page.getByRole('textbox',{name:'YAMLエディター'}).fill(source.replace('HQ-PC-01','MAPPING-EDIT'));
   await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
-  // A selection made against the stale preview must not attach to a new map.
+  // Stale YAML previews cannot select source positions or attach to a new map.
   await group.locator('text').first().click();
-  await expect(page.getByLabel('選択した層間対応')).toContainText('pc-a.ip');
+  await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
+  await expect(page.locator('.cm-yaml-definition,.cm-yaml-reference')).toHaveCount(0);
   await expect(page.getByTestId('diagram')).toContainText('MAPPING-EDIT');
   await expect(page.getByLabel('選択した層間対応')).toHaveCount(0);
   await expect(page.locator('.selected-binding')).toHaveCount(0);
