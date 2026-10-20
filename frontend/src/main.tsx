@@ -2,7 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {basicSetup} from 'codemirror';
 import {EditorView, keymap} from '@codemirror/view';
-import {EditorState} from '@codemirror/state';
+import {EditorState,type Extension} from '@codemirror/state';
+import {NEW_SOURCE} from './newDocument';
 import {yaml} from '@codemirror/lang-yaml';
 import {setDiagnostics} from '@codemirror/lint';
 import './style.css';
@@ -24,6 +25,9 @@ const encoder = new TextEncoder();
 const LABELS = {all:'全レイヤー',l1:'L1 物理',l2:'L2 VLAN',l3:'L3 IP'};
 
 function App() {
+  const documentGeneration=useRef(0);
+  const [documentEpoch,setDocumentEpoch]=useState(0);
+  const editorExtensions=useRef<Extension[]>([]);
   const [undoState,setUndoState]=useState<UndoEdit|null>(null);
   const undoRef=useRef<UndoEdit|null>(null);
   const [busyUndo,setBusyUndo]=useState(false);
@@ -92,7 +96,7 @@ function App() {
 
   useEffect(()=>{
     if(!editorMount.current) return;
-    const ed = new EditorView({parent:editorMount.current,state:EditorState.create({doc:'',extensions:[
+    const extensions:Extension[]=[
       basicSetup, yaml(), sourceMarks,
       EditorView.contentAttributes.of({'aria-label':'YAMLエディター','spellcheck':'false'}),
       keymap.of([{key:'Mod-s',run:()=>{document.getElementById('save-yaml')?.click();return true;}}]),
@@ -104,12 +108,14 @@ function App() {
         const next=pending?.target??edited(before,changes);if(next!==before)changeSource(next);
       }}),
       EditorView.theme({'&':{height:'100%',fontSize:'12px'},'.cm-scroller':{overflow:'auto',fontFamily:'ui-monospace, Consolas, monospace',lineHeight:'1.8'},'.cm-content':{padding:'14px 0'},'.cm-gutters':{background:'#f6f8fa',color:'#98a3af',borderRight:'1px solid #e7ebef'},'.cm-activeLine':{background:'#edf5f3'},'.cm-activeLineGutter':{background:'#e6efec'},'&.cm-focused':{outline:'none'}})
-    ]})});
+    ];
+    editorExtensions.current=extensions;
+    const ed = new EditorView({parent:editorMount.current,state:EditorState.create({doc:'',extensions})});
     editor.current=ed;
-    let active=true;
+    let active=true;const generation=documentGeneration.current;
     fetch('/api/limits').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)setLimits(data);}).catch(()=>{});
     fetch('/api/samples').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)setSamples(data.samples);}).catch(()=>{if(active)setSampleError('サンプル一覧を取得できません。画面を再読み込みしてください。');});
-    fetch('/api/sample').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active)replaceSource(data.yaml_text);}).catch(()=>{if(active){setPhase('invalid');setIssues([{message:'サンプルを読み込めません。接続を確認して再読み込みしてください。',path:'',line:null,column:null}]);}});
+    fetch('/api/sample').then(r=>{if(!r.ok)throw Error();return r.json();}).then(data=>{if(active&&generation===documentGeneration.current)replaceSource(data.yaml_text);}).catch(()=>{if(active&&generation===documentGeneration.current){setPhase('invalid');setIssues([{message:'サンプルを読み込めません。接続を確認して再読み込みしてください。',path:'',line:null,column:null}]);}});
     return ()=>{active=false;ed.destroy();editor.current=null;};
   },[]);
 
@@ -197,25 +203,41 @@ function App() {
   const download=(body:string,name:string,type:string)=>{const url=URL.createObjectURL(new Blob([body],{type}));const anchor=document.createElement('a');anchor.href=url;anchor.download=name;anchor.click();window.setTimeout(()=>URL.revokeObjectURL(url),1000);};
   const saveYaml=()=>{download(source,filename,'application/yaml;charset=utf-8');saved.current=source;dirtyRef.current=false;setDirty(false);setNotice('YAMLをダウンロードしました');};
   const fit=()=>{if(viewport.current)setZoom(Math.max(.1,Math.min(1,(viewport.current.clientWidth-64)/dimensions.width,(viewport.current.clientHeight-64)/dimensions.height)));};
-  const openFile=async(e:React.ChangeEvent<HTMLInputElement>)=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(f.size>limits.yaml_bytes){setNotice('ファイルは'+sizeLabel(limits.yaml_bytes)+'以下にしてください');return;}if(dirty&&!window.confirm('未保存の編集内容を置き換えますか？'))return;replaceSource(await f.text());setFilename(f.name);setNotice('ファイルを読み込みました');};
+  const openFile=async(e:React.ChangeEvent<HTMLInputElement>)=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(f.size>limits.yaml_bytes){setNotice('ファイルは'+sizeLabel(limits.yaml_bytes)+'以下にしてください');return;}if(dirty&&!window.confirm('未保存の編集内容を置き換えますか？'))return;const generation=documentGeneration.current;const text=await f.text();if(generation!==documentGeneration.current)return;replaceSource(text);setFilename(f.name);setNotice('ファイルを読み込みました');};
+  const newDocument=()=>{
+    if(dirtyRef.current&&!window.confirm('未保存の編集内容を破棄して、新規作成しますか？必要な内容は先にYAMLを保存してください。'))return;
+    documentGeneration.current++;setDocumentEpoch(n=>n+1);
+    replaceSource(NEW_SOURCE);
+    editor.current?.setState(EditorState.create({doc:NEW_SOURCE,extensions:editorExtensions.current}));
+    editor.current?.scrollDOM.scrollTo(0,0);
+    resultSource.current='';setResult(null);setIssues([]);setSelected('');
+    setFilename('untitled.yaml');setView('all');setBindings(true);latest.current={source:NEW_SOURCE,view:'all',bindings:true};
+    setZoom(.6);fitPending.current=true;viewport.current?.scrollTo(0,0);
+    setSampleId('base');setSampleError('');sampleBusy.current=false;setSampleLoading(false);setHelpOpen(false);
+    saved.current='';dirtyRef.current=true;setDirty(true);
+    setNotice('新規作成しました。「機器を追加」から入力を始められます。');
+  };
+
   const loadSample=async(id:string):Promise<boolean>=>{
     if(sampleBusy.current)return false;
     if(dirtyRef.current&&!window.confirm('未保存の編集内容をサンプルで置き換えますか？'))return false;
-    const before=sourceRef.current;
+    const before=sourceRef.current,generation=documentGeneration.current;
     sampleBusy.current=true;setSampleLoading(true);setSampleError('');
     try{
       const response=await fetch('/api/samples/'+encodeURIComponent(id));
       if(!response.ok)throw Error();
       const data=await response.json();
+      if(generation!==documentGeneration.current)return false;
       if(sourceRef.current!==before&&!window.confirm('サンプルの取得中に編集されました。最新の編集内容を置き換えますか？'))return false;
       fitPending.current=true;setSelected('');setView('all');setBindings(true);
       replaceSource(data.yaml_text);setFilename(data.filename);setSampleId(id);
       setNotice('サンプルを読み込みました');
       return true;
     }catch{
+      if(generation!==documentGeneration.current)return false;
       setSampleError('サンプルの読み込みに失敗しました。編集内容は保持されています。もう一度お試しください。');
       return false;
-    }finally{sampleBusy.current=false;setSampleLoading(false);}
+    }finally{if(generation===documentGeneration.current){sampleBusy.current=false;setSampleLoading(false);}}
   };
   const changeScope=(next:Scope)=>{invalidate();setSelected('');setScope(next);fitPending.current=true;};
   const focusScope=(root:Endpoint|null)=>{
@@ -373,6 +395,7 @@ function App() {
       <a className="brand" href="/" aria-label="LayerMap ホーム"><span className="brand-mark"><i/><i/><i/></span><span>Layer<span className="brand-light">Map</span></span><span className="version">PREVIEW</span></a>
       <div className="header-note"><span className="live-dot"/>NETWORK WORKSPACE</div>
       <div className="file-actions">
+        <button onClick={newDocument} disabled={busyUndo}>新規作成</button>
         <button className="help-trigger" onClick={()=>setHelpOpen(true)}><span aria-hidden="true">?</span> ヘルプ</button>
         <input ref={file} type="file" accept=".yaml,.yml,text/yaml,application/yaml" onChange={openFile} hidden/>
         <button onClick={()=>file.current?.click()}><span aria-hidden="true">↥</span> YAMLを開く</button>
@@ -389,9 +412,9 @@ function App() {
       <p>{samples.find(s=>s.id===sampleId)?.description}</p><button className="guide-link" onClick={()=>setHelpOpen(true)}>項目と追加手順 ↗</button>
       {sampleError&&<div className="sample-error" role="alert">{sampleError}</div>}
     </section>
-    <MergeWorkspace source={source} maxBytes={limits.yaml_bytes} onApply={applyMerge}/>
-    <VpnWorkspace source={source} maxBytes={limits.yaml_bytes} onApply={applyProposal} onSample={applyMerge}/>
-    <InputSupport source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
+    <MergeWorkspace key={'MergeWorkspace-'+documentEpoch} source={source} maxBytes={limits.yaml_bytes} onApply={applyMerge}/>
+    <VpnWorkspace key={'VpnWorkspace-'+documentEpoch} source={source} maxBytes={limits.yaml_bytes} onApply={applyProposal} onSample={applyMerge}/>
+    <InputSupport key={'InputSupport-'+documentEpoch} source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
     <main className="workspace">
       <section className="editor-panel" aria-label="構成データ">
         <div className="panel-header"><div><span className="file-icon">≡</span> 構成データ <span className="file-type">YAML</span></div><span className={'saved '+(dirty?'unsaved':'')}>{dirty?'● 未保存':'保存済み'}</span></div>
@@ -428,12 +451,12 @@ function App() {
         </section>}
         <div className="viewport" ref={viewport}>
           {phase!=='valid'&&result?.svg&&<div className={'stale-banner '+(phase==='invalid'?'error':'')} role="status">{phase==='invalid'?'現在のYAMLは未反映です。最後に正常生成した図を表示しています。':'更新待ち · 最後に正常生成した図を表示しています。'}</div>}
-          {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:!result.svg?<div className="empty-state" aria-label="表示範囲の案内"><span className="empty-glyph">▱</span><h2>{result.display.status==='empty'?'表示対象がありません':'表示範囲を絞り込んでください'}</h2><p>{result.display.message}</p><p>構成全体の検証は完了しています。上の「表示範囲」で条件を選んでください。</p></div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}
+          {!result?<div className="empty-state"><span className="empty-glyph">▱</span><h2>{phase==='invalid'?'構成データを確認してください':'図面を準備しています'}</h2><p>YAMLを検証して、レイヤーごとの構成を描画します。</p></div>:!result.svg?<div className="empty-state" aria-label="表示範囲の案内"><span className="empty-glyph">▱</span><h2>{result.counts.devices===0?'機器を追加して始めましょう':result.display.status==='empty'?'表示対象がありません':'表示範囲を絞り込んでください'}</h2><p>{result.counts.devices===0?'「機器を追加」またはYAMLの編集で構成を作成できます。':result.display.message}</p>{result.counts.devices>0&&<p>構成全体の検証は完了しています。上の「表示範囲」で条件を選んでください。</p>}</div>:<div className="diagram-space" style={{width:dimensions.width*zoom+64,height:dimensions.height*zoom+64}}><div ref={canvas} className="diagram" data-testid="diagram" style={{width:dimensions.width,height:dimensions.height,transform:'scale('+zoom+')'}} onClick={e=>selectElement(e.target)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectElement(e.target);}}} dangerouslySetInnerHTML={{__html:result.svg}}/></div>}
         </div>
         <div className="preview-bottom"><div className="legend"><span><i className="line-solid"/>レイヤー内の関係</span><span><i className="line-dash"/>層間の対応（選択可）</span>{result?.svg.includes('data-connection-kind=')&&<span>〜 Wi-Fi · 橙色 ? 未確認</span>}</div><div className="zoom-controls"><button aria-label="縮小" onClick={()=>setZoom(z=>Math.max(.1,z-.1))}>−</button><span>{Math.round(zoom*100)}%</span><button aria-label="拡大" onClick={()=>setZoom(z=>Math.min(2,z+.1))}>＋</button><button onClick={fit}>全体表示</button></div></div>
       </section>
     </main>
-    <section className={'validation '+phase} aria-live="polite" aria-label="検証結果"><div className="validation-title"><span className="status-icon">{phase==='valid'?'✓':phase==='invalid'?'!':'◌'}</span><strong>{phase==='valid'?'検証済み':phase==='invalid'?'入力を確認してください':phase==='loading'?'読み込み中':'更新待ち'}</strong>{phase==='valid'&&result&&<span className="counts">{result.counts.devices} 機器 <b>·</b> {result.counts.links} L1接続 <b>·</b> {result.counts.vlans} VLAN</span>}<span className="validation-hint">{phase==='valid'?(result?.svg?'最新のYAMLを選択範囲の図面に反映しました':'構成は有効です。描画する範囲を選んでください'):'編集が止まると自動で検証します'}</span></div>{issues.map((issue,n)=><button className="issue" key={n} onClick={()=>jump(issue)}>{issue.line&&<span>{issue.line}行{issue.column?':'+issue.column:''}</span>}<code>{issue.path}</code>{issue.message}</button>)}</section>
+    <section className={'validation '+phase} aria-live="polite" aria-label="検証結果"><div className="validation-title"><span className="status-icon">{phase==='valid'?'✓':phase==='invalid'?'!':'◌'}</span><strong>{phase==='valid'?'検証済み':phase==='invalid'?'入力を確認してください':phase==='loading'?'読み込み中':'更新待ち'}</strong>{phase==='valid'&&result&&<span className="counts">{result.counts.devices} 機器 <b>·</b> {result.counts.links} L1接続 <b>·</b> {result.counts.vlans} VLAN</span>}<span className="validation-hint">{phase==='valid'?(result?.counts.devices===0?'空の構成です。機器を追加できます':result?.svg?'最新のYAMLを選択範囲の図面に反映しました':'構成は有効です。描画する範囲を選んでください'):'編集が止まると自動で検証します'}</span></div>{issues.map((issue,n)=><button className="issue" key={n} onClick={()=>jump(issue)}>{issue.line&&<span>{issue.line}行{issue.column?':'+issue.column:''}</span>}<code>{issue.path}</code>{issue.message}</button>)}</section>
     <footer><span>LayerMap <b>·</b> 構成の意味を、ひとつに。</span><span>YAMLは描画のためサーバーへ送信されます。永続保存はしません。</span></footer>
     {helpOpen&&<Help limits={limits} samples={samples} loading={sampleLoading} error={sampleError} onClose={()=>setHelpOpen(false)} onLoadSample={loadSample}/>}
     {notice&&<div className="toast" role="status" onClick={()=>setNotice('')}>{notice}<button aria-label="通知を閉じる" onClick={()=>setNotice('')}>×</button></div>}

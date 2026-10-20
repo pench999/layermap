@@ -106,3 +106,6 @@ body:has(.help-dialog[open]) { overflow:hidden; }
 .diagram .yaml-linked path{stroke-width:3.5}.diagram .yaml-linked{outline:none}.diagram .unknown-peer,.diagram .unresolved-endpoint{cursor:pointer}
 
 .yaml-source-nav.has-source{height:165px}
+
+/* Keep document actions usable when the header wraps. */
+.app-header{height:auto;min-height:76px;padding-top:12px;padding-bottom:12px;flex-wrap:wrap}.file-actions{flex-wrap:wrap}@media(max-width:760px){.file-actions button{flex:1 1 calc(33.333% - 6px)}}

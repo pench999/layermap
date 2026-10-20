@@ -19,6 +19,32 @@ class WebTests(unittest.TestCase):
     def request(self, source=None, **options):
         return self.client.post('/api/render', json={'yaml_text': self.source if source is None else source, **options})
 
+    def test_empty_document_is_valid_and_can_start_with_first_device(self):
+        from input_support import DeviceOperation, preview
+        model = yaml.safe_load(self.source)
+        model['devices'] = []
+        for layer in ['l1', 'l2', 'l3', 'bindings']:
+            for key in model[layer]:
+                model[layer][key] = []
+        source = yaml.safe_dump(model, allow_unicode=True)
+        response = self.request(source)
+        self.assertEqual(response.status_code, 200, response.text)
+        data = response.json()
+        self.assertEqual(data['counts'], {'devices':0,'links':0,'vlans':0})
+        self.assertEqual(data['svg'], '')
+        self.assertEqual(data['display']['status'], 'empty')
+        self.assertFalse(data['display']['filtered'])
+        ET.fromstring(render(load_model(source)))
+        added = preview(source, DeviceOperation(type='device', device={'id':'first-pc','role':'endpoint'}, configure_l2=False))
+        self.assertEqual(self.request(added['yaml_text']).json()['counts']['devices'], 1)
+
+    def test_empty_device_list_does_not_hide_dangling_references(self):
+        model = yaml.safe_load(self.source)
+        model['devices'] = []
+        response = self.request(yaml.safe_dump(model))
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(response.json()['errors'][0]['path'], 'l1.ports[0].device')
+
     def test_sample_and_health(self):
         self.assertEqual(self.client.get('/api/health').json()['status'],'ok')
         self.assertEqual(self.client.get('/api/sample').json()['yaml_text'],self.source)

@@ -333,7 +333,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 height+=44
             cards[device]=(title,identity,metadata,header,rows,height)
         card_top=top+62+(20*(len(physical_links)+len(extra_connections)) if layer=='l1' else 0)
-        bottom=max(card_top+c[-1] for c in cards.values())
+        bottom=max((card_top+c[-1] for c in cards.values()),default=card_top+44)
         bus_top=bottom+45
         bus_layout=[]
         cursor=bus_top

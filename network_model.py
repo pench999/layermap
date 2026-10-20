@@ -165,7 +165,7 @@ class Network(Record):
     schema_version: Literal['lan-example/v1'] = Field(alias='schema')
     name: Text = 'LAN'
     scope: Text = '社内LAN'
-    devices: list[Device] = Field(min_length=1, max_length=MAX_DEVICES)
+    devices: list[Device] = Field(max_length=MAX_DEVICES)
     l1: L1
     l2: L2
     l3: L3
