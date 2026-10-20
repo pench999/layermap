@@ -22,6 +22,7 @@ class DeviceOperation(Record):
     subnet: Id | None = None
     ip_vlan: Id | None = None
     gateway: Text | None = None
+    ip_attachment: Literal['port','svi'] = 'port'
 
 
 class ConnectionOperation(Record):
@@ -51,6 +52,8 @@ def device_additions(op,ix):
     else:specs=[('p'+str(n) if role=='l2-switch' else 'lan'+str(n),op.port_prefix+str(n),'wired') for n in range(op.port_start,op.port_start+op.port_count)]
     ports=[dict(id=identity+'.'+suffix,device=identity,name=name,kind=kind) for suffix,name,kind in specs]
     result={('devices',):[d],('l1','ports'):ports}
+    if op.ip_attachment=='svi' and (role!='l2-switch' or not op.configure_l2):
+        raise ModelError('管理SVIはL2設定を行うL2スイッチに指定してください','ip_attachment')
     if not op.configure_l2:
         if op.address or op.subnet or op.gateway:raise ModelError('IP設定にはL2設定が必要です','address')
         return result
@@ -74,12 +77,19 @@ def device_additions(op,ix):
         result[('l2','bridges')]=[dict(id=identity+'.bridge',device=identity,members=[i['id'] for i in interfaces])]
     if op.address:
         if not op.subnet:raise ModelError('IPの所属サブネットを選んでください','subnet')
-        if op.ip_vlan not in op.vlans:raise ModelError('IPに対応するVLANを選んでください','ip_vlan')
-        if interfaces[0]['mode']=='access' and op.ip_vlan!=op.vlans[0]:raise ModelError('先頭IFのVLANとIPのVLANを一致させてください','ip_vlan')
+        if op.ip_attachment=='svi':
+            if op.ip_vlan not in ix['l2.vlans']:raise ModelError('管理SVIのVLANを選んでください','ip_vlan')
+        elif op.ip_vlan not in op.vlans:raise ModelError('IPに対応するVLANを選んでください','ip_vlan')
+        if op.ip_attachment!='svi' and interfaces[0]['mode']=='access' and op.ip_vlan!=op.vlans[0]:raise ModelError('先頭IFのVLANとIPのVLANを一致させてください','ip_vlan')
+        lower=interfaces[0]['id']
+        if op.ip_attachment=='svi':
+            lower=identity+'.svi'
+            interfaces.append(dict(id=lower,device=identity,mode='svi',vlan=op.ip_vlan))
+            result[('l2','bridges')][0]['members'].append(lower)
         result[('l3','interfaces')]=[dict(id=identity+'.ip',device=identity,address=op.address,subnet=op.subnet)]
-        result[('bindings','l3_to_l2')]=[dict(l3_interface=identity+'.ip',l2_interface=interfaces[0]['id'],vlan=op.ip_vlan)]
+        result[('bindings','l3_to_l2')]=[dict(l3_interface=identity+'.ip',l2_interface=lower,vlan=op.ip_vlan)]
         if op.gateway:result[('l3','routes')]=[dict(device=identity,destination='::/0' if ':' in op.address else '0.0.0.0/0',next_hop=op.gateway,interface=identity+'.ip')]
-    elif op.subnet or op.gateway:raise ModelError('IPアドレスを入力してください','address')
+    elif op.subnet or op.gateway or op.ip_attachment=='svi':raise ModelError('IPアドレスを入力してください','address')
     return result
 
 

@@ -2,7 +2,7 @@
 from collections import Counter, defaultdict, deque
 from typing import Literal
 from pydantic import Field
-from network_model import Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS, all_l1_connections, endpoint_owner, endpoint_label
+from network_model import interface_vlans, Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS, all_l1_connections, endpoint_owner, endpoint_label
 
 MAX_VIEW_DEVICES = 24
 MAX_VIEW_ROWS = 200
@@ -53,7 +53,7 @@ def display_stats(model, layers=None, show_bindings=True):
     if 'l2' in wanted:
         groups+=len(model['l2']['vlans'])+len(model['l2']['bridges'])
         elements+=len(model['l2']['interfaces'])+len(model['l2']['vlans'])+len(model['l2']['bridges'])
-        connections+=sum(1 if i['mode']=='access' else len(i.get('tagged_vlans',[])) for i in model['l2']['interfaces'])
+        connections+=sum(len(interface_vlans(i)) for i in model['l2']['interfaces'])
         connections+=sum(len(b['members']) for b in model['l2']['bridges'])
     if 'l3' in wanted:
         groups+=len(model['l3']['subnets'])
@@ -117,7 +117,7 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
         for layer,key in [('l1','l1.ports'),('l2','l2.interfaces'),('l3','l3.interfaces')]:
             for item in ix[key].values():
                 if item['device']!=chosen[0]['id']:continue
-                value=(item.get('name') or item['id'].split('.')[-1]) if layer=='l1' else item['address'] if layer=='l3' else 'VLAN '+', '.join(str(ix['l2.vlans'][v]['tag']) for v in ([item['untagged_vlan']] if item['mode']=='access' else item['tagged_vlans']))
+                value=(item.get('name') or item['id'].split('.')[-1]) if layer=='l1' else item['address'] if layer=='l3' else ('SVI / ' if item['mode']=='svi' else '')+'VLAN '+', '.join(str(ix['l2.vlans'][v]['tag']) for v in interface_vlans(item))
                 catalog['focus_options'].append(dict(layer=layer,id=item['id'],label=layer.upper()+' / '+value+' / '+item['id']))
     nodes=binding_component(model,scope.trace_root,ix) if scope.trace_root else None
     scoped=scope.site is not None or scope.group is not None or bool(scope.device_ids) or nodes is not None
@@ -143,7 +143,7 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
         elif any(seen):
             local,remote=(connection['endpoints'][seen.index(True)],connection['endpoints'][seen.index(False)])
             boundary.append(dict(id=connection['id'],local=endpoint_label(local),remote=endpoint_label(remote),remote_device=endpoint_owner(remote,ix),kind=connection['kind'],status=connection['status'],ssid=connection.get('ssid'),observed_at=connection.get('observed_at')))
-    vlan_ids={v for i in l2 for v in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])}
+    vlan_ids={v for i in l2 for v in interface_vlans(i)}
     subnet_ids={i['subnet'] for i in l3}
     bridges=[]
     for bridge in ix['l2.bridges'].values():

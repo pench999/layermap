@@ -8,7 +8,7 @@ from collections import Counter
 from pathlib import Path
 
 import yaml
-from network_model import ModelError, validate, load_model, endpoint_owner, endpoint_label, connection_label
+from network_model import interface_vlans, ModelError, validate, load_model, endpoint_owner, endpoint_label, connection_label
 from view_model import require_display_budget, prepare_view, ViewScope, TraceRoot
 
 
@@ -156,8 +156,8 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             relations[layer] = [(s['id']+' / '+s['cidr'],[i['id'] for i in items if i['subnet']==s['id']],palette[n%len(palette)]) for n,s in enumerate(ix['l3.subnets'].values())]
         elif layer == 'l2':
             relations[layer] = [(v['id']+' / VLAN '+str(v['tag'])+' / '+v.get('label',''),
-                                 [i['id'] for i in items if v['id'] in ([i['untagged_vlan']] if i['mode']=='access' else i['tagged_vlans'])],colors[v['id']]) for v in ix['l2.vlans'].values()]
-            relations[layer] += [(b['id']+' / VLAN別に転送',b['members'],'#48794b') for b in ix['l2.bridges'].values()]
+                                 [i['id'] for i in items if v['id'] in interface_vlans(i)],colors[v['id']]) for v in ix['l2.vlans'].values()]
+            relations[layer] += [(b['id']+(' / VLAN内の転送・SVI終端' if any(ix['l2.interfaces'][m]['mode']=='svi' for m in b['members']) else ' / VLAN別に転送'),b['members'],'#48794b') for b in ix['l2.bridges'].values()]
         else:
             relations[layer] = []  # Physical cables are independent point-to-point paths.
     # Memberships are explicit: VLAN/subnet badges get distinct connection points.
@@ -272,12 +272,15 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     primary=item.get('name') or item['id'].split('.')[-1]
                     details=[item['id']]+(['Wi-Fi 無線インターフェース'] if item.get('kind')=='wifi' else [])
                 elif layer=='l2':
-                    vlan_refs=[item['untagged_vlan']] if item['mode']=='access' else item['tagged_vlans']
+                    vlan_refs=interface_vlans(item)
                     primary='VLAN '+(', '.join(str(ix['l2.vlans'][v]['tag']) for v in vlan_refs) or 'なし')
-                    details=[item['id'],item['mode']+(' / untagged' if item['mode']=='access' else ' / tagged')]
+                    details=[item['id'],'SVI / 論理VLAN IF・物理ポートなし' if item['mode']=='svi' else item['mode']+(' / untagged' if item['mode']=='access' else ' / tagged')]
                 else:
                     primary=item['address']
                     details=[item['id'],'subnet / '+item['subnet']]
+                    binding=next((b for b in model['bindings']['l3_to_l2'] if b['l3_interface']==item['id']),None)
+                    if binding and ix['l2.interfaces'][binding['l2_interface']]['mode']=='svi':
+                        details.append('SVI / VLAN '+str(ix['l2.vlans'][binding['vlan']]['tag'])+' / '+binding['l2_interface'])
                 if layer=='l1' and item.get('connector'):
                     details.append('connector / '+item['connector'])
                 title_lines=wrap_label(primary,30)
@@ -343,7 +346,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
                 member_classes=' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
-                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / "+"".join(title_lines)+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
+                svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-interface-mode="{escape(item.get('mode','ip' if layer=='l3' else 'physical'))}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / "+"".join(title_lines)+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'transparent','none','interface-hit')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'#f1eafa','#8665a6','binding-row-highlight')
                 svg.append(f'<title>{escape(item["id"])}</title>')

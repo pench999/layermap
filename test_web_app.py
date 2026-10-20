@@ -99,8 +99,8 @@ class WebTests(unittest.TestCase):
 
     def test_bundled_sample_catalog_and_rendering(self):
         catalog = self.client.get('/api/samples').json()['samples']
-        self.assertEqual([s['id'] for s in catalog], ['base','add-pc','add-vlan','multi-site','connection-status'])
-        expected = {'base':(4,3,2), 'add-pc':(5,4,2), 'add-vlan':(5,4,3), 'multi-site':(36,33,6), 'connection-status':(10,9,2)}
+        self.assertEqual([s['id'] for s in catalog], ['base','add-pc','add-vlan','multi-site','connection-status','management-svi'])
+        expected = {'base':(4,3,2), 'add-pc':(5,4,2), 'add-vlan':(5,4,3), 'multi-site':(36,33,6), 'connection-status':(10,9,2), 'management-svi':(4,3,3)}
         for item in catalog:
             self.assertNotIn('file',item)
             response = self.client.get('/api/samples/'+item['id'])

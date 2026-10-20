@@ -86,7 +86,8 @@ class Vlan(Record):
 class L2Interface(Record):
     id: Id
     device: Id
-    mode: Literal['access', 'trunk']
+    mode: Literal['access', 'trunk', 'svi']
+    vlan: Id | None = None
     untagged_vlan: Id | None = None
     tagged_vlans: list[Id] = Field(default_factory=list, max_length=64)
 
@@ -237,7 +238,13 @@ def validate(data):
                 raise ModelError('確認日時はタイムゾーン付きISO 8601形式にしてください',p+'.observed_at') from None
     for n, item in enumerate(data['l2']['interfaces']):
         p = f'l2.interfaces[{n}]'
-        if item['mode'] == 'access':
+        if item['mode'] == 'svi':
+            if not item.get('vlan') or item.get('untagged_vlan') or item['tagged_vlans']:
+                raise ModelError('SVIにはvlanのみを指定してください',p)
+            ref(item['vlan'],'l2.vlans',p+'.vlan')
+        elif item.get('vlan'):
+            raise ModelError('vlanはSVI専用です。access/trunkには従来のVLAN項目を指定してください',p+'.vlan')
+        elif item['mode'] == 'access':
             if not item.get('untagged_vlan') or item['tagged_vlans']:
                 raise ModelError('accessにはuntagged_vlanのみを指定してください', p)
             ref(item['untagged_vlan'], 'l2.vlans', p+'.untagged_vlan')
@@ -246,11 +253,23 @@ def validate(data):
                 raise ModelError('trunkにはtagged_vlansのみを指定してください', p)
             for j, v in enumerate(item['tagged_vlans']):
                 ref(v, 'l2.vlans', p+f'.tagged_vlans[{j}]')
+    bridge_memberships={}
     for n, bridge in enumerate(data['l2']['bridges']):
         for j, member in enumerate(bridge['members']):
             p = f'l2.bridges[{n}].members[{j}]'
             if ref(member, 'l2.interfaces', p)['device'] != bridge['device']:
                 raise ModelError('ブリッジのメンバーは同じ機器に所属する必要があります', p)
+            bridge_memberships.setdefault(member,[]).append(bridge)
+    svi_domains=set()
+    for item in data['l2']['interfaces']:
+        if item['mode']!='svi':continue
+        p=positions[('l2.interfaces',item['id'])]
+        memberships=bridge_memberships.get(item['id'],[])
+        if len(memberships)!=1:
+            raise ModelError('SVIは同じ機器のbridgeに一度だけ所属させてください',p)
+        domain=(memberships[0]['id'],item['vlan'])
+        if domain in svi_domains:raise ModelError('同じbridge・VLANのSVIが重複しています',p)
+        svi_domains.add(domain)
     nets = {}
     for n, subnet in enumerate(data['l3']['subnets']):
         try:
@@ -270,6 +289,7 @@ def validate(data):
     for n, b in enumerate(data['bindings']['l2_to_l1']):
         p = f'bindings.l2_to_l1[{n}]'
         a = ref(b['l2_interface'], 'l2.interfaces', p+'.l2_interface')
+        if a['mode']=='svi':raise ModelError('SVIを物理ポートへ対応付けることはできません',p+'.l2_interface')
         port = ref(b['physical_port'], 'l1.ports', p+'.physical_port')
         if b['l2_interface'] in bound2 or a['device'] != port['device']:
             raise ModelError('L2対応が重複しているか、物理ポートの機器が異なります', p)
@@ -279,7 +299,7 @@ def validate(data):
         a = ref(b['l3_interface'], 'l3.interfaces', p+'.l3_interface')
         lower = ref(b['l2_interface'], 'l2.interfaces', p+'.l2_interface')
         ref(b['vlan'], 'l2.vlans', p+'.vlan')
-        allowed = [lower['untagged_vlan']] if lower['mode']=='access' else lower['tagged_vlans']
+        allowed = interface_vlans(lower)
         if b['vlan'] not in allowed:
             raise ModelError('対応先のL2インターフェースでこのVLANは使用されていません', p+'.vlan')
         if b['l3_interface'] in bound3 or a['device'] != lower['device']:
@@ -287,6 +307,7 @@ def validate(data):
         bound3.add(b['l3_interface'])
     for group, bound in [('l2.interfaces',bound2),('l3.interfaces',bound3)]:
         for key in ix[group].keys()-bound:
+            if group=='l2.interfaces' and ix[group][key]['mode']=='svi':continue
             raise ModelError('下位レイヤーへの対応が必要です', positions[(group,key)])
     for n, r in enumerate(data['l3']['routes']):
         p = f'l3.routes[{n}]'
@@ -393,3 +414,8 @@ def endpoint_label(endpoint):
 def connection_label(connection):
     status={'confirmed':'両端確認済み','port_unknown':'ポート／無線IF未確認','peer_unknown':'接続先未確認'}[connection['status']]
     return ('Wi-Fi' if connection['kind']=='wifi' else '有線')+' / '+status+' / '+' ↔ '.join(endpoint_label(e) for e in connection['endpoints'])+(' / SSID: '+connection['ssid'] if connection.get('ssid') else '')+(' / 確認: '+connection['observed_at'] if connection.get('observed_at') else '')+(' / '+connection['medium'] if connection.get('medium') else '')+(' / '+connection['speed'] if connection.get('speed') else '')+(' / '+connection['note'] if connection.get('note') else '')
+
+
+def interface_vlans(item):
+    """Explicit VLAN membership, including a port-independent SVI endpoint."""
+    return [item['vlan']] if item['mode']=='svi' else [item['untagged_vlan']] if item['mode']=='access' else item.get('tagged_vlans',[])

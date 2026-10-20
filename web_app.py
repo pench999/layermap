@@ -98,6 +98,7 @@ SAMPLES = {
     'add-vlan': {'id':'add-vlan', 'title':'VLAN追加版', 'description':'HQ-PC-03を新設VLAN 30へ移動。5機器・4ケーブル・3 VLAN。', 'filename':'02-add-vlan30.yaml', 'file':ROOT/'samples'/'02-add-vlan30.yaml'},
     'multi-site': {'id':'multi-site', 'title':'複数拠点・機器群（36台）', 'description':'3拠点×12台。拠点・役割・フロアで絞り込みを試せます。最初は描画上限の案内が出ます。', 'filename':'03-multi-site-36.yaml', 'file':ROOT/'samples'/'03-multi-site-36.yaml'},
     'connection-status': {'id':'connection-status','title':'有線・Wi-Fiと未確認接続','description':'10台・9接続。ポート未確認、AP未確認、APの無線IF共有を比較できます。','filename':'04-wired-wifi-status.yaml','file':ROOT/'samples'/'04-wired-wifi-status.yaml'},
+    'management-svi': {'id':'management-svi','title':'L2スイッチの管理SVI','description':'4台・3 VLAN。VLAN 99の管理IPを物理ポートと独立して表示します。','filename':'05-management-svi.yaml','file':ROOT/'samples'/'05-management-svi.yaml'},
 }
 
 
