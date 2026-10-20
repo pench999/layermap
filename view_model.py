@@ -25,6 +25,7 @@ class ViewScope(Record):
     group: str | None = Field(default=None, max_length=100)
     device_ids: list[Id] = Field(default_factory=list, max_length=MAX_DEVICES)
     trace_root: TraceRoot | None = None
+    vpn_id: Id | None = None
 
 
 def limits():
@@ -38,7 +39,7 @@ def limits():
 def element_count(model):
     return (len(model['devices'])+sum(len(model[layer][key]) for layer,keys in
             [('l1',['ports','links']),('l2',['vlans','interfaces','bridges']),('l3',['subnets','interfaces'])] for key in keys)
-            +len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
+            +len(model.get('vpn_connections',[]))+len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
 
 
 def display_stats(model, layers=None, show_bindings=True):
@@ -56,6 +57,8 @@ def display_stats(model, layers=None, show_bindings=True):
         connections+=sum(len(interface_vlans(i)) for i in model['l2']['interfaces'])
         connections+=sum(len(b['members']) for b in model['l2']['bridges'])
     if 'l3' in wanted:
+        vpns=model.get('vpn_connections',[])
+        rows+=2*len(vpns);connections+=len(vpns);elements+=3*len(vpns)
         groups+=len(model['l3']['subnets'])
         connections+=len(model['l3']['interfaces'])
         elements+=len(model['l3']['interfaces'])+len(model['l3']['subnets'])+len(model['l3'].get('routes',[]))
@@ -105,14 +108,21 @@ def binding_component(model, root, ix):
 def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
     scope=scope or ViewScope()
     all_devices=list(ix['devices'].values())
+    if scope.vpn_id:
+        if scope.vpn_id not in ix['vpn_connections']:raise ModelError('VPNが見つかりません','scope.vpn_id')
+        vpn=ix['vpn_connections'][scope.vpn_id]
+        subnets={s for e in vpn['endpoints'] for s in e['subnets']}
+        vpn_owners={e['device'] for e in vpn['endpoints']}|{i['device'] for i in ix['l3.interfaces'].values() if i['subnet'] in subnets}
+    else:vpn_owners=None
     chosen=[d for d in all_devices if
+            (vpn_owners is None or d['id'] in vpn_owners) and
             (scope.site is None or site_of(d)==scope.site) and
             (scope.group is None or (scope.group in d.get('groups',[]) if scope.group else not d.get('groups'))) and
             (not scope.device_ids or d['id'] in scope.device_ids)]
     # The full catalog stays available even when the current view is too large.
     catalog={'sites':sorted({site_of(d) for d in all_devices}),
              'groups':sorted({g for d in all_devices for g in (d.get('groups') or [''])}),
-             'focus_options':[]}
+             'focus_options':[], 'vpns':[dict(id=v['id'],name=v['name']) for v in ix['vpn_connections'].values()]}
     if len(chosen)==1:
         for layer,key in [('l1','l1.ports'),('l2','l2.interfaces'),('l3','l3.interfaces')]:
             for item in ix[key].values():
@@ -120,7 +130,7 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
                 value=(item.get('name') or item['id'].split('.')[-1]) if layer=='l1' else item['address'] if layer=='l3' else ('SVI / ' if item['mode']=='svi' else '')+'VLAN '+', '.join(str(ix['l2.vlans'][v]['tag']) for v in interface_vlans(item))
                 catalog['focus_options'].append(dict(layer=layer,id=item['id'],label=layer.upper()+' / '+value+' / '+item['id']))
     nodes=binding_component(model,scope.trace_root,ix) if scope.trace_root else None
-    scoped=scope.site is not None or scope.group is not None or bool(scope.device_ids) or nodes is not None
+    scoped=scope.site is not None or scope.group is not None or bool(scope.device_ids) or nodes is not None or scope.vpn_id is not None
     if nodes is not None:
         owners={ix['l1.ports' if layer=='l1' else layer+'.interfaces'][identity]['device'] for layer,identity in nodes}
         chosen=[d for d in chosen if d['id'] in owners]
@@ -162,6 +172,13 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
        'bindings':{'l2_to_l1':[b for b in model['bindings']['l2_to_l1'] if b['l2_interface'] in l2_ids and b['physical_port'] in port_ids],
                    'l3_to_l2':[b for b in model['bindings']['l3_to_l2'] if b['l3_interface'] in l3_ids and b['l2_interface'] in l2_ids]},
        'notes':list(model.get('notes',[]))}
+    visible_vpns=[];hidden_vpns=[]
+    for vpn in ix['vpn_connections'].values():
+        if scope.vpn_id and vpn['id']!=scope.vpn_id:continue
+        if all(e['device'] in owners and all(s in subnet_ids for s in e['subnets']) for e in vpn['endpoints']):visible_vpns.append(vpn)
+        elif any(e['device'] in owners or any(s in subnet_ids for s in e['subnets']) for e in vpn['endpoints']):hidden_vpns.append(vpn['id'])
+    if visible_vpns:projected['vpn_connections']=visible_vpns
+    if hidden_vpns:notes.append('範囲外のVPN終端・対象サブネットがあるためVPN '+', '.join(hidden_vpns)+'を省略しています。VPNの表示範囲を選択すると両端を確認できます。')
     stats=display_stats(projected,layers,show_bindings)
     problems=budget_errors(stats)
     status='empty' if not chosen else 'too_large' if problems else 'ready'

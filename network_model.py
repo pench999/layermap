@@ -145,6 +145,22 @@ class Bindings(Record):
     l3_to_l2: list[L3Binding]
 
 
+class VpnEndpoint(Record):
+    site: Id
+    device: Id
+    subnets: list[Id] = Field(min_length=1, max_length=64)
+    tunnel_interface: Text | None = None
+    tunnel_address: Text | None = None
+
+
+class VpnConnection(Record):
+    id: Id
+    name: Text
+    technology: Literal['ipsec'] = 'ipsec'
+    mode: Literal['route_based', 'policy_based']
+    endpoints: list[VpnEndpoint] = Field(min_length=2, max_length=2)
+
+
 class Network(Record):
     schema_version: Literal['lan-example/v1'] = Field(alias='schema')
     name: Text = 'LAN'
@@ -153,6 +169,7 @@ class Network(Record):
     l1: L1
     l2: L2
     l3: L3
+    vpn_connections: list[VpnConnection] = Field(default_factory=list, max_length=128)
     bindings: Bindings
     notes: list[Annotated[str, Field(max_length=500)]] = Field(default_factory=list, max_length=20)
 
@@ -170,7 +187,7 @@ def validate(data):
     except ValidationError as exc:
         error = exc.errors(include_input=False)[0]
         raise ModelError(error['msg'], model_path(error['loc'])) from None
-    groups = {'devices': data['devices']}
+    groups = {'devices': data['devices'], 'vpn_connections': data['vpn_connections']}
     for layer, names in [('l1', ['ports', 'links', 'connections']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces'])]:
         groups.update({f'{layer}.{n}': data[layer][n] for n in names})
     count = sum(len(v) for v in groups.values()) + len(data['l3']['routes']) + sum(len(v) for v in data['bindings'].values())
@@ -320,6 +337,8 @@ def validate(data):
             raise ModelError('経路のアドレスが不正です', p) from None
         if iface['device'] != r['device'] or hop.version != dest.version or hop not in ipaddress.ip_interface(iface['address']).network:
             raise ModelError('経路の機器または次ホップがインターフェースと一致しません', p)
+    from vpn_model import validate_vpns
+    validate_vpns(data, ix)
     return ix
 
 

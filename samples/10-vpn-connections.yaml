@@ -1,0 +1,30 @@
+# 拠点YAMLをhq / osakaの拠点IDで統合した後に読み込みます。
+# 元のLANファイルにVPN情報を書き足す必要はありません。
+schema: layermap-vpn/v1
+vpn_connections:
+  - id: vpn-office
+    name: 本社－大阪 業務VPN
+    technology: ipsec
+    mode: route_based
+    endpoints:
+      - site: hq
+        device: hq::gw01
+        tunnel_interface: tunnel0
+        tunnel_address: 10.255.0.1/30
+        subnets: [hq::net-office]
+      - site: osaka
+        device: osaka::gw01
+        tunnel_interface: tunnel0
+        tunnel_address: 10.255.0.2/30
+        subnets: [osaka::net-office]
+  - id: vpn-management
+    name: 本社－大阪 管理VPN
+    technology: ipsec
+    mode: policy_based
+    endpoints:
+      - site: hq
+        device: hq::gw01
+        subnets: [hq::net-management]
+      - site: osaka
+        device: osaka::gw01
+        subnets: [osaka::net-management]

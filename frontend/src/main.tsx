@@ -9,6 +9,7 @@ import './style.css';
 import {isolateHistory} from '@codemirror/commands';
 import {InputSupport,assist,type Proposal} from './InputSupport';
 import {normalized,newline,editorOffset,rawOffset,edited,inverse,trackUndo,type Edit,type UndoEdit} from './sourceEdits';
+import {VpnWorkspace} from './VpnWorkspace';
 import {MergeWorkspace} from './MergeWorkspace';
 import {Help, type Sample} from './Help';
 import {ScopeControls} from './ScopeControls';
@@ -40,6 +41,7 @@ function App() {
   const [notice,setNotice] = useState('');
   const [selected,setSelected] = useState('');
   const [selectedBinding,setSelectedBinding] = useState<{key:string;label:string}|null>(null);
+  const [selectedVpn,setSelectedVpn]=useState<{id:string;label:string}|null>(null);
   const [selectedTrace,setSelectedTrace] = useState<Trace|null>(null);
   const pendingTrace = useRef<{root:Endpoint;source:string}|null>(null);
   const traceJumpPending = useRef(false);
@@ -65,15 +67,15 @@ function App() {
   const fitPending = useRef(true);
   const sourceRef = useRef('');
   const clearBinding = () => {
-    setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
+    setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group'))focused.blur();
   };
   const invalidate = () => { clearBinding(); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
     if(value!==sourceRef.current){
       invalidate(); sourceRef.current = value; latest.current.source=value;
-      setSource(value);setScope(s=>s.trace_root?{...s,trace_root:null}:s);
+      setSource(value);setScope(s=>s.trace_root||s.vpn_id?{...s,trace_root:null,vpn_id:null}:s);
     }
     dirtyRef.current=user && value!==saved.current;
     setDirty(dirtyRef.current);
@@ -230,8 +232,30 @@ function App() {
     if(result){traceJumpPending.current=true;setSelectedTrace(traceFromSvg(result.svg,root));}
     row.focus({preventScroll:true});
   };
+  useEffect(()=>{
+    const svg=canvas.current?.querySelector('svg');if(!svg)return;
+    const groups=Array.from(svg.querySelectorAll<SVGGElement>('.vpn-group'));
+    const chosen=groups.find(g=>g.dataset.vpnId===selectedVpn?.id);
+    groups.forEach(g=>{const active=g===chosen;g.classList.toggle('vpn-selected',active);g.setAttribute('aria-pressed',String(active));});
+    const nodes=new Set<string>(),edges=new Set<string>();
+    if(chosen){
+      for(const id of JSON.parse(chosen.dataset.vpnMembers??'[]') as string[])nodes.add(endpointKey({layer:'l3',id}));
+      // A VPN selects protected networks and their lower-layer realization.
+      // Do not traverse back up a shared trunk into other, unprotected IPs.
+      for(const upper of ['l3','l2'])for(const group of svg.querySelectorAll<SVGGElement>('.binding-group')){
+        const edge=group.querySelector('.binding-edge');if(edge?.getAttribute('data-from-layer')!==upper)continue;
+        const from={layer:upper as Endpoint['layer'],id:edge.getAttribute('data-from')!};
+        if(!nodes.has(endpointKey(from)))continue;
+        nodes.add(endpointKey({layer:edge.getAttribute('data-to-layer') as Endpoint['layer'],id:edge.getAttribute('data-to')!}));edges.add(group.dataset.bindingKey!);
+      }
+    }
+    svg.querySelectorAll<SVGGElement>('.interface-row').forEach(row=>{const layer=row.closest('[data-layer]')?.getAttribute('data-layer') as Endpoint['layer'];row.classList.toggle('vpn-related',nodes.has(endpointKey({layer,id:row.dataset.elementId!})));});
+    svg.querySelectorAll<SVGGElement>('.binding-group,.binding-badge').forEach(g=>g.classList.toggle('vpn-related',edges.has(g.dataset.bindingKey!)));
+  },[result,selectedVpn]);
   const selectElement=(target:EventTarget|null)=>{
     const element=target as Element|null;
+    const vpn=element?.closest?.<SVGGElement>('.vpn-group');
+    if(vpn){const id=vpn.dataset.vpnId!;const active=selectedVpn?.id===id;clearBinding();setSelected('');if(!active){setSelectedVpn({id,label:vpn.getAttribute('aria-label')??id});vpn.focus({preventScroll:true});}return;}
     const mapping=element?.closest?.<SVGGElement>('.binding-group,.binding-badge');
     if(mapping){
       const key=mapping.dataset.bindingKey!;
@@ -340,6 +364,7 @@ function App() {
       {sampleError&&<div className="sample-error" role="alert">{sampleError}</div>}
     </section>
     <MergeWorkspace source={source} maxBytes={limits.yaml_bytes} onApply={applyMerge}/>
+    <VpnWorkspace source={source} maxBytes={limits.yaml_bytes} onApply={applyProposal} onSample={applyMerge}/>
     <InputSupport source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
     <main className="workspace">
       <section className="editor-panel" aria-label="構成データ">
@@ -355,6 +380,8 @@ function App() {
         </div>
         <ScopeControls scope={scope} result={result} limits={limits} pending={phase!=='valid'} onChange={changeScope} onFocus={focusScope}/>
         <div className="preview-info"><span className="preview-label"><span className="live-dot"/> DIAGRAM PREVIEW</span><span className="trace-hint">行を選んで層間対応を追跡</span><label>機器 <select aria-label="機器の強調表示" value={selected} onChange={e=>{clearBinding();setSelected(e.target.value);}}><option value="">すべて表示</option>{result?.devices.filter(d=>result.visible_devices.includes(d.id)).map(d=><option value={d.id} key={d.id}>{d.name}</option>)}</select></label></div>
+        {!!result?.catalog.vpns?.length&&<div className="vpn-scope"><label>VPNの表示範囲 <select aria-label="VPNの表示範囲" value={scope.vpn_id??''} onChange={e=>{changeScope({...emptyScope(),vpn_id:e.target.value||null});if(e.target.value){setView('all');setBindings(true);}}}><option value="">すべての構成</option>{result.catalog.vpns.map(v=><option value={v.id} key={v.id}>{v.name}</option>)}</select></label><span>拠点フィルターで片端が隠れるVPNは図から省略します。</span></div>}
+        {selectedVpn&&<div className="binding-selection" role="status" aria-label="選択したVPN"><span>{selectedVpn.label} / 対象サブネットの行と層間対応を強調</span><button onClick={clearBinding}>VPNの強調を解除</button></div>}
         {selectedBinding&&<div className="binding-selection" role="status" aria-label="選択した層間対応"><span>{selectedBinding.label}</span><button onClick={focusSelectedBinding}>この対応の関連行だけを表示</button><button onClick={()=>showBindingEnd(true)}>上位の行へ</button><button onClick={()=>showBindingEnd(false)}>下位の行へ</button><button onClick={clearBinding}>対応の強調を解除</button></div>}
         {selectedTrace&&<section className="trace-selection" aria-label="層間対応の追跡">
           <div className="trace-heading"><strong aria-live="polite">起点 {selectedTrace.root.layer.toUpperCase()} / {selectedTrace.root.id} · {selectedTrace.nodes.length}行・{selectedTrace.edges.length}対応</strong><button onClick={()=>focusScope(selectedTrace.root)}>この対応だけを表示</button><button onClick={clearBinding}>追跡の強調を解除</button></div>

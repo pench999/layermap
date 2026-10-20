@@ -249,3 +249,15 @@ location.siteは指定拠点IDへ揃え、groups、機器名、メーカー・�
 ID変換の画面は検索結果の先頭100件まで、JSON確認レポートは全変換を含みます。確認事項は総数を算出して先頭200件、各詳細は先頭30件までとし、省略を明示します（JSONも同範囲）。サブネットは直接または連鎖して重なる群として報告します。
 
 「統合サンプルをセット」はsamples/06-merge-hq.yamlと07-merge-osaka.yamlを読み込みます。同じ元ID・VLAN番号・IPを意図的に含む本社/大阪の独立構成です。POST /api/merge/previewは統合YAML、変換一覧、確認事項を返し、GET /api/merge/sampleはこの2件だけを返します。描画APIと同じ同時実行枠と8 MiBのHTTP制限を共用し、永続保存しません。
+
+### 拠点間VPN
+
+拠点YAMLを統合した後、「VPN接続定義を読み込む」で別ファイルを追加できます。「VPNサンプルをセット」では、本社・大阪の重複しないLANとルート型・ポリシー型のVPNを試せます。接続ファイルは samples/10-vpn-connections.yaml、元のLANは samples/08-vpn-hq.yaml と samples/09-vpn-osaka.yaml です。
+
+別ファイルのschemaは layermap-vpn/v1。vpn_connectionsの各項目はid、name、mode、technology（ipsec）、2つのendpointsです。各端点にsite、統合後のdevice ID、対象subnetsのID一覧を記述します。route_basedにはtunnel_interfaceが必須、tunnel_addressは両端とも省略可能です。policy_basedはトンネルIFを指定せず、同じIPバージョンの両端subnetsを相互のセレクターとします。
+
+POST /api/vpn/preview は yaml_text（統合LAN）と connections_yaml（別のVPN定義）を受け取り、コメントと書式を保持して追記したyaml_textと変更差分を返します。ID重複・参照切れ・拠点不一致・両端の対象アドレス重複・トンネルアドレス重複を検証します。保存したLANは最上位にvpn_connectionsを含み、通常のCLI/APIでも再読み込みできます。元ファイルは変更しません。
+
+VPNはL3の独立した論理オーバーレイに表示します。選択すると対象サブネットの行と層間対応を強調できます。「VPNの表示範囲」で両端と対象ネットワークの機器へ絞り込めます。フィルターで定義の一部が範囲外になるVPNは図から省略し、注記にIDを表示します。
+
+NAT・VRF、暗号/IKE設定、プロトコル/ポート別のポリシーセレクター、経路自動生成、実機設定、稼働監視は対象外です。VPN定義は通信可否を証明しません。VPNを含む統合済み構成の再統合はエラーにします。拠点YAMLを先に統合し、変換後IDを参照するVPNを追加してください。

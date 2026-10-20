@@ -22,3 +22,5 @@ frontend/playwright-report/
 !input_support.py
 
 !merge_model.py
+
+!vpn_model.py

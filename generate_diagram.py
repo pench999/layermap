@@ -1,6 +1,8 @@
 """Render the shared network model as one equipment card per device per layer."""
 import argparse
 import html
+import json
+from vpn_model import vpn_members
 import sys
 import time
 import unicodedata
@@ -247,7 +249,46 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         d='M'+' L'.join(f'{x},{y}' for x,y in points)
         svg.append(f'<path class="{css}" d="{d}" fill="none" stroke="{color}" stroke-width="1.7" {attrs}/>')
 
+    vpn_styles=[]
+    vpns=list(ix['vpn_connections'].values()) if 'l3' in wanted else []
+    vpn_rows={};vpn_networks={};vpn_devices={}
+    for n,vpn in enumerate(vpns):
+        for identity in vpn_members(vpn,ix):vpn_rows.setdefault(identity,[]).append(n)
+        for endpoint in vpn['endpoints']:
+            vpn_devices.setdefault(endpoint['device'],[]).append(n)
+            for identity in endpoint['subnets']:vpn_networks.setdefault(identity,[]).append(n)
     y = 145
+    if vpns:
+        svg.append('<g data-vpn-layer="l3">')
+        text(40,y+28,'L3 / 拠点間VPN（論理オーバーレイ）',22)
+        text(40,y+51,'破線＝VPNの定義 / 稼働状態・ルーティング・FW許可は別途確認 / L1ケーブルは追加しません',12,'#60788e')
+        y+=70
+        for n,vpn in enumerate(vpns):
+            endpoint_lines=[]
+            for e in vpn['endpoints']:
+                labels=[e['site']+' / '+e['device']]
+                labels.append(('トンネルIF: '+e['tunnel_interface']+' / '+e.get('tunnel_address','unnumbered')) if vpn['mode']=='route_based' else 'ポリシー終端 / トンネルIFなし')
+                labels+=['対象: '+s+' / '+ix['l3.subnets'][s]['cidr'] for s in e['subnets']]
+                endpoint_lines.append([part for label in labels for part in wrap_label(label,64)])
+            h=80+18*max(map(len,endpoint_lines))
+            mode='ルート型' if vpn['mode']=='route_based' else 'ポリシー型（同一IPバージョンの両端対象を相互セレクターとして定義）'
+            desc=vpn['name']+' / '+vpn['id']+' / IPsec / '+mode
+            desc_lines=wrap_label(desc,max(80,int((width-120)/8)))
+            extra=18*(len(desc_lines)-1);h+=extra
+            attrs='data-vpn-id="'+escape(vpn['id'])+'" data-vpn-members="'+escape(json.dumps(vpn_members(vpn,ix)))+'" data-vpn-devices="'+escape(json.dumps([e['device'] for e in vpn['endpoints']]))+'"'
+            svg.append(f'<g class="vpn-group vpn-{n}" {attrs} tabindex="0" role="button" aria-pressed="false" aria-label="{escape(desc)}">')
+            rect(40,y,width-80,h,'#f3f0fc','#a896c1','vpn-frame')
+            lines_at(56,y+25,desc_lines,15,'#614184',18)
+            half=(width-160)/2
+            lines_at(56,y+53+extra,endpoint_lines[0],12,'#33475b')
+            lines_at(width/2+70,y+53+extra,endpoint_lines[1],12,'#33475b')
+            edge([(width/2-55,y+h-20),(width/2+55,y+h-20)],'#80549b','vpn-path','stroke-dasharray="8 5"')
+            text(width/2-39,y+h-27,'IPsec VPN',11,'#614184')
+            svg.append('</g>')
+            active=f'svg:has(.vpn-{n}:is(:hover,:focus,.vpn-selected))'
+            vpn_styles.append(active+f' :is(.vpn-member-{n},.vpn-network-{n}){{opacity:1!important}}'+active+f' .vpn-member-{n} .binding-row-highlight{{display:block;fill:#eee2fc;stroke:#80549b;stroke-width:2}}'+active+f' .device-card[data-vpn-device~="{n}"] .device-frame{{stroke:#80549b;stroke-width:3}}')
+            y+=h+18
+        svg.append('</g>');y+=20
     for layer,group,heading,fill in specs:
         top = y
         cards = {}
@@ -331,7 +372,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             left=lefts[device]
             right=left+card_width
             name=ix['devices'][device].get('name',device)
-            svg.append(f'<g class="device-card" data-device="{escape(device)}" data-device-layer="{layer}" tabindex="0" role="button" aria-label="{escape(name)} / {layer.upper()}">')
+            svg.append(f'<g class="device-card" data-vpn-device="{" ".join(str(n) for n in vpn_devices.get(device,[]))}" data-device="{escape(device)}" data-device-layer="{layer}" tabindex="0" role="button" aria-label="{escape(name)} / {layer.upper()}">')
             rect(left,card_top,card_width,height,css='device-frame')
             baseline=card_top+26
             lines_at(left+16,baseline,title,16,step=21)
@@ -345,7 +386,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 side=port_sides.get(item['id'],1) if layer=='l1' else 1
                 anchor_x=right if side==1 else left
                 nodes[(layer,item['id'])]={'left':left,'right':right,'anchor_x':anchor_x,'y':anchor,'device':device,'side':side,'slot':len([n for (l,k),n in nodes.items() if l==layer and n['device']==device])}
-                member_classes=' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
+                member_classes=' '.join(['vpn-member-'+str(n) for n in vpn_rows.get(item['id'],[])] if layer=='l3' else [])+' '+' '.join(['member-'+net['key'] for net in memberships.get((layer,item['id']),[])]+['binding-row-'+b['key'] for b in row_bindings.get((layer,item['id']),[])])
                 svg.append(f'<g class="interface-row {member_classes}" data-element-id="{escape(item["id"])}" data-owner="{escape(device)}" data-interface-mode="{escape(item.get('mode','ip' if layer=='l3' else 'physical'))}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(layer.upper()+" / "+item["id"]+" / "+"".join(title_lines)+" / 層間対応を追跡")}" data-anchor-y="{anchor}" data-anchor-x="{anchor_x}">')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'transparent','none','interface-hit')
                 rect(left+5,row_top+3,card_width-10,row_height-6,'#f1eafa','#8665a6','binding-row-highlight')
@@ -461,7 +502,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             for by,labels,net in bus_layout:
                 key,color=net['key'],net['color']
                 description=net['number']+' / '+net['label']+' / 所属：'+(', '.join(net['members']) or 'なし')
-                svg.append(f'<g class="network-group network-{key}" data-network-id="{escape(net["id"])}" data-network-kind="{net["kind"]}" tabindex="0" role="img" aria-label="{escape(description)}">')
+                svg.append(f'<g class="network-group network-{key} {" ".join("vpn-network-"+str(n) for n in vpn_networks.get(net["id"],[])) if layer=="l3" else ""}" data-network-id="{escape(net["id"])}" data-network-kind="{net["kind"]}" tabindex="0" role="img" aria-label="{escape(description)}">')
                 svg.append(f'<title>{escape(description)}</title>')
                 xs=[lanes[(key,member)] for member in net['members']]
                 def logical_edge(points,css,attrs=''):
@@ -564,9 +605,9 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         y+=len(labels)*18+8
     text(40,y+28,'一機器一枠 / 枠内の行・接続点＝ポートやインターフェース / 実線＝各層の関係 / 紫破線＝層間対応',12)
     height=y+55
-    network_css=''.join(network_styles)
+    network_css=''.join(network_styles+vpn_styles)
     binding_css=''.join(binding_styles)
-    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.l1-connection{{cursor:crosshair;outline:none}}.l1-connection:is(:hover,:focus) .connection-path{{stroke-width:3.5}}svg:has(.l1-connection:is(:hover,:focus)) .l1-connection:not(:hover):not(:focus){{opacity:.22}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}.interface-hit{{pointer-events:all}}.interface-row{{cursor:pointer;outline:none}}.interface-row:focus>.binding-row-highlight{{display:block;stroke:#177b69;stroke-width:2}}svg.trace-active .interface-row{{opacity:.18!important}}svg.trace-active .interface-row.trace-row{{opacity:1!important}}svg.trace-active .trace-row .binding-row-highlight{{display:block;stroke-width:2;stroke:#8665a6}}svg.trace-active .trace-root .binding-row-highlight{{fill:#e4f5ee;stroke:#177b69;stroke-width:3}}svg.trace-active .binding-group{{opacity:.12!important}}svg.trace-active .binding-group.trace-edge{{opacity:1!important}}svg.trace-active .trace-edge .binding-edge{{stroke:#6f359e;stroke-width:3.5}}svg.trace-active .binding-badge.trace-edge text{{font-weight:bold}}svg.trace-active :is(.network-group,.physical-cable-group){{opacity:.12!important}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
+    header=f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}"><style>.vpn-group{{cursor:pointer;outline:none}}.vpn-group:is(:hover,:focus,.vpn-selected) .vpn-frame{{stroke:#80549b;stroke-width:3}}.vpn-group:is(:hover,:focus,.vpn-selected) .vpn-path{{stroke-width:4}}.vpn-related .binding-row-highlight{{display:block;fill:#eee2fc;stroke:#80549b;stroke-width:2}}.vpn-related.binding-group .binding-edge{{stroke:#80549b;stroke-width:3.5}}text{{font-family:"Yu Gothic",Meiryo,sans-serif}}.l1-connection{{cursor:crosshair;outline:none}}.l1-connection:is(:hover,:focus) .connection-path{{stroke-width:3.5}}svg:has(.l1-connection:is(:hover,:focus)) .l1-connection:not(:hover):not(:focus){{opacity:.22}}.physical-cable-group{{cursor:crosshair;outline:none}}.physical-cable-group:is(:hover,:focus) .physical-cable{{stroke-width:3.5}}svg:has(.physical-cable-group:is(:hover,:focus)) .physical-cable-group:not(:hover):not(:focus){{opacity:.22}}.network-group,.membership-label{{cursor:crosshair;outline:none}}.network-group:is(:hover,:focus) .relation-branch,.network-group:is(:hover,:focus) .relation-bus{{stroke-width:3}}{network_css}.binding-row-highlight{{display:none}}.binding-group,.binding-badge{{cursor:pointer;outline:none}}{binding_css}.interface-hit{{pointer-events:all}}.interface-row{{cursor:pointer;outline:none}}.interface-row:focus>.binding-row-highlight{{display:block;stroke:#177b69;stroke-width:2}}svg.trace-active .interface-row{{opacity:.18!important}}svg.trace-active .interface-row.trace-row{{opacity:1!important}}svg.trace-active .trace-row .binding-row-highlight{{display:block;stroke-width:2;stroke:#8665a6}}svg.trace-active .trace-root .binding-row-highlight{{fill:#e4f5ee;stroke:#177b69;stroke-width:3}}svg.trace-active .binding-group{{opacity:.12!important}}svg.trace-active .binding-group.trace-edge{{opacity:1!important}}svg.trace-active .trace-edge .binding-edge{{stroke:#6f359e;stroke-width:3.5}}svg.trace-active .binding-badge.trace-edge text{{font-weight:bold}}svg.trace-active :is(.network-group,.physical-cable-group){{opacity:.12!important}}</style><rect width="100%" height="100%" fill="#f8fafc"/>'
     title=f'<text x="40" y="43" font-family="Meiryo,sans-serif" font-size="27">{escape(model.get("name","LAN"))}</text><text x="40" y="76" font-family="Meiryo,sans-serif" font-size="14">{escape(model.get("scope",""))}</text><text x="40" y="106" font-family="Meiryo,sans-serif" font-size="13">YAMLから自動生成 / 機器ごとに集約し、ポート・インターフェース単位の接続を表示</text>'
     return header+title+'\n'+'\n'.join(svg)+'</svg>\n'
 

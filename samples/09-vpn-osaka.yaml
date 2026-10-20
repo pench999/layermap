@@ -1,0 +1,123 @@
+# 統合元サンプル。大阪と大阪は独立した構成。同じ元ID・VLAN番号・IPを意図的に含む。
+# このコメントと書式は元ファイルとして保持し、統合結果は別ファイルへ生成する。
+# 説明用の独自スキーマ。既存の標準規格ではありません。
+schema: lan-example/v1
+name: 大阪の統合元サンプル
+scope: 端末からインターネットゲートウェイのLAN側まで
+
+devices:
+  # メーカー・型番・シリアルNoを含め、以下の機器情報はすべて架空のサンプル。
+  # 現在の状態だけを保持し、交換時は属性を更新する。idは各層の参照用に維持する。
+  - id: pc-a
+    groups: [端末]
+    role: endpoint
+    label: 業務PC
+    name: OSAKA-PC-01
+    manufacturer: Example Computing
+    model: EC-Desktop-100
+    serial_number: "OSAKA-DEMO-PC-0001"
+    location: {site: 大阪, room: 執務室, position: 座席A01}
+  - id: pc-b
+    groups: [端末]
+    role: endpoint
+    label: 来客PC
+    name: OSAKA-GUEST-PC-01
+    manufacturer: Example Computing
+    model: EC-Notebook-200
+    serial_number: "OSAKA-DEMO-PC-0002"
+    location: {site: 大阪, room: 会議室, position: 来客席B01}
+  - id: sw01
+    groups: [ネットワーク機器]
+    role: l2-switch
+    label: 社内スイッチ
+    name: OSAKA-SW-01
+    manufacturer: Example Networks
+    model: EN-SW24
+    serial_number: "OSAKA-DEMO-SW-0001"
+    location: {site: 大阪, room: サーバー室, rack: R01, rack_unit: 12}
+  - id: gw01
+    groups: [ネットワーク機器]
+    role: internet-gateway
+    label: ゲートウェイ
+    name: OSAKA-GW-01
+    manufacturer: Example Networks
+    model: EN-GW100
+    serial_number: "OSAKA-DEMO-GW-0001"
+    location: {site: 大阪, room: サーバー室, rack: R01, rack_unit: 13}
+
+l1:
+  ports:
+    - {id: pc-a.eth0, device: pc-a}
+    - {id: pc-b.eth0, device: pc-b}
+    - {id: sw01.p1, device: sw01}
+    - {id: sw01.p2, device: sw01}
+    - {id: sw01.p24, device: sw01}
+    - {id: gw01.lan, device: gw01}
+  links:
+    - {id: cable-a, endpoints: [pc-a.eth0, sw01.p1], medium: copper, speed: 1Gbps}
+    - {id: cable-b, endpoints: [pc-b.eth0, sw01.p2], medium: copper, speed: 1Gbps}
+    - {id: cable-uplink, endpoints: [sw01.p24, gw01.lan], medium: copper, speed: 1Gbps}
+
+l2:
+  # VLAN IDはこのサンプルの単一ブリッジドメイン内で使用する。
+  vlans:
+    - {id: vlan-office, tag: 10, label: 業務LAN}
+    - {id: vlan-guest, tag: 20, label: 来客LAN}
+    - {id: vlan-management, tag: 99, label: 管理LAN}
+  interfaces:
+    - {id: pc-a.l2, device: pc-a, mode: access, untagged_vlan: vlan-office}
+    - {id: pc-b.l2, device: pc-b, mode: access, untagged_vlan: vlan-guest}
+    - {id: sw01.access1, device: sw01, mode: access, untagged_vlan: vlan-office}
+    - {id: sw01.access2, device: sw01, mode: access, untagged_vlan: vlan-guest}
+    - {id: sw01.trunk, device: sw01, mode: trunk, tagged_vlans: [vlan-office, vlan-guest, vlan-management]}
+    - {id: gw01.trunk, device: gw01, mode: trunk, tagged_vlans: [vlan-office, vlan-guest, vlan-management]}
+    # SVIは物理ポートではないためl2_to_l1を定義しない。
+    - {id: sw01.svi99, device: sw01, mode: svi, vlan: vlan-management}
+  # 同じVLANのメンバーをスイッチ内で転送する。
+  bridges:
+    - id: sw01.bridge
+      device: sw01
+      members: [sw01.access1, sw01.access2, sw01.trunk, sw01.svi99]
+
+l3:
+  subnets:
+    - {id: net-office, cidr: 192.168.110.0/24}
+    - {id: net-guest, cidr: 192.168.120.0/24}
+    - {id: net-management, cidr: 192.168.199.0/24}
+  interfaces:
+    - {id: pc-a.ip, device: pc-a, address: 192.168.110.10/24, subnet: net-office}
+    - {id: pc-b.ip, device: pc-b, address: 192.168.120.10/24, subnet: net-guest}
+    - {id: gw01.v10, device: gw01, address: 192.168.110.1/24, subnet: net-office}
+    - {id: gw01.v20, device: gw01, address: 192.168.120.1/24, subnet: net-guest}
+    - {id: sw01.management, device: sw01, address: 192.168.199.2/24, subnet: net-management}
+    - {id: gw01.v99, device: gw01, address: 192.168.199.1/24, subnet: net-management}
+  routes:
+    # これはスイッチ自身の管理通信に使う経路。VLAN間ルーティングの設定ではない。
+    - {device: sw01, destination: 0.0.0.0/0, next_hop: 192.168.199.1, interface: sw01.management}
+    - {device: pc-a, destination: 0.0.0.0/0, next_hop: 192.168.110.1, interface: pc-a.ip}
+    - {device: pc-b, destination: 0.0.0.0/0, next_hop: 192.168.120.1, interface: pc-b.ip}
+
+bindings:
+  # L2インターフェースが使用する物理ポート。
+  l2_to_l1:
+    - {l2_interface: pc-a.l2, physical_port: pc-a.eth0}
+    - {l2_interface: pc-b.l2, physical_port: pc-b.eth0}
+    - {l2_interface: sw01.access1, physical_port: sw01.p1}
+    - {l2_interface: sw01.access2, physical_port: sw01.p2}
+    - {l2_interface: sw01.trunk, physical_port: sw01.p24}
+    - {l2_interface: gw01.trunk, physical_port: gw01.lan}
+  # ゲートウェイでは一つの物理ポートにVLAN別のL3インターフェースを置く。
+  l3_to_l2:
+    - {l3_interface: sw01.management, l2_interface: sw01.svi99, vlan: vlan-management}
+    - {l3_interface: gw01.v99, l2_interface: gw01.trunk, vlan: vlan-management}
+    - {l3_interface: pc-a.ip, l2_interface: pc-a.l2, vlan: vlan-office}
+    - {l3_interface: pc-b.ip, l2_interface: pc-b.l2, vlan: vlan-guest}
+    - {l3_interface: gw01.v10, l2_interface: gw01.trunk, vlan: vlan-office}
+    - {l3_interface: gw01.v20, l2_interface: gw01.trunk, vlan: vlan-guest}
+
+notes:
+  - SVIの管理IPは物理ポートと独立。管理SVIを選ぶとL3とL2の2行だけを追跡し、L1へ架空の対応線を作らない。
+  - 管理VLAN 99は既存trunkを通すが、SVIの存在だけでは疎通やVLAN間ルーティングは保証しない。
+  - ゲートウェイのWAN側、NAT、DNS、DHCPは今回の範囲外。
+  - 経路の存在は通信許可を意味しない。VLAN間および外部向けの許可規則は未定義。
+  - VLANとサブネットを1対1にするのはこの例の設計であり、スキーマの一般的制約ではない。

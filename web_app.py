@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from vpn_model import VpnRequest, preview_vpn
 from merge_model import MergeRequest, merge_preview
 from input_support import Operation, catalog as assist_catalog, preview as assist_preview
 from generate_diagram import render
@@ -172,6 +173,17 @@ def input_preview(request: PreviewRequest):
 @app.post('/api/merge/preview')
 def preview_merge(request: MergeRequest):
     return assist_call(merge_preview,request)
+
+
+@app.post('/api/vpn/preview')
+def vpn_preview(request: VpnRequest):
+    return assist_call(preview_vpn,request)
+
+
+@app.get('/api/vpn/sample')
+def vpn_sample():
+    network=merge_preview(MergeRequest(sources=[dict(site_id=s,filename=f,yaml_text=(ROOT/'samples'/f).read_text(encoding='utf-8')) for s,f in [('hq','08-vpn-hq.yaml'),('osaka','09-vpn-osaka.yaml')]]))
+    return dict(yaml_text=network['yaml_text'],connections_yaml=(ROOT/'samples'/'10-vpn-connections.yaml').read_text(encoding='utf-8'))
 
 
 @app.get('/api/merge/sample')

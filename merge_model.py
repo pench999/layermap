@@ -40,11 +40,12 @@ def merge_preview(request):
         try:model=load_model(source.yaml_text)
         except ModelError as error:
             raise ModelError(source.filename+' ['+source.site_id+']: '+str(error),p+'.yaml_text'+('.'+error.path if error.path else ''),error.line,error.column) from None
+        if model.get('vpn_connections'):raise ModelError('VPNを含む統合済みYAMLは再統合できません。拠点YAMLを統合してから、変換後IDを参照する別のVPN定義を読み込んでください',p+'.yaml_text')
         devices+=len(model['devices']);elements+=element_count(model)
         if devices>MAX_DEVICES or elements>MAX_ELEMENTS:
             raise ModelError(f'統合後の構成は{MAX_DEVICES}機器・{MAX_ELEMENTS}要素以下にしてください（現在{devices}機器・{elements}要素）','sources')
         inputs.append((source,model))
-    merged={'schema':'lan-example/v1','name':'複数拠点の統合構成','scope':'拠点ごとの構成を並列に表示。拠点間接続は未定義。','devices':[],
+    merged={'schema':'lan-example/v1','name':'複数拠点の統合構成','scope':'拠点ごとの構成を並列に保持。拠点間接続は別の接続定義で指定。','devices':[],
             'l1':{'ports':[],'links':[],'connections':[]},'l2':{'vlans':[],'interfaces':[],'bridges':[]},
             'l3':{'subnets':[],'interfaces':[],'routes':[]},'bindings':{'l2_to_l1':[],'l3_to_l2':[]},
             'notes':['拠点ID::元IDで識別。元ファイルのコメント・書式は統合元ダウンロードで保持します。','拠点間接続は自動追加しません。同じVLAN番号・IP・サブネットでも拠点ごとの定義を維持します。']}
