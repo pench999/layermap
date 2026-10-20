@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
+from merge_model import MergeRequest, merge_preview
 from input_support import Operation, catalog as assist_catalog, preview as assist_preview
 from generate_diagram import render
 from network_model import ModelError, load_model, MAX_YAML_BYTES
@@ -167,6 +168,16 @@ def input_catalog(request: AssistRequest):
 @app.post('/api/assist/preview')
 def input_preview(request: PreviewRequest):
     return assist_call(lambda r:assist_preview(r.yaml_text,r.operation),request)
+
+@app.post('/api/merge/preview')
+def preview_merge(request: MergeRequest):
+    return assist_call(merge_preview,request)
+
+
+@app.get('/api/merge/sample')
+def merge_sample():
+    return {'sources':[{'site_id':site,'filename':filename,'yaml_text':(ROOT/'samples'/filename).read_text(encoding='utf-8')} for site,filename in [('hq','06-merge-hq.yaml'),('osaka','07-merge-osaka.yaml')]]}
+
 
 # Serving is local and bundled; no CDN, storage service, or external fonts are used.
 DIST = ROOT/'frontend'/'dist'

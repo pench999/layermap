@@ -9,6 +9,7 @@ import './style.css';
 import {isolateHistory} from '@codemirror/commands';
 import {InputSupport,assist,type Proposal} from './InputSupport';
 import {normalized,newline,editorOffset,rawOffset,edited,inverse,trackUndo,type Edit,type UndoEdit} from './sourceEdits';
+import {MergeWorkspace} from './MergeWorkspace';
 import {Help, type Sample} from './Help';
 import {ScopeControls} from './ScopeControls';
 import {emptyScope,defaultLimits,sizeLabel,type Scope,type Result,type Limits} from './scope';
@@ -293,6 +294,13 @@ function App() {
     try{ed.dispatch({changes:changes.map(e=>({from:editorOffset(before,e.from),to:editorOffset(before,e.to),insert:normalized(e.insert)})),annotations:isolateHistory.of('full')});}finally{programEdit.current=null;}
     return true;
   };
+  const applyMerge=(base:string,text:string,site:string,nextView:View)=>{
+    if(sourceRef.current!==base||undoBusy.current||sampleBusy.current)return false;
+    if(dirtyRef.current&&!window.confirm('未保存の編集内容を統合結果で置き換えますか？'))return false;
+    fitPending.current=true;setSelected('');setBindings(true);setView(nextView);
+    replaceSource(text);setScope({...emptyScope(),...(site?{site}:{})});setFilename('layermap-merged.yaml');
+    saved.current='';dirtyRef.current=true;setDirty(true);setNotice('統合結果を読み込みました。統合元は保持しています。YAMLを保存してください。');return true;
+  };
   const applyProposal=(base:string,p:Proposal)=>{
     if(undoBusy.current||sourceRef.current!==base||edited(base,p.changes)!==p.yaml_text)return false;
     const nextUndo=inverse(base,p.changes);
@@ -331,6 +339,7 @@ function App() {
       <p>{samples.find(s=>s.id===sampleId)?.description}</p><button className="guide-link" onClick={()=>setHelpOpen(true)}>項目と追加手順 ↗</button>
       {sampleError&&<div className="sample-error" role="alert">{sampleError}</div>}
     </section>
+    <MergeWorkspace source={source} maxBytes={limits.yaml_bytes} onApply={applyMerge}/>
     <InputSupport source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
     <main className="workspace">
       <section className="editor-panel" aria-label="構成データ">

@@ -2,13 +2,14 @@ import React,{useEffect,useRef,useState} from 'react';
 import type {Edit} from './sourceEdits';
 type Catalog={devices:{id:string;name:string}[];ports:{id:string;device:string;name?:string;kind?:string;occupied:boolean}[];vlans:{id:string;tag:number;label?:string}[];subnets:{id:string;cidr:string}[]};
 export type Proposal={yaml_text:string;changes:Edit[];summary:{path:string;count:number}[];diff:string};
-export async function assist(url:string,body:unknown,signal?:AbortSignal){
+export async function requestJson(url:string,body:unknown,signal?:AbortSignal){
   for(let n=0;;n++){
-    const r=await fetch('/api/assist/'+url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal});
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal});
     if(r.status===429&&n<9){await new Promise<void>((resolve,reject)=>{const stop=()=>{clearTimeout(t);reject(new DOMException('Aborted','AbortError'));};const t=setTimeout(()=>{signal?.removeEventListener('abort',stop);resolve();},1000);signal?.addEventListener('abort',stop,{once:true});if(signal?.aborted)stop();});continue;}
-    const data=await r.json();if(!r.ok)throw Error(data.errors?.map((e:{message:string;path?:string})=>(e.path?e.path+': ':'')+e.message).join(' / ')||'入力を確認してください');return data;
+    const data=await r.json();if(!r.ok)throw Error(data.errors?.map((e:{message:string;path?:string;line?:number;column?:number})=>(e.path?e.path+': ':'')+e.message+(e.line?'（'+e.line+'行'+(e.column?':'+e.column:'')+'）':'')).join(' / ')||'入力を確認してください');return data;
   }
 }
+export const assist=(url:string,body:unknown,signal?:AbortSignal)=>requestJson('/api/assist/'+url,body,signal);
 const initial={role:'endpoint',id:'',name:'',manufacturer:'',model:'',serial_number:'',site:'',room:'',rack:'',position:'',groups:'',port_kind:'wired',port_count:4,port_prefix:'Gi1/0/',port_start:1,configure_l2:true,mode:'access',vlans:[] as string[],address:'',subnet:'',ip_vlan:'',gateway:'',ip_attachment:'port'};
 export function InputSupport({source,valid,onApply,onUndo,canUndo,undoReason,busyUndo}:{source:string;valid:boolean;onApply:(base:string,p:Proposal)=>boolean;onUndo:()=>void;canUndo:boolean;undoReason:string;busyUndo:boolean}){
  const [kind,setKind]=useState<'device'|'connection'|null>(null),[step,setStep]=useState(0),[data,setData]=useState(initial);
