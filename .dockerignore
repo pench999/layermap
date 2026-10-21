@@ -28,3 +28,5 @@ frontend/playwright-report/
 !source_map.py
 
 !redundancy.py
+
+!bench_48port.py

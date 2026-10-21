@@ -1,4 +1,4 @@
-import {emptyScope,type Scope,type Result,type Limits} from './scope';
+import {emptyScope,sizeLabel,type Scope,type Result,type Limits} from './scope';
 import type {Endpoint} from './trace';
 type Props={scope:Scope;result:Result|null;limits:Limits;onChange:(s:Scope)=>void;onFocus:(e:Endpoint|null)=>void;pending:boolean};
 export function ScopeControls({scope,result,limits,onChange,onFocus,pending}:Props){
@@ -20,7 +20,7 @@ export function ScopeControls({scope,result,limits,onChange,onFocus,pending}:Pro
    <label>対応関係の起点<select aria-label="表示する対応関係" value={rootValue} onChange={e=>onFocus(e.target.value?JSON.parse(e.target.value):null)}><option value="">すべての行</option>{scope.trace_root&&!knownRoot&&<option value={rootValue}>{scope.trace_root.layer.toUpperCase()} / {scope.trace_root.id}</option>}{roots.map(r=><option key={r.layer+r.id} value={JSON.stringify({layer:r.layer,id:r.id})}>{r.label}</option>)}</select></label>
   </div>
   <p>条件は組み合わせて適用します。機器を1台に絞ると、図が表示できない場合もポート・インターフェースから対応関係を選べます。YAMLの内容は変わりません。</p>
-  <details className="scope-limits"><summary>描画の上限：{limits.view_devices}台・{limits.view_rows}行・接続／所属 {limits.view_connections}件</summary><p>表示中のレイヤーで構成要素 {limits.view_elements}件、VLAN・ブリッジ・サブネット {limits.view_groups}件まで。上限を超える場合は一部を自動で間引かず、条件の変更を案内します。trunkのVLAN所属もそれぞれ接続1件として数えます。</p></details>
+  <details className="scope-limits"><summary>描画の上限：{limits.view_devices}台・{limits.view_rows}行・接続／所属 {limits.view_connections}件</summary><p>表示中のレイヤーで構成要素 {limits.view_elements}件、VLAN・ブリッジ・サブネット {limits.view_groups}件、SVG {sizeLabel(limits.svg_bytes)}まで。上限を超える場合は一部を自動で間引かず、条件の変更を案内します。trunkのVLAN所属もそれぞれ接続1件として数えます。</p></details>
   {result?.display.filtered&&<p className="scope-partial">構成の一部を表示しています。同じVLAN・サブネットでも範囲外の機器は表示されません。</p>}
   {!!result?.display.boundary_links.total&&<details className="scope-boundary"><summary>範囲外へつながる{result.display.boundary_links.noun} {result.display.boundary_links.total}本（図から省略）</summary><ul>{result.display.boundary_links.items.map(b=><li key={b.id}><code>{b.id}</code>〔{b.kind==='wifi'?'Wi-Fi':'有線'} / {{confirmed:'両端確認済み',port_unknown:'ポート／無線IF未確認',peer_unknown:'接続先未確認'}[b.status]}〕：{b.local} ↔ {b.remote}{b.remote_device&&<>（機器 {b.remote_device}）</>}{b.ssid&&<> / SSID: {b.ssid}</>}{b.observed_at&&<> / 確認: {b.observed_at}</>}</li>)}</ul>{result.display.boundary_links.has_more&&<p>先頭100件を表示しています。全接続はYAMLで確認できます。</p>}</details>}
  </section>;

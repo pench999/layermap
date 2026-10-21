@@ -5,14 +5,14 @@ from typing import Literal, Annotated
 import yaml
 from pydantic import Field
 from network_model import (Record, Device, Id, Text, Connection, ModelError, load_model,
-                           BoundedLoader, BaseLoader, all_l1_connections)
+                           BoundedLoader, BaseLoader, all_l1_connections, MAX_DEVICE_PORTS)
 
 
 class DeviceOperation(Record):
     type: Literal['device']
     device: Device
     port_kind: Literal['wired','wifi'] = 'wired'
-    port_count: int = Field(default=1,ge=1,le=24)
+    port_count: int = Field(default=1,ge=1,le=MAX_DEVICE_PORTS)
     port_prefix: Text = 'Gi1/0/'
     port_start: int = Field(default=1,ge=1,le=9999)
     configure_l2: bool = True

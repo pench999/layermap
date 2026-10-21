@@ -45,8 +45,8 @@ test('whole inventory is retained while site, group and device scopes intersect'
 });
 
 test('dense device can be focused before a diagram exists and restored without editing YAML',async({page})=>{
- await upload(page,inventory(1,7,true));await expect(page.getByLabel('表示範囲の案内')).toBeVisible();
- const focus=page.getByLabel('表示する対応関係');await expect(focus.locator('option')).toHaveCount(22);
+ await upload(page,inventory(1,20,true));await expect(page.getByLabel('表示範囲の案内')).toBeVisible();
+ const focus=page.getByLabel('表示する対応関係');await expect(focus.locator('option')).toHaveCount(61);
  await focus.selectOption(JSON.stringify({layer:'l3',id:'d000.0'}));
  await expect(page.locator('.interface-row')).toHaveCount(3);await expect(page.locator('.trace-row')).toHaveCount(3);
  await expect(page.locator('.trace-root')).toHaveAttribute('data-element-id','d000.0');

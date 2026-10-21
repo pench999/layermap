@@ -1,0 +1,717 @@
+{
+  "limits": {
+    "yaml_bytes": 2097152,
+    "devices": 256,
+    "elements": 10000,
+    "view_devices": 24,
+    "view_rows": 600,
+    "view_connections": 1200,
+    "view_elements": 1600,
+    "view_groups": 80,
+    "svg_bytes": 8388608,
+    "http_bytes": 8388608,
+    "render_jobs": 2
+  },
+  "candidate": true,
+  "environment": {
+    "cpu_quota": "1 CPU",
+    "memory_limit_mib": 512
+  },
+  "repeats": 3,
+  "cases": [
+    {
+      "name": "three-48-switches-12-hosts",
+      "runs": [
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 15,
+            "rows": 414,
+            "connections": 662,
+            "elements": 720,
+            "groups": 10
+          },
+          "parse_ms": 41.64,
+          "projection_ms": 0.47,
+          "render_ms": 148.03,
+          "total_ms": 190.14,
+          "svg_bytes": 1791239,
+          "process_rss_mib": 48.16
+        },
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 15,
+            "rows": 414,
+            "connections": 662,
+            "elements": 720,
+            "groups": 10
+          },
+          "parse_ms": 41.29,
+          "projection_ms": 0.45,
+          "render_ms": 158.67,
+          "total_ms": 200.41,
+          "svg_bytes": 1791239,
+          "process_rss_mib": 48.11
+        },
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 15,
+            "rows": 414,
+            "connections": 662,
+            "elements": 720,
+            "groups": 10
+          },
+          "parse_ms": 44.37,
+          "projection_ms": 0.44,
+          "render_ms": 149.34,
+          "total_ms": 194.15,
+          "svg_bytes": 1791239,
+          "process_rss_mib": 48.21
+        }
+      ],
+      "median_ms": 194.15,
+      "max_ms": 200.41,
+      "max_rss_mib": 48.21
+    },
+    {
+      "name": "three-48-switches-21-hosts",
+      "runs": [
+        {
+          "yaml_bytes": 76835,
+          "status": "ready",
+          "devices": 24,
+          "elements": 918,
+          "display": {
+            "devices": 24,
+            "rows": 504,
+            "connections": 815,
+            "elements": 918,
+            "groups": 10
+          },
+          "parse_ms": 54.01,
+          "projection_ms": 0.64,
+          "render_ms": 343.38,
+          "total_ms": 398.02,
+          "svg_bytes": 2242821,
+          "process_rss_mib": 51.59
+        },
+        {
+          "yaml_bytes": 76835,
+          "status": "ready",
+          "devices": 24,
+          "elements": 918,
+          "display": {
+            "devices": 24,
+            "rows": 504,
+            "connections": 815,
+            "elements": 918,
+            "groups": 10
+          },
+          "parse_ms": 53.33,
+          "projection_ms": 0.64,
+          "render_ms": 343.77,
+          "total_ms": 397.74,
+          "svg_bytes": 2242821,
+          "process_rss_mib": 51.77
+        },
+        {
+          "yaml_bytes": 76835,
+          "status": "ready",
+          "devices": 24,
+          "elements": 918,
+          "display": {
+            "devices": 24,
+            "rows": 504,
+            "connections": 815,
+            "elements": 918,
+            "groups": 10
+          },
+          "parse_ms": 53.96,
+          "projection_ms": 0.65,
+          "render_ms": 344.66,
+          "total_ms": 399.28,
+          "svg_bytes": 2242821,
+          "process_rss_mib": 51.52
+        }
+      ],
+      "median_ms": 398.02,
+      "max_ms": 399.28,
+      "max_rss_mib": 51.77
+    },
+    {
+      "name": "three-48-single-switch",
+      "runs": [
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 1,
+            "rows": 98,
+            "connections": 151,
+            "elements": 154,
+            "groups": 6
+          },
+          "parse_ms": 48.36,
+          "projection_ms": 0.61,
+          "render_ms": 16.28,
+          "total_ms": 65.25,
+          "svg_bytes": 402948,
+          "process_rss_mib": 40.54
+        },
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 1,
+            "rows": 98,
+            "connections": 151,
+            "elements": 154,
+            "groups": 6
+          },
+          "parse_ms": 40.64,
+          "projection_ms": 0.45,
+          "render_ms": 9.21,
+          "total_ms": 50.3,
+          "svg_bytes": 402948,
+          "process_rss_mib": 40.28
+        },
+        {
+          "yaml_bytes": 58673,
+          "status": "ready",
+          "devices": 15,
+          "elements": 720,
+          "display": {
+            "devices": 1,
+            "rows": 98,
+            "connections": 151,
+            "elements": 154,
+            "groups": 6
+          },
+          "parse_ms": 41.74,
+          "projection_ms": 0.46,
+          "render_ms": 9.33,
+          "total_ms": 51.52,
+          "svg_bytes": 402948,
+          "process_rss_mib": 40.21
+        }
+      ],
+      "median_ms": 51.52,
+      "max_ms": 65.25,
+      "max_rss_mib": 40.54
+    },
+    {
+      "name": "rows-600",
+      "runs": [
+        {
+          "yaml_bytes": 76542,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 57.57,
+          "projection_ms": 0.51,
+          "render_ms": 88.82,
+          "total_ms": 146.9,
+          "svg_bytes": 2903940,
+          "process_rss_mib": 55.46
+        },
+        {
+          "yaml_bytes": 76542,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 61.3,
+          "projection_ms": 1.15,
+          "render_ms": 95.51,
+          "total_ms": 157.96,
+          "svg_bytes": 2903940,
+          "process_rss_mib": 55.67
+        },
+        {
+          "yaml_bytes": 76542,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 58.19,
+          "projection_ms": 0.52,
+          "render_ms": 88.75,
+          "total_ms": 147.47,
+          "svg_bytes": 2903940,
+          "process_rss_mib": 55.45
+        }
+      ],
+      "median_ms": 147.47,
+      "max_ms": 157.96,
+      "max_rss_mib": 55.67
+    },
+    {
+      "name": "rows-601",
+      "runs": [
+        {
+          "yaml_bytes": 76577,
+          "status": "too_large",
+          "devices": 20,
+          "elements": 1072,
+          "display": {
+            "devices": 20,
+            "rows": 601,
+            "connections": 1010,
+            "elements": 1072,
+            "groups": 41
+          },
+          "parse_ms": 58.81,
+          "projection_ms": 0.51,
+          "render_ms": 0.0,
+          "total_ms": 59.32,
+          "svg_bytes": 0,
+          "process_rss_mib": 40.32
+        },
+        {
+          "yaml_bytes": 76577,
+          "status": "too_large",
+          "devices": 20,
+          "elements": 1072,
+          "display": {
+            "devices": 20,
+            "rows": 601,
+            "connections": 1010,
+            "elements": 1072,
+            "groups": 41
+          },
+          "parse_ms": 57.35,
+          "projection_ms": 0.51,
+          "render_ms": 0.0,
+          "total_ms": 57.87,
+          "svg_bytes": 0,
+          "process_rss_mib": 40.44
+        },
+        {
+          "yaml_bytes": 76577,
+          "status": "too_large",
+          "devices": 20,
+          "elements": 1072,
+          "display": {
+            "devices": 20,
+            "rows": 601,
+            "connections": 1010,
+            "elements": 1072,
+            "groups": 41
+          },
+          "parse_ms": 59.25,
+          "projection_ms": 0.52,
+          "render_ms": 0.0,
+          "total_ms": 59.77,
+          "svg_bytes": 0,
+          "process_rss_mib": 40.36
+        }
+      ],
+      "median_ms": 59.32,
+      "max_ms": 59.77,
+      "max_rss_mib": 40.44
+    },
+    {
+      "name": "rows-600-long-labels",
+      "runs": [
+        {
+          "yaml_bytes": 171122,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 60.99,
+          "projection_ms": 0.51,
+          "render_ms": 97.11,
+          "total_ms": 158.61,
+          "svg_bytes": 3307174,
+          "process_rss_mib": 57.69
+        },
+        {
+          "yaml_bytes": 171122,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 59.92,
+          "projection_ms": 0.51,
+          "render_ms": 97.01,
+          "total_ms": 157.44,
+          "svg_bytes": 3307174,
+          "process_rss_mib": 57.3
+        },
+        {
+          "yaml_bytes": 171122,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 60.63,
+          "projection_ms": 0.52,
+          "render_ms": 98.7,
+          "total_ms": 159.85,
+          "svg_bytes": 3307174,
+          "process_rss_mib": 57.29
+        }
+      ],
+      "median_ms": 158.61,
+      "max_ms": 159.85,
+      "max_rss_mib": 57.69
+    },
+    {
+      "name": "dense-17-ports-64-vlans",
+      "runs": [
+        {
+          "yaml_bytes": 18829,
+          "status": "ready",
+          "devices": 1,
+          "elements": 152,
+          "display": {
+            "devices": 1,
+            "rows": 51,
+            "connections": 1156,
+            "elements": 152,
+            "groups": 66
+          },
+          "parse_ms": 14.18,
+          "projection_ms": 0.42,
+          "render_ms": 28.91,
+          "total_ms": 43.5,
+          "svg_bytes": 1337175,
+          "process_rss_mib": 45.02
+        },
+        {
+          "yaml_bytes": 18829,
+          "status": "ready",
+          "devices": 1,
+          "elements": 152,
+          "display": {
+            "devices": 1,
+            "rows": 51,
+            "connections": 1156,
+            "elements": 152,
+            "groups": 66
+          },
+          "parse_ms": 14.35,
+          "projection_ms": 0.42,
+          "render_ms": 28.53,
+          "total_ms": 43.29,
+          "svg_bytes": 1337175,
+          "process_rss_mib": 44.88
+        },
+        {
+          "yaml_bytes": 18829,
+          "status": "ready",
+          "devices": 1,
+          "elements": 152,
+          "display": {
+            "devices": 1,
+            "rows": 51,
+            "connections": 1156,
+            "elements": 152,
+            "groups": 66
+          },
+          "parse_ms": 23.6,
+          "projection_ms": 0.42,
+          "render_ms": 38.72,
+          "total_ms": 62.73,
+          "svg_bytes": 1337175,
+          "process_rss_mib": 44.56
+        }
+      ],
+      "median_ms": 43.5,
+      "max_ms": 62.73,
+      "max_rss_mib": 45.02
+    },
+    {
+      "name": "dense-18-ports-64-vlans",
+      "runs": [
+        {
+          "yaml_bytes": 19817,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 157,
+          "display": {
+            "devices": 1,
+            "rows": 54,
+            "connections": 1224,
+            "elements": 157,
+            "groups": 66
+          },
+          "parse_ms": 14.7,
+          "projection_ms": 0.43,
+          "render_ms": 0.0,
+          "total_ms": 15.13,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.94
+        },
+        {
+          "yaml_bytes": 19817,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 157,
+          "display": {
+            "devices": 1,
+            "rows": 54,
+            "connections": 1224,
+            "elements": 157,
+            "groups": 66
+          },
+          "parse_ms": 14.9,
+          "projection_ms": 0.46,
+          "render_ms": 0.0,
+          "total_ms": 15.37,
+          "svg_bytes": 0,
+          "process_rss_mib": 38.83
+        },
+        {
+          "yaml_bytes": 19817,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 157,
+          "display": {
+            "devices": 1,
+            "rows": 54,
+            "connections": 1224,
+            "elements": 157,
+            "groups": 66
+          },
+          "parse_ms": 14.33,
+          "projection_ms": 0.45,
+          "render_ms": 0.0,
+          "total_ms": 14.79,
+          "svg_bytes": 0,
+          "process_rss_mib": 39.16
+        }
+      ],
+      "median_ms": 15.13,
+      "max_ms": 15.37,
+      "max_rss_mib": 39.16
+    },
+    {
+      "name": "elements-1600",
+      "runs": [
+        {
+          "yaml_bytes": 153623,
+          "status": "ready",
+          "devices": 1,
+          "elements": 1600,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1600,
+            "groups": 3
+          },
+          "parse_ms": 142.33,
+          "projection_ms": 0.29,
+          "render_ms": 48.37,
+          "total_ms": 191.0,
+          "svg_bytes": 193909,
+          "process_rss_mib": 42.67
+        },
+        {
+          "yaml_bytes": 153623,
+          "status": "ready",
+          "devices": 1,
+          "elements": 1600,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1600,
+            "groups": 3
+          },
+          "parse_ms": 145.02,
+          "projection_ms": 0.29,
+          "render_ms": 47.17,
+          "total_ms": 192.49,
+          "svg_bytes": 193909,
+          "process_rss_mib": 42.67
+        },
+        {
+          "yaml_bytes": 153623,
+          "status": "ready",
+          "devices": 1,
+          "elements": 1600,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1600,
+            "groups": 3
+          },
+          "parse_ms": 155.82,
+          "projection_ms": 0.31,
+          "render_ms": 47.0,
+          "total_ms": 203.14,
+          "svg_bytes": 193909,
+          "process_rss_mib": 43.01
+        }
+      ],
+      "median_ms": 192.49,
+      "max_ms": 203.14,
+      "max_rss_mib": 43.01
+    },
+    {
+      "name": "elements-1601",
+      "runs": [
+        {
+          "yaml_bytes": 153719,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 1601,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1601,
+            "groups": 3
+          },
+          "parse_ms": 134.2,
+          "projection_ms": 0.28,
+          "render_ms": 0.0,
+          "total_ms": 134.47,
+          "svg_bytes": 0,
+          "process_rss_mib": 42.74
+        },
+        {
+          "yaml_bytes": 153719,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 1601,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1601,
+            "groups": 3
+          },
+          "parse_ms": 136.09,
+          "projection_ms": 0.28,
+          "render_ms": 0.0,
+          "total_ms": 136.37,
+          "svg_bytes": 0,
+          "process_rss_mib": 42.26
+        },
+        {
+          "yaml_bytes": 153719,
+          "status": "too_large",
+          "devices": 1,
+          "elements": 1601,
+          "display": {
+            "devices": 1,
+            "rows": 3,
+            "connections": 5,
+            "elements": 1601,
+            "groups": 3
+          },
+          "parse_ms": 148.15,
+          "projection_ms": 0.34,
+          "render_ms": 0.0,
+          "total_ms": 148.49,
+          "svg_bytes": 0,
+          "process_rss_mib": 42.36
+        }
+      ],
+      "median_ms": 136.37,
+      "max_ms": 148.49,
+      "max_rss_mib": 42.74
+    }
+  ],
+  "parallel_two": {
+    "wall_ms": 4753.72,
+    "runs": [
+      {
+        "yaml_bytes": 58673,
+        "status": "ready",
+        "devices": 15,
+        "elements": 720,
+        "display": {
+          "devices": 15,
+          "rows": 414,
+          "connections": 662,
+          "elements": 720,
+          "groups": 10
+        },
+        "parse_ms": 341.47,
+        "projection_ms": 1.96,
+        "render_ms": 1361.06,
+        "total_ms": 1704.49,
+        "svg_bytes": 1791239,
+        "process_rss_mib": 48.43
+      },
+      {
+        "yaml_bytes": 58673,
+        "status": "ready",
+        "devices": 15,
+        "elements": 720,
+        "display": {
+          "devices": 15,
+          "rows": 414,
+          "connections": 662,
+          "elements": 720,
+          "groups": 10
+        },
+        "parse_ms": 388.52,
+        "projection_ms": 2.09,
+        "render_ms": 1332.92,
+        "total_ms": 1723.53,
+        "svg_bytes": 1791239,
+        "process_rss_mib": 48.34
+      }
+    ]
+  },
+  "container_peak_mib": 91.68
+}

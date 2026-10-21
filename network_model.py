@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 MAX_YAML_BYTES = 2 * 1024 * 1024
 MAX_DEVICES = 256
+MAX_DEVICE_PORTS = 64
 MAX_ELEMENTS = 10000
 MAX_YAML_NODES = 200000
 MAX_YAML_DEPTH = 48

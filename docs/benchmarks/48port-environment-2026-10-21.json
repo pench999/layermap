@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-21",
+  "cpu_quota": 1,
+  "memory_limit_mib": 512,
+  "web_cgroup_memory_peak_bytes": 167391232,
+  "web_cgroup_memory_peak_mib": 159.63671875,
+  "measurement_note": "Running web container across validation including repeated test runs; cgroup memory.peak",
+  "python_tests_passed": 103,
+  "playwright_tests_passed": 91,
+  "playwright_duration": "7.1m"
+}

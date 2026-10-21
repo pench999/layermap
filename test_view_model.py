@@ -51,7 +51,7 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(len(model['l1']['links']),2)
 
     def test_correspondence_projection_keeps_the_full_component_and_references(self):
-        model=make_model(1,7,dense=True);ix=validate(model)
+        model=make_model(1,20,dense=True);ix=validate(model)
         self.assertEqual(prepare_view(model,ix)[1]['status'],'too_large')
         projected,display,catalog=prepare_view(model,ix,ViewScope(trace_root=TraceRoot(layer='l3',id='d000.ip00')))
         self.assertEqual(display['status'],'ready')
@@ -60,14 +60,14 @@ class ViewTests(unittest.TestCase):
         self.assertEqual(len(projected['l2']['vlans']),64)
         self.assertEqual(projected['l2']['bridges'][0]['members'],['d000.eth00'])
         validate(projected);render(projected)
-        self.assertEqual(len(catalog['focus_options']),21)
+        self.assertEqual(len(catalog['focus_options']),60)
 
     def test_display_budget_applies_to_the_layer_being_drawn(self):
-        model=make_model(8,9);ix=validate(model)
+        model=make_model(20,11);ix=validate(model)
         self.assertEqual(prepare_view(model,ix)[1]['status'],'too_large')
         projected,display,_=prepare_view(model,ix,layers=['l1'])
         self.assertEqual(display['status'],'ready')
-        self.assertEqual(display['counts']['rows'],72)
+        self.assertEqual(display['counts']['rows'],220)
         render(projected,layers=['l1'])
 
     def test_hidden_invalid_references_are_still_rejected(self):

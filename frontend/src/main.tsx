@@ -418,7 +418,7 @@ function App() {
     </section>
     <MergeWorkspace key={'MergeWorkspace-'+documentEpoch} source={source} maxBytes={limits.yaml_bytes} onApply={applyMerge}/>
     <VpnWorkspace key={'VpnWorkspace-'+documentEpoch} source={source} maxBytes={limits.yaml_bytes} onApply={applyProposal} onSample={applyMerge}/>
-    <InputSupport key={'InputSupport-'+documentEpoch} source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
+    <InputSupport maxPorts={limits.wizard_ports} key={'InputSupport-'+documentEpoch} source={source} valid={phase==='valid'} onApply={applyProposal} onUndo={undoForm} canUndo={!!undoState&&!undoState.conflict} busyUndo={busyUndo} undoReason={undoState?.conflict?'追加部分が手動編集されたため、安全のためフォームの取り消しを停止しています。エディターのCtrl / ⌘ + Zを利用してください。':''}/>
     <main className="workspace">
       <section className="editor-panel" aria-label="構成データ">
         <div className="panel-header"><div><span className="file-icon">≡</span> 構成データ <span className="file-type">YAML</span></div><span className={'saved '+(dirty?'unsaved':'')}>{dirty?'● 未保存':'保存済み'}</span></div>

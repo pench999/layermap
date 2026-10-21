@@ -3,14 +3,14 @@ from redundancy import stack_members, stack_owners
 from collections import Counter, defaultdict, deque
 from typing import Literal
 from pydantic import Field
-from network_model import interface_vlans, Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_ELEMENTS, all_l1_connections, endpoint_owner, endpoint_label
+from network_model import interface_vlans, Record, Id, ModelError, MAX_YAML_BYTES, MAX_DEVICES, MAX_DEVICE_PORTS, MAX_ELEMENTS, all_l1_connections, endpoint_owner, endpoint_label
 
 MAX_VIEW_DEVICES = 24
-MAX_VIEW_ROWS = 200
-MAX_VIEW_CONNECTIONS = 400
-MAX_VIEW_ELEMENTS = 500
+MAX_VIEW_ROWS = 600
+MAX_VIEW_CONNECTIONS = 1200
+MAX_VIEW_ELEMENTS = 1600
 MAX_VIEW_GROUPS = 80
-MAX_SVG_BYTES = 4 * 1024 * 1024
+MAX_SVG_BYTES = 8 * 1024 * 1024
 MAX_HTTP_BYTES = 8 * 1024 * 1024
 MAX_RENDER_JOBS = 2
 
@@ -30,7 +30,7 @@ class ViewScope(Record):
 
 
 def limits():
-    return dict(yaml_bytes=MAX_YAML_BYTES, devices=MAX_DEVICES, elements=MAX_ELEMENTS,
+    return dict(yaml_bytes=MAX_YAML_BYTES, devices=MAX_DEVICES, elements=MAX_ELEMENTS, wizard_ports=MAX_DEVICE_PORTS,
                 view_devices=MAX_VIEW_DEVICES, view_rows=MAX_VIEW_ROWS,
                 view_connections=MAX_VIEW_CONNECTIONS, view_elements=MAX_VIEW_ELEMENTS,
                 view_groups=MAX_VIEW_GROUPS, svg_bytes=MAX_SVG_BYTES,

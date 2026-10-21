@@ -1,0 +1,2885 @@
+schema: lan-example/v1
+name: 48ポートスイッチ3台＋接続先の負荷試験
+scope: 架空構成。実機の設定・アドレスではありません。
+devices:
+- id: sw01
+  name: SW01
+  role: l2-switch
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-sw01
+  groups:
+  - switches
+  - 48-port
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: sw02
+  name: SW02
+  role: l2-switch
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-sw02
+  groups:
+  - switches
+  - 48-port
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: sw03
+  name: SW03
+  role: l2-switch
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-sw03
+  groups:
+  - switches
+  - 48-port
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host01
+  name: HOST01
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host01
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host02
+  name: HOST02
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host02
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host03
+  name: HOST03
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host03
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host04
+  name: HOST04
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host04
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host05
+  name: HOST05
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host05
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host06
+  name: HOST06
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host06
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host07
+  name: HOST07
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host07
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host08
+  name: HOST08
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host08
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host09
+  name: HOST09
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host09
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host10
+  name: HOST10
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host10
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host11
+  name: HOST11
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host11
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+- id: host12
+  name: HOST12
+  role: endpoint
+  manufacturer: Synthetic
+  model: Load-test only
+  serial_number: FAKE-host12
+  groups:
+  - hosts
+  location:
+    site: 負荷試験拠点
+    rack: R1
+l1:
+  ports:
+  - id: sw01.p01
+    device: sw01
+    name: Gi1/0/1
+    kind: wired
+  - id: sw01.p02
+    device: sw01
+    name: Gi1/0/2
+    kind: wired
+  - id: sw01.p03
+    device: sw01
+    name: Gi1/0/3
+    kind: wired
+  - id: sw01.p04
+    device: sw01
+    name: Gi1/0/4
+    kind: wired
+  - id: sw01.p05
+    device: sw01
+    name: Gi1/0/5
+    kind: wired
+  - id: sw01.p06
+    device: sw01
+    name: Gi1/0/6
+    kind: wired
+  - id: sw01.p07
+    device: sw01
+    name: Gi1/0/7
+    kind: wired
+  - id: sw01.p08
+    device: sw01
+    name: Gi1/0/8
+    kind: wired
+  - id: sw01.p09
+    device: sw01
+    name: Gi1/0/9
+    kind: wired
+  - id: sw01.p10
+    device: sw01
+    name: Gi1/0/10
+    kind: wired
+  - id: sw01.p11
+    device: sw01
+    name: Gi1/0/11
+    kind: wired
+  - id: sw01.p12
+    device: sw01
+    name: Gi1/0/12
+    kind: wired
+  - id: sw01.p13
+    device: sw01
+    name: Gi1/0/13
+    kind: wired
+  - id: sw01.p14
+    device: sw01
+    name: Gi1/0/14
+    kind: wired
+  - id: sw01.p15
+    device: sw01
+    name: Gi1/0/15
+    kind: wired
+  - id: sw01.p16
+    device: sw01
+    name: Gi1/0/16
+    kind: wired
+  - id: sw01.p17
+    device: sw01
+    name: Gi1/0/17
+    kind: wired
+  - id: sw01.p18
+    device: sw01
+    name: Gi1/0/18
+    kind: wired
+  - id: sw01.p19
+    device: sw01
+    name: Gi1/0/19
+    kind: wired
+  - id: sw01.p20
+    device: sw01
+    name: Gi1/0/20
+    kind: wired
+  - id: sw01.p21
+    device: sw01
+    name: Gi1/0/21
+    kind: wired
+  - id: sw01.p22
+    device: sw01
+    name: Gi1/0/22
+    kind: wired
+  - id: sw01.p23
+    device: sw01
+    name: Gi1/0/23
+    kind: wired
+  - id: sw01.p24
+    device: sw01
+    name: Gi1/0/24
+    kind: wired
+  - id: sw01.p25
+    device: sw01
+    name: Gi1/0/25
+    kind: wired
+  - id: sw01.p26
+    device: sw01
+    name: Gi1/0/26
+    kind: wired
+  - id: sw01.p27
+    device: sw01
+    name: Gi1/0/27
+    kind: wired
+  - id: sw01.p28
+    device: sw01
+    name: Gi1/0/28
+    kind: wired
+  - id: sw01.p29
+    device: sw01
+    name: Gi1/0/29
+    kind: wired
+  - id: sw01.p30
+    device: sw01
+    name: Gi1/0/30
+    kind: wired
+  - id: sw01.p31
+    device: sw01
+    name: Gi1/0/31
+    kind: wired
+  - id: sw01.p32
+    device: sw01
+    name: Gi1/0/32
+    kind: wired
+  - id: sw01.p33
+    device: sw01
+    name: Gi1/0/33
+    kind: wired
+  - id: sw01.p34
+    device: sw01
+    name: Gi1/0/34
+    kind: wired
+  - id: sw01.p35
+    device: sw01
+    name: Gi1/0/35
+    kind: wired
+  - id: sw01.p36
+    device: sw01
+    name: Gi1/0/36
+    kind: wired
+  - id: sw01.p37
+    device: sw01
+    name: Gi1/0/37
+    kind: wired
+  - id: sw01.p38
+    device: sw01
+    name: Gi1/0/38
+    kind: wired
+  - id: sw01.p39
+    device: sw01
+    name: Gi1/0/39
+    kind: wired
+  - id: sw01.p40
+    device: sw01
+    name: Gi1/0/40
+    kind: wired
+  - id: sw01.p41
+    device: sw01
+    name: Gi1/0/41
+    kind: wired
+  - id: sw01.p42
+    device: sw01
+    name: Gi1/0/42
+    kind: wired
+  - id: sw01.p43
+    device: sw01
+    name: Gi1/0/43
+    kind: wired
+  - id: sw01.p44
+    device: sw01
+    name: Gi1/0/44
+    kind: wired
+  - id: sw01.p45
+    device: sw01
+    name: Gi1/0/45
+    kind: wired
+  - id: sw01.p46
+    device: sw01
+    name: Gi1/0/46
+    kind: wired
+  - id: sw01.p47
+    device: sw01
+    name: Gi1/0/47
+    kind: wired
+  - id: sw01.p48
+    device: sw01
+    name: Gi1/0/48
+    kind: wired
+  - id: sw02.p01
+    device: sw02
+    name: Gi1/0/1
+    kind: wired
+  - id: sw02.p02
+    device: sw02
+    name: Gi1/0/2
+    kind: wired
+  - id: sw02.p03
+    device: sw02
+    name: Gi1/0/3
+    kind: wired
+  - id: sw02.p04
+    device: sw02
+    name: Gi1/0/4
+    kind: wired
+  - id: sw02.p05
+    device: sw02
+    name: Gi1/0/5
+    kind: wired
+  - id: sw02.p06
+    device: sw02
+    name: Gi1/0/6
+    kind: wired
+  - id: sw02.p07
+    device: sw02
+    name: Gi1/0/7
+    kind: wired
+  - id: sw02.p08
+    device: sw02
+    name: Gi1/0/8
+    kind: wired
+  - id: sw02.p09
+    device: sw02
+    name: Gi1/0/9
+    kind: wired
+  - id: sw02.p10
+    device: sw02
+    name: Gi1/0/10
+    kind: wired
+  - id: sw02.p11
+    device: sw02
+    name: Gi1/0/11
+    kind: wired
+  - id: sw02.p12
+    device: sw02
+    name: Gi1/0/12
+    kind: wired
+  - id: sw02.p13
+    device: sw02
+    name: Gi1/0/13
+    kind: wired
+  - id: sw02.p14
+    device: sw02
+    name: Gi1/0/14
+    kind: wired
+  - id: sw02.p15
+    device: sw02
+    name: Gi1/0/15
+    kind: wired
+  - id: sw02.p16
+    device: sw02
+    name: Gi1/0/16
+    kind: wired
+  - id: sw02.p17
+    device: sw02
+    name: Gi1/0/17
+    kind: wired
+  - id: sw02.p18
+    device: sw02
+    name: Gi1/0/18
+    kind: wired
+  - id: sw02.p19
+    device: sw02
+    name: Gi1/0/19
+    kind: wired
+  - id: sw02.p20
+    device: sw02
+    name: Gi1/0/20
+    kind: wired
+  - id: sw02.p21
+    device: sw02
+    name: Gi1/0/21
+    kind: wired
+  - id: sw02.p22
+    device: sw02
+    name: Gi1/0/22
+    kind: wired
+  - id: sw02.p23
+    device: sw02
+    name: Gi1/0/23
+    kind: wired
+  - id: sw02.p24
+    device: sw02
+    name: Gi1/0/24
+    kind: wired
+  - id: sw02.p25
+    device: sw02
+    name: Gi1/0/25
+    kind: wired
+  - id: sw02.p26
+    device: sw02
+    name: Gi1/0/26
+    kind: wired
+  - id: sw02.p27
+    device: sw02
+    name: Gi1/0/27
+    kind: wired
+  - id: sw02.p28
+    device: sw02
+    name: Gi1/0/28
+    kind: wired
+  - id: sw02.p29
+    device: sw02
+    name: Gi1/0/29
+    kind: wired
+  - id: sw02.p30
+    device: sw02
+    name: Gi1/0/30
+    kind: wired
+  - id: sw02.p31
+    device: sw02
+    name: Gi1/0/31
+    kind: wired
+  - id: sw02.p32
+    device: sw02
+    name: Gi1/0/32
+    kind: wired
+  - id: sw02.p33
+    device: sw02
+    name: Gi1/0/33
+    kind: wired
+  - id: sw02.p34
+    device: sw02
+    name: Gi1/0/34
+    kind: wired
+  - id: sw02.p35
+    device: sw02
+    name: Gi1/0/35
+    kind: wired
+  - id: sw02.p36
+    device: sw02
+    name: Gi1/0/36
+    kind: wired
+  - id: sw02.p37
+    device: sw02
+    name: Gi1/0/37
+    kind: wired
+  - id: sw02.p38
+    device: sw02
+    name: Gi1/0/38
+    kind: wired
+  - id: sw02.p39
+    device: sw02
+    name: Gi1/0/39
+    kind: wired
+  - id: sw02.p40
+    device: sw02
+    name: Gi1/0/40
+    kind: wired
+  - id: sw02.p41
+    device: sw02
+    name: Gi1/0/41
+    kind: wired
+  - id: sw02.p42
+    device: sw02
+    name: Gi1/0/42
+    kind: wired
+  - id: sw02.p43
+    device: sw02
+    name: Gi1/0/43
+    kind: wired
+  - id: sw02.p44
+    device: sw02
+    name: Gi1/0/44
+    kind: wired
+  - id: sw02.p45
+    device: sw02
+    name: Gi1/0/45
+    kind: wired
+  - id: sw02.p46
+    device: sw02
+    name: Gi1/0/46
+    kind: wired
+  - id: sw02.p47
+    device: sw02
+    name: Gi1/0/47
+    kind: wired
+  - id: sw02.p48
+    device: sw02
+    name: Gi1/0/48
+    kind: wired
+  - id: sw03.p01
+    device: sw03
+    name: Gi1/0/1
+    kind: wired
+  - id: sw03.p02
+    device: sw03
+    name: Gi1/0/2
+    kind: wired
+  - id: sw03.p03
+    device: sw03
+    name: Gi1/0/3
+    kind: wired
+  - id: sw03.p04
+    device: sw03
+    name: Gi1/0/4
+    kind: wired
+  - id: sw03.p05
+    device: sw03
+    name: Gi1/0/5
+    kind: wired
+  - id: sw03.p06
+    device: sw03
+    name: Gi1/0/6
+    kind: wired
+  - id: sw03.p07
+    device: sw03
+    name: Gi1/0/7
+    kind: wired
+  - id: sw03.p08
+    device: sw03
+    name: Gi1/0/8
+    kind: wired
+  - id: sw03.p09
+    device: sw03
+    name: Gi1/0/9
+    kind: wired
+  - id: sw03.p10
+    device: sw03
+    name: Gi1/0/10
+    kind: wired
+  - id: sw03.p11
+    device: sw03
+    name: Gi1/0/11
+    kind: wired
+  - id: sw03.p12
+    device: sw03
+    name: Gi1/0/12
+    kind: wired
+  - id: sw03.p13
+    device: sw03
+    name: Gi1/0/13
+    kind: wired
+  - id: sw03.p14
+    device: sw03
+    name: Gi1/0/14
+    kind: wired
+  - id: sw03.p15
+    device: sw03
+    name: Gi1/0/15
+    kind: wired
+  - id: sw03.p16
+    device: sw03
+    name: Gi1/0/16
+    kind: wired
+  - id: sw03.p17
+    device: sw03
+    name: Gi1/0/17
+    kind: wired
+  - id: sw03.p18
+    device: sw03
+    name: Gi1/0/18
+    kind: wired
+  - id: sw03.p19
+    device: sw03
+    name: Gi1/0/19
+    kind: wired
+  - id: sw03.p20
+    device: sw03
+    name: Gi1/0/20
+    kind: wired
+  - id: sw03.p21
+    device: sw03
+    name: Gi1/0/21
+    kind: wired
+  - id: sw03.p22
+    device: sw03
+    name: Gi1/0/22
+    kind: wired
+  - id: sw03.p23
+    device: sw03
+    name: Gi1/0/23
+    kind: wired
+  - id: sw03.p24
+    device: sw03
+    name: Gi1/0/24
+    kind: wired
+  - id: sw03.p25
+    device: sw03
+    name: Gi1/0/25
+    kind: wired
+  - id: sw03.p26
+    device: sw03
+    name: Gi1/0/26
+    kind: wired
+  - id: sw03.p27
+    device: sw03
+    name: Gi1/0/27
+    kind: wired
+  - id: sw03.p28
+    device: sw03
+    name: Gi1/0/28
+    kind: wired
+  - id: sw03.p29
+    device: sw03
+    name: Gi1/0/29
+    kind: wired
+  - id: sw03.p30
+    device: sw03
+    name: Gi1/0/30
+    kind: wired
+  - id: sw03.p31
+    device: sw03
+    name: Gi1/0/31
+    kind: wired
+  - id: sw03.p32
+    device: sw03
+    name: Gi1/0/32
+    kind: wired
+  - id: sw03.p33
+    device: sw03
+    name: Gi1/0/33
+    kind: wired
+  - id: sw03.p34
+    device: sw03
+    name: Gi1/0/34
+    kind: wired
+  - id: sw03.p35
+    device: sw03
+    name: Gi1/0/35
+    kind: wired
+  - id: sw03.p36
+    device: sw03
+    name: Gi1/0/36
+    kind: wired
+  - id: sw03.p37
+    device: sw03
+    name: Gi1/0/37
+    kind: wired
+  - id: sw03.p38
+    device: sw03
+    name: Gi1/0/38
+    kind: wired
+  - id: sw03.p39
+    device: sw03
+    name: Gi1/0/39
+    kind: wired
+  - id: sw03.p40
+    device: sw03
+    name: Gi1/0/40
+    kind: wired
+  - id: sw03.p41
+    device: sw03
+    name: Gi1/0/41
+    kind: wired
+  - id: sw03.p42
+    device: sw03
+    name: Gi1/0/42
+    kind: wired
+  - id: sw03.p43
+    device: sw03
+    name: Gi1/0/43
+    kind: wired
+  - id: sw03.p44
+    device: sw03
+    name: Gi1/0/44
+    kind: wired
+  - id: sw03.p45
+    device: sw03
+    name: Gi1/0/45
+    kind: wired
+  - id: sw03.p46
+    device: sw03
+    name: Gi1/0/46
+    kind: wired
+  - id: sw03.p47
+    device: sw03
+    name: Gi1/0/47
+    kind: wired
+  - id: sw03.p48
+    device: sw03
+    name: Gi1/0/48
+    kind: wired
+  - id: host01.eth0
+    device: host01
+    name: Ethernet0
+    kind: wired
+  - id: host01.eth1
+    device: host01
+    name: Ethernet1
+    kind: wired
+  - id: host01.eth2
+    device: host01
+    name: Ethernet2
+    kind: wired
+  - id: host01.eth3
+    device: host01
+    name: Ethernet3
+    kind: wired
+  - id: host02.eth0
+    device: host02
+    name: Ethernet0
+    kind: wired
+  - id: host02.eth1
+    device: host02
+    name: Ethernet1
+    kind: wired
+  - id: host02.eth2
+    device: host02
+    name: Ethernet2
+    kind: wired
+  - id: host02.eth3
+    device: host02
+    name: Ethernet3
+    kind: wired
+  - id: host03.eth0
+    device: host03
+    name: Ethernet0
+    kind: wired
+  - id: host03.eth1
+    device: host03
+    name: Ethernet1
+    kind: wired
+  - id: host03.eth2
+    device: host03
+    name: Ethernet2
+    kind: wired
+  - id: host03.eth3
+    device: host03
+    name: Ethernet3
+    kind: wired
+  - id: host04.eth0
+    device: host04
+    name: Ethernet0
+    kind: wired
+  - id: host04.eth1
+    device: host04
+    name: Ethernet1
+    kind: wired
+  - id: host04.eth2
+    device: host04
+    name: Ethernet2
+    kind: wired
+  - id: host04.eth3
+    device: host04
+    name: Ethernet3
+    kind: wired
+  - id: host05.eth0
+    device: host05
+    name: Ethernet0
+    kind: wired
+  - id: host05.eth1
+    device: host05
+    name: Ethernet1
+    kind: wired
+  - id: host05.eth2
+    device: host05
+    name: Ethernet2
+    kind: wired
+  - id: host05.eth3
+    device: host05
+    name: Ethernet3
+    kind: wired
+  - id: host06.eth0
+    device: host06
+    name: Ethernet0
+    kind: wired
+  - id: host06.eth1
+    device: host06
+    name: Ethernet1
+    kind: wired
+  - id: host06.eth2
+    device: host06
+    name: Ethernet2
+    kind: wired
+  - id: host06.eth3
+    device: host06
+    name: Ethernet3
+    kind: wired
+  - id: host07.eth0
+    device: host07
+    name: Ethernet0
+    kind: wired
+  - id: host07.eth1
+    device: host07
+    name: Ethernet1
+    kind: wired
+  - id: host07.eth2
+    device: host07
+    name: Ethernet2
+    kind: wired
+  - id: host07.eth3
+    device: host07
+    name: Ethernet3
+    kind: wired
+  - id: host08.eth0
+    device: host08
+    name: Ethernet0
+    kind: wired
+  - id: host08.eth1
+    device: host08
+    name: Ethernet1
+    kind: wired
+  - id: host08.eth2
+    device: host08
+    name: Ethernet2
+    kind: wired
+  - id: host08.eth3
+    device: host08
+    name: Ethernet3
+    kind: wired
+  - id: host09.eth0
+    device: host09
+    name: Ethernet0
+    kind: wired
+  - id: host09.eth1
+    device: host09
+    name: Ethernet1
+    kind: wired
+  - id: host09.eth2
+    device: host09
+    name: Ethernet2
+    kind: wired
+  - id: host09.eth3
+    device: host09
+    name: Ethernet3
+    kind: wired
+  - id: host10.eth0
+    device: host10
+    name: Ethernet0
+    kind: wired
+  - id: host10.eth1
+    device: host10
+    name: Ethernet1
+    kind: wired
+  - id: host10.eth2
+    device: host10
+    name: Ethernet2
+    kind: wired
+  - id: host10.eth3
+    device: host10
+    name: Ethernet3
+    kind: wired
+  - id: host11.eth0
+    device: host11
+    name: Ethernet0
+    kind: wired
+  - id: host11.eth1
+    device: host11
+    name: Ethernet1
+    kind: wired
+  - id: host11.eth2
+    device: host11
+    name: Ethernet2
+    kind: wired
+  - id: host11.eth3
+    device: host11
+    name: Ethernet3
+    kind: wired
+  - id: host12.eth0
+    device: host12
+    name: Ethernet0
+    kind: wired
+  - id: host12.eth1
+    device: host12
+    name: Ethernet1
+    kind: wired
+  - id: host12.eth2
+    device: host12
+    name: Ethernet2
+    kind: wired
+  - id: host12.eth3
+    device: host12
+    name: Ethernet3
+    kind: wired
+  links:
+  - id: host01-cable0
+    endpoints:
+    - host01.eth0
+    - sw01.p01
+    medium: copper
+    speed: 1Gbps
+  - id: host01-cable1
+    endpoints:
+    - host01.eth1
+    - sw02.p01
+    medium: copper
+    speed: 1Gbps
+  - id: host01-cable2
+    endpoints:
+    - host01.eth2
+    - sw03.p01
+    medium: copper
+    speed: 1Gbps
+  - id: host01-cable3
+    endpoints:
+    - host01.eth3
+    - sw03.p02
+    medium: copper
+    speed: 1Gbps
+  - id: host02-cable0
+    endpoints:
+    - host02.eth0
+    - sw01.p02
+    medium: copper
+    speed: 1Gbps
+  - id: host02-cable1
+    endpoints:
+    - host02.eth1
+    - sw02.p02
+    medium: copper
+    speed: 1Gbps
+  - id: host02-cable2
+    endpoints:
+    - host02.eth2
+    - sw03.p03
+    medium: copper
+    speed: 1Gbps
+  - id: host02-cable3
+    endpoints:
+    - host02.eth3
+    - sw03.p04
+    medium: copper
+    speed: 1Gbps
+  - id: host03-cable0
+    endpoints:
+    - host03.eth0
+    - sw01.p03
+    medium: copper
+    speed: 1Gbps
+  - id: host03-cable1
+    endpoints:
+    - host03.eth1
+    - sw02.p03
+    medium: copper
+    speed: 1Gbps
+  - id: host03-cable2
+    endpoints:
+    - host03.eth2
+    - sw03.p05
+    medium: copper
+    speed: 1Gbps
+  - id: host03-cable3
+    endpoints:
+    - host03.eth3
+    - sw03.p06
+    medium: copper
+    speed: 1Gbps
+  - id: host04-cable0
+    endpoints:
+    - host04.eth0
+    - sw01.p04
+    medium: copper
+    speed: 1Gbps
+  - id: host04-cable1
+    endpoints:
+    - host04.eth1
+    - sw02.p04
+    medium: copper
+    speed: 1Gbps
+  - id: host04-cable2
+    endpoints:
+    - host04.eth2
+    - sw03.p07
+    medium: copper
+    speed: 1Gbps
+  - id: host04-cable3
+    endpoints:
+    - host04.eth3
+    - sw03.p08
+    medium: copper
+    speed: 1Gbps
+  - id: host05-cable0
+    endpoints:
+    - host05.eth0
+    - sw01.p05
+    medium: copper
+    speed: 1Gbps
+  - id: host05-cable1
+    endpoints:
+    - host05.eth1
+    - sw02.p05
+    medium: copper
+    speed: 1Gbps
+  - id: host05-cable2
+    endpoints:
+    - host05.eth2
+    - sw03.p09
+    medium: copper
+    speed: 1Gbps
+  - id: host05-cable3
+    endpoints:
+    - host05.eth3
+    - sw03.p10
+    medium: copper
+    speed: 1Gbps
+  - id: host06-cable0
+    endpoints:
+    - host06.eth0
+    - sw01.p06
+    medium: copper
+    speed: 1Gbps
+  - id: host06-cable1
+    endpoints:
+    - host06.eth1
+    - sw02.p06
+    medium: copper
+    speed: 1Gbps
+  - id: host06-cable2
+    endpoints:
+    - host06.eth2
+    - sw03.p11
+    medium: copper
+    speed: 1Gbps
+  - id: host06-cable3
+    endpoints:
+    - host06.eth3
+    - sw03.p12
+    medium: copper
+    speed: 1Gbps
+  - id: host07-cable0
+    endpoints:
+    - host07.eth0
+    - sw01.p07
+    medium: copper
+    speed: 1Gbps
+  - id: host07-cable1
+    endpoints:
+    - host07.eth1
+    - sw02.p07
+    medium: copper
+    speed: 1Gbps
+  - id: host07-cable2
+    endpoints:
+    - host07.eth2
+    - sw03.p13
+    medium: copper
+    speed: 1Gbps
+  - id: host07-cable3
+    endpoints:
+    - host07.eth3
+    - sw03.p14
+    medium: copper
+    speed: 1Gbps
+  - id: host08-cable0
+    endpoints:
+    - host08.eth0
+    - sw01.p08
+    medium: copper
+    speed: 1Gbps
+  - id: host08-cable1
+    endpoints:
+    - host08.eth1
+    - sw02.p08
+    medium: copper
+    speed: 1Gbps
+  - id: host08-cable2
+    endpoints:
+    - host08.eth2
+    - sw03.p15
+    medium: copper
+    speed: 1Gbps
+  - id: host08-cable3
+    endpoints:
+    - host08.eth3
+    - sw03.p16
+    medium: copper
+    speed: 1Gbps
+  - id: host09-cable0
+    endpoints:
+    - host09.eth0
+    - sw01.p09
+    medium: copper
+    speed: 1Gbps
+  - id: host09-cable1
+    endpoints:
+    - host09.eth1
+    - sw02.p09
+    medium: copper
+    speed: 1Gbps
+  - id: host09-cable2
+    endpoints:
+    - host09.eth2
+    - sw03.p17
+    medium: copper
+    speed: 1Gbps
+  - id: host09-cable3
+    endpoints:
+    - host09.eth3
+    - sw03.p18
+    medium: copper
+    speed: 1Gbps
+  - id: host10-cable0
+    endpoints:
+    - host10.eth0
+    - sw01.p10
+    medium: copper
+    speed: 1Gbps
+  - id: host10-cable1
+    endpoints:
+    - host10.eth1
+    - sw02.p10
+    medium: copper
+    speed: 1Gbps
+  - id: host10-cable2
+    endpoints:
+    - host10.eth2
+    - sw03.p19
+    medium: copper
+    speed: 1Gbps
+  - id: host10-cable3
+    endpoints:
+    - host10.eth3
+    - sw03.p20
+    medium: copper
+    speed: 1Gbps
+  - id: host11-cable0
+    endpoints:
+    - host11.eth0
+    - sw01.p11
+    medium: copper
+    speed: 1Gbps
+  - id: host11-cable1
+    endpoints:
+    - host11.eth1
+    - sw02.p11
+    medium: copper
+    speed: 1Gbps
+  - id: host11-cable2
+    endpoints:
+    - host11.eth2
+    - sw03.p21
+    medium: copper
+    speed: 1Gbps
+  - id: host11-cable3
+    endpoints:
+    - host11.eth3
+    - sw03.p22
+    medium: copper
+    speed: 1Gbps
+  - id: host12-cable0
+    endpoints:
+    - host12.eth0
+    - sw01.p12
+    medium: copper
+    speed: 1Gbps
+  - id: host12-cable1
+    endpoints:
+    - host12.eth1
+    - sw02.p12
+    medium: copper
+    speed: 1Gbps
+  - id: host12-cable2
+    endpoints:
+    - host12.eth2
+    - sw03.p23
+    medium: copper
+    speed: 1Gbps
+  - id: host12-cable3
+    endpoints:
+    - host12.eth3
+    - sw03.p24
+    medium: copper
+    speed: 1Gbps
+  - id: uplink-1
+    endpoints:
+    - sw01.p47
+    - sw03.p47
+    medium: fiber
+    speed: 10Gbps
+  - id: uplink-2
+    endpoints:
+    - sw02.p48
+    - sw03.p48
+    medium: fiber
+    speed: 10Gbps
+  connections: []
+l2:
+  vlans:
+  - id: v1
+    tag: 1
+    label: 管理
+  - id: v10
+    tag: 10
+    label: 検証
+  - id: v100
+    tag: 100
+    label: サービス
+  - id: v200
+    tag: 200
+    label: 業務
+  interfaces:
+  - id: sw01.p01.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p02.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p03.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p04.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p05.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p06.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p07.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p08.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p09.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p10.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p11.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p12.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v100
+  - id: sw01.p13.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p14.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p15.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p16.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p17.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p18.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p19.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p20.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p21.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p22.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p23.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p24.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p25.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p26.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p27.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p28.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p29.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p30.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p31.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p32.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p33.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p34.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p35.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p36.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p37.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p38.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p39.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p40.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p41.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p42.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p43.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p44.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p45.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p46.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.p47.l2
+    device: sw01
+    mode: trunk
+    tagged_vlans:
+    - v1
+    - v10
+    - v100
+    - v200
+  - id: sw01.p48.l2
+    device: sw01
+    mode: access
+    untagged_vlan: v1
+  - id: sw01.svi1
+    device: sw01
+    mode: svi
+    vlan: v1
+  - id: sw02.p01.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p02.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p03.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p04.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p05.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p06.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p07.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p08.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p09.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p10.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p11.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p12.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v100
+  - id: sw02.p13.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p14.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p15.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p16.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p17.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p18.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p19.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p20.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p21.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p22.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p23.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p24.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p25.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p26.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p27.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p28.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p29.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p30.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p31.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p32.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p33.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p34.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p35.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p36.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p37.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p38.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p39.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p40.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p41.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p42.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p43.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p44.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p45.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p46.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p47.l2
+    device: sw02
+    mode: access
+    untagged_vlan: v1
+  - id: sw02.p48.l2
+    device: sw02
+    mode: trunk
+    tagged_vlans:
+    - v1
+    - v10
+    - v100
+    - v200
+  - id: sw02.svi1
+    device: sw02
+    mode: svi
+    vlan: v1
+  - id: sw03.p01.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p02.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p03.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p04.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p05.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p06.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p07.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p08.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p09.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p10.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p11.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p12.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p13.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p14.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p15.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p16.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p17.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p18.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p19.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p20.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p21.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p22.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p23.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p24.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v200
+  - id: sw03.p25.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p26.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p27.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p28.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p29.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p30.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p31.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p32.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p33.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p34.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p35.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p36.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p37.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p38.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p39.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p40.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p41.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p42.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p43.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p44.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p45.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p46.l2
+    device: sw03
+    mode: access
+    untagged_vlan: v1
+  - id: sw03.p47.l2
+    device: sw03
+    mode: trunk
+    tagged_vlans:
+    - v1
+    - v10
+    - v100
+    - v200
+  - id: sw03.p48.l2
+    device: sw03
+    mode: trunk
+    tagged_vlans:
+    - v1
+    - v10
+    - v100
+    - v200
+  - id: sw03.svi1
+    device: sw03
+    mode: svi
+    vlan: v1
+  - id: host01.bond0
+    device: host01
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host01.eth0
+  - id: host01.management
+    device: host01
+    mode: access
+    untagged_vlan: v1
+  - id: host01.business
+    device: host01
+    mode: access
+    untagged_vlan: v200
+  - id: host02.bond0
+    device: host02
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host02.eth0
+  - id: host02.management
+    device: host02
+    mode: access
+    untagged_vlan: v1
+  - id: host02.business
+    device: host02
+    mode: access
+    untagged_vlan: v200
+  - id: host03.bond0
+    device: host03
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host03.eth0
+  - id: host03.management
+    device: host03
+    mode: access
+    untagged_vlan: v1
+  - id: host03.business
+    device: host03
+    mode: access
+    untagged_vlan: v200
+  - id: host04.bond0
+    device: host04
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host04.eth0
+  - id: host04.management
+    device: host04
+    mode: access
+    untagged_vlan: v1
+  - id: host04.business
+    device: host04
+    mode: access
+    untagged_vlan: v200
+  - id: host05.bond0
+    device: host05
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host05.eth0
+  - id: host05.management
+    device: host05
+    mode: access
+    untagged_vlan: v1
+  - id: host05.business
+    device: host05
+    mode: access
+    untagged_vlan: v200
+  - id: host06.bond0
+    device: host06
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host06.eth0
+  - id: host06.management
+    device: host06
+    mode: access
+    untagged_vlan: v1
+  - id: host06.business
+    device: host06
+    mode: access
+    untagged_vlan: v200
+  - id: host07.bond0
+    device: host07
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host07.eth0
+  - id: host07.management
+    device: host07
+    mode: access
+    untagged_vlan: v1
+  - id: host07.business
+    device: host07
+    mode: access
+    untagged_vlan: v200
+  - id: host08.bond0
+    device: host08
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host08.eth0
+  - id: host08.management
+    device: host08
+    mode: access
+    untagged_vlan: v1
+  - id: host08.business
+    device: host08
+    mode: access
+    untagged_vlan: v200
+  - id: host09.bond0
+    device: host09
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host09.eth0
+  - id: host09.management
+    device: host09
+    mode: access
+    untagged_vlan: v1
+  - id: host09.business
+    device: host09
+    mode: access
+    untagged_vlan: v200
+  - id: host10.bond0
+    device: host10
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host10.eth0
+  - id: host10.management
+    device: host10
+    mode: access
+    untagged_vlan: v1
+  - id: host10.business
+    device: host10
+    mode: access
+    untagged_vlan: v200
+  - id: host11.bond0
+    device: host11
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host11.eth0
+  - id: host11.management
+    device: host11
+    mode: access
+    untagged_vlan: v1
+  - id: host11.business
+    device: host11
+    mode: access
+    untagged_vlan: v200
+  - id: host12.bond0
+    device: host12
+    mode: access
+    untagged_vlan: v100
+    aggregation:
+      kind: bond
+      mode: active_backup
+      primary_port: host12.eth0
+  - id: host12.management
+    device: host12
+    mode: access
+    untagged_vlan: v1
+  - id: host12.business
+    device: host12
+    mode: access
+    untagged_vlan: v200
+  bridges:
+  - id: sw01.bridge
+    device: sw01
+    members:
+    - sw01.p01.l2
+    - sw01.p02.l2
+    - sw01.p03.l2
+    - sw01.p04.l2
+    - sw01.p05.l2
+    - sw01.p06.l2
+    - sw01.p07.l2
+    - sw01.p08.l2
+    - sw01.p09.l2
+    - sw01.p10.l2
+    - sw01.p11.l2
+    - sw01.p12.l2
+    - sw01.p13.l2
+    - sw01.p14.l2
+    - sw01.p15.l2
+    - sw01.p16.l2
+    - sw01.p17.l2
+    - sw01.p18.l2
+    - sw01.p19.l2
+    - sw01.p20.l2
+    - sw01.p21.l2
+    - sw01.p22.l2
+    - sw01.p23.l2
+    - sw01.p24.l2
+    - sw01.p25.l2
+    - sw01.p26.l2
+    - sw01.p27.l2
+    - sw01.p28.l2
+    - sw01.p29.l2
+    - sw01.p30.l2
+    - sw01.p31.l2
+    - sw01.p32.l2
+    - sw01.p33.l2
+    - sw01.p34.l2
+    - sw01.p35.l2
+    - sw01.p36.l2
+    - sw01.p37.l2
+    - sw01.p38.l2
+    - sw01.p39.l2
+    - sw01.p40.l2
+    - sw01.p41.l2
+    - sw01.p42.l2
+    - sw01.p43.l2
+    - sw01.p44.l2
+    - sw01.p45.l2
+    - sw01.p46.l2
+    - sw01.p47.l2
+    - sw01.p48.l2
+    - sw01.svi1
+  - id: sw02.bridge
+    device: sw02
+    members:
+    - sw02.p01.l2
+    - sw02.p02.l2
+    - sw02.p03.l2
+    - sw02.p04.l2
+    - sw02.p05.l2
+    - sw02.p06.l2
+    - sw02.p07.l2
+    - sw02.p08.l2
+    - sw02.p09.l2
+    - sw02.p10.l2
+    - sw02.p11.l2
+    - sw02.p12.l2
+    - sw02.p13.l2
+    - sw02.p14.l2
+    - sw02.p15.l2
+    - sw02.p16.l2
+    - sw02.p17.l2
+    - sw02.p18.l2
+    - sw02.p19.l2
+    - sw02.p20.l2
+    - sw02.p21.l2
+    - sw02.p22.l2
+    - sw02.p23.l2
+    - sw02.p24.l2
+    - sw02.p25.l2
+    - sw02.p26.l2
+    - sw02.p27.l2
+    - sw02.p28.l2
+    - sw02.p29.l2
+    - sw02.p30.l2
+    - sw02.p31.l2
+    - sw02.p32.l2
+    - sw02.p33.l2
+    - sw02.p34.l2
+    - sw02.p35.l2
+    - sw02.p36.l2
+    - sw02.p37.l2
+    - sw02.p38.l2
+    - sw02.p39.l2
+    - sw02.p40.l2
+    - sw02.p41.l2
+    - sw02.p42.l2
+    - sw02.p43.l2
+    - sw02.p44.l2
+    - sw02.p45.l2
+    - sw02.p46.l2
+    - sw02.p47.l2
+    - sw02.p48.l2
+    - sw02.svi1
+  - id: sw03.bridge
+    device: sw03
+    members:
+    - sw03.p01.l2
+    - sw03.p02.l2
+    - sw03.p03.l2
+    - sw03.p04.l2
+    - sw03.p05.l2
+    - sw03.p06.l2
+    - sw03.p07.l2
+    - sw03.p08.l2
+    - sw03.p09.l2
+    - sw03.p10.l2
+    - sw03.p11.l2
+    - sw03.p12.l2
+    - sw03.p13.l2
+    - sw03.p14.l2
+    - sw03.p15.l2
+    - sw03.p16.l2
+    - sw03.p17.l2
+    - sw03.p18.l2
+    - sw03.p19.l2
+    - sw03.p20.l2
+    - sw03.p21.l2
+    - sw03.p22.l2
+    - sw03.p23.l2
+    - sw03.p24.l2
+    - sw03.p25.l2
+    - sw03.p26.l2
+    - sw03.p27.l2
+    - sw03.p28.l2
+    - sw03.p29.l2
+    - sw03.p30.l2
+    - sw03.p31.l2
+    - sw03.p32.l2
+    - sw03.p33.l2
+    - sw03.p34.l2
+    - sw03.p35.l2
+    - sw03.p36.l2
+    - sw03.p37.l2
+    - sw03.p38.l2
+    - sw03.p39.l2
+    - sw03.p40.l2
+    - sw03.p41.l2
+    - sw03.p42.l2
+    - sw03.p43.l2
+    - sw03.p44.l2
+    - sw03.p45.l2
+    - sw03.p46.l2
+    - sw03.p47.l2
+    - sw03.p48.l2
+    - sw03.svi1
+l3:
+  subnets:
+  - id: net1
+    cidr: 10.48.1.0/24
+  - id: net100
+    cidr: 10.48.100.0/24
+  - id: net200
+    cidr: 10.48.200.0/24
+  interfaces:
+  - id: sw01.management
+    device: sw01
+    address: 10.48.1.2/24
+    subnet: net1
+  - id: sw02.management
+    device: sw02
+    address: 10.48.1.3/24
+    subnet: net1
+  - id: sw03.management
+    device: sw03
+    address: 10.48.1.4/24
+    subnet: net1
+  - id: host01.ip100
+    device: host01
+    address: 10.48.100.20/24
+    subnet: net100
+  - id: host01.ip1
+    device: host01
+    address: 10.48.1.20/24
+    subnet: net1
+  - id: host01.ip200
+    device: host01
+    address: 10.48.200.20/24
+    subnet: net200
+  - id: host02.ip100
+    device: host02
+    address: 10.48.100.21/24
+    subnet: net100
+  - id: host02.ip1
+    device: host02
+    address: 10.48.1.21/24
+    subnet: net1
+  - id: host02.ip200
+    device: host02
+    address: 10.48.200.21/24
+    subnet: net200
+  - id: host03.ip100
+    device: host03
+    address: 10.48.100.22/24
+    subnet: net100
+  - id: host03.ip1
+    device: host03
+    address: 10.48.1.22/24
+    subnet: net1
+  - id: host03.ip200
+    device: host03
+    address: 10.48.200.22/24
+    subnet: net200
+  - id: host04.ip100
+    device: host04
+    address: 10.48.100.23/24
+    subnet: net100
+  - id: host04.ip1
+    device: host04
+    address: 10.48.1.23/24
+    subnet: net1
+  - id: host04.ip200
+    device: host04
+    address: 10.48.200.23/24
+    subnet: net200
+  - id: host05.ip100
+    device: host05
+    address: 10.48.100.24/24
+    subnet: net100
+  - id: host05.ip1
+    device: host05
+    address: 10.48.1.24/24
+    subnet: net1
+  - id: host05.ip200
+    device: host05
+    address: 10.48.200.24/24
+    subnet: net200
+  - id: host06.ip100
+    device: host06
+    address: 10.48.100.25/24
+    subnet: net100
+  - id: host06.ip1
+    device: host06
+    address: 10.48.1.25/24
+    subnet: net1
+  - id: host06.ip200
+    device: host06
+    address: 10.48.200.25/24
+    subnet: net200
+  - id: host07.ip100
+    device: host07
+    address: 10.48.100.26/24
+    subnet: net100
+  - id: host07.ip1
+    device: host07
+    address: 10.48.1.26/24
+    subnet: net1
+  - id: host07.ip200
+    device: host07
+    address: 10.48.200.26/24
+    subnet: net200
+  - id: host08.ip100
+    device: host08
+    address: 10.48.100.27/24
+    subnet: net100
+  - id: host08.ip1
+    device: host08
+    address: 10.48.1.27/24
+    subnet: net1
+  - id: host08.ip200
+    device: host08
+    address: 10.48.200.27/24
+    subnet: net200
+  - id: host09.ip100
+    device: host09
+    address: 10.48.100.28/24
+    subnet: net100
+  - id: host09.ip1
+    device: host09
+    address: 10.48.1.28/24
+    subnet: net1
+  - id: host09.ip200
+    device: host09
+    address: 10.48.200.28/24
+    subnet: net200
+  - id: host10.ip100
+    device: host10
+    address: 10.48.100.29/24
+    subnet: net100
+  - id: host10.ip1
+    device: host10
+    address: 10.48.1.29/24
+    subnet: net1
+  - id: host10.ip200
+    device: host10
+    address: 10.48.200.29/24
+    subnet: net200
+  - id: host11.ip100
+    device: host11
+    address: 10.48.100.30/24
+    subnet: net100
+  - id: host11.ip1
+    device: host11
+    address: 10.48.1.30/24
+    subnet: net1
+  - id: host11.ip200
+    device: host11
+    address: 10.48.200.30/24
+    subnet: net200
+  - id: host12.ip100
+    device: host12
+    address: 10.48.100.31/24
+    subnet: net100
+  - id: host12.ip1
+    device: host12
+    address: 10.48.1.31/24
+    subnet: net1
+  - id: host12.ip200
+    device: host12
+    address: 10.48.200.31/24
+    subnet: net200
+  routes: []
+bindings:
+  l2_to_l1:
+  - l2_interface: sw01.p01.l2
+    physical_port: sw01.p01
+  - l2_interface: sw01.p02.l2
+    physical_port: sw01.p02
+  - l2_interface: sw01.p03.l2
+    physical_port: sw01.p03
+  - l2_interface: sw01.p04.l2
+    physical_port: sw01.p04
+  - l2_interface: sw01.p05.l2
+    physical_port: sw01.p05
+  - l2_interface: sw01.p06.l2
+    physical_port: sw01.p06
+  - l2_interface: sw01.p07.l2
+    physical_port: sw01.p07
+  - l2_interface: sw01.p08.l2
+    physical_port: sw01.p08
+  - l2_interface: sw01.p09.l2
+    physical_port: sw01.p09
+  - l2_interface: sw01.p10.l2
+    physical_port: sw01.p10
+  - l2_interface: sw01.p11.l2
+    physical_port: sw01.p11
+  - l2_interface: sw01.p12.l2
+    physical_port: sw01.p12
+  - l2_interface: sw01.p13.l2
+    physical_port: sw01.p13
+  - l2_interface: sw01.p14.l2
+    physical_port: sw01.p14
+  - l2_interface: sw01.p15.l2
+    physical_port: sw01.p15
+  - l2_interface: sw01.p16.l2
+    physical_port: sw01.p16
+  - l2_interface: sw01.p17.l2
+    physical_port: sw01.p17
+  - l2_interface: sw01.p18.l2
+    physical_port: sw01.p18
+  - l2_interface: sw01.p19.l2
+    physical_port: sw01.p19
+  - l2_interface: sw01.p20.l2
+    physical_port: sw01.p20
+  - l2_interface: sw01.p21.l2
+    physical_port: sw01.p21
+  - l2_interface: sw01.p22.l2
+    physical_port: sw01.p22
+  - l2_interface: sw01.p23.l2
+    physical_port: sw01.p23
+  - l2_interface: sw01.p24.l2
+    physical_port: sw01.p24
+  - l2_interface: sw01.p25.l2
+    physical_port: sw01.p25
+  - l2_interface: sw01.p26.l2
+    physical_port: sw01.p26
+  - l2_interface: sw01.p27.l2
+    physical_port: sw01.p27
+  - l2_interface: sw01.p28.l2
+    physical_port: sw01.p28
+  - l2_interface: sw01.p29.l2
+    physical_port: sw01.p29
+  - l2_interface: sw01.p30.l2
+    physical_port: sw01.p30
+  - l2_interface: sw01.p31.l2
+    physical_port: sw01.p31
+  - l2_interface: sw01.p32.l2
+    physical_port: sw01.p32
+  - l2_interface: sw01.p33.l2
+    physical_port: sw01.p33
+  - l2_interface: sw01.p34.l2
+    physical_port: sw01.p34
+  - l2_interface: sw01.p35.l2
+    physical_port: sw01.p35
+  - l2_interface: sw01.p36.l2
+    physical_port: sw01.p36
+  - l2_interface: sw01.p37.l2
+    physical_port: sw01.p37
+  - l2_interface: sw01.p38.l2
+    physical_port: sw01.p38
+  - l2_interface: sw01.p39.l2
+    physical_port: sw01.p39
+  - l2_interface: sw01.p40.l2
+    physical_port: sw01.p40
+  - l2_interface: sw01.p41.l2
+    physical_port: sw01.p41
+  - l2_interface: sw01.p42.l2
+    physical_port: sw01.p42
+  - l2_interface: sw01.p43.l2
+    physical_port: sw01.p43
+  - l2_interface: sw01.p44.l2
+    physical_port: sw01.p44
+  - l2_interface: sw01.p45.l2
+    physical_port: sw01.p45
+  - l2_interface: sw01.p46.l2
+    physical_port: sw01.p46
+  - l2_interface: sw01.p47.l2
+    physical_port: sw01.p47
+  - l2_interface: sw01.p48.l2
+    physical_port: sw01.p48
+  - l2_interface: sw02.p01.l2
+    physical_port: sw02.p01
+  - l2_interface: sw02.p02.l2
+    physical_port: sw02.p02
+  - l2_interface: sw02.p03.l2
+    physical_port: sw02.p03
+  - l2_interface: sw02.p04.l2
+    physical_port: sw02.p04
+  - l2_interface: sw02.p05.l2
+    physical_port: sw02.p05
+  - l2_interface: sw02.p06.l2
+    physical_port: sw02.p06
+  - l2_interface: sw02.p07.l2
+    physical_port: sw02.p07
+  - l2_interface: sw02.p08.l2
+    physical_port: sw02.p08
+  - l2_interface: sw02.p09.l2
+    physical_port: sw02.p09
+  - l2_interface: sw02.p10.l2
+    physical_port: sw02.p10
+  - l2_interface: sw02.p11.l2
+    physical_port: sw02.p11
+  - l2_interface: sw02.p12.l2
+    physical_port: sw02.p12
+  - l2_interface: sw02.p13.l2
+    physical_port: sw02.p13
+  - l2_interface: sw02.p14.l2
+    physical_port: sw02.p14
+  - l2_interface: sw02.p15.l2
+    physical_port: sw02.p15
+  - l2_interface: sw02.p16.l2
+    physical_port: sw02.p16
+  - l2_interface: sw02.p17.l2
+    physical_port: sw02.p17
+  - l2_interface: sw02.p18.l2
+    physical_port: sw02.p18
+  - l2_interface: sw02.p19.l2
+    physical_port: sw02.p19
+  - l2_interface: sw02.p20.l2
+    physical_port: sw02.p20
+  - l2_interface: sw02.p21.l2
+    physical_port: sw02.p21
+  - l2_interface: sw02.p22.l2
+    physical_port: sw02.p22
+  - l2_interface: sw02.p23.l2
+    physical_port: sw02.p23
+  - l2_interface: sw02.p24.l2
+    physical_port: sw02.p24
+  - l2_interface: sw02.p25.l2
+    physical_port: sw02.p25
+  - l2_interface: sw02.p26.l2
+    physical_port: sw02.p26
+  - l2_interface: sw02.p27.l2
+    physical_port: sw02.p27
+  - l2_interface: sw02.p28.l2
+    physical_port: sw02.p28
+  - l2_interface: sw02.p29.l2
+    physical_port: sw02.p29
+  - l2_interface: sw02.p30.l2
+    physical_port: sw02.p30
+  - l2_interface: sw02.p31.l2
+    physical_port: sw02.p31
+  - l2_interface: sw02.p32.l2
+    physical_port: sw02.p32
+  - l2_interface: sw02.p33.l2
+    physical_port: sw02.p33
+  - l2_interface: sw02.p34.l2
+    physical_port: sw02.p34
+  - l2_interface: sw02.p35.l2
+    physical_port: sw02.p35
+  - l2_interface: sw02.p36.l2
+    physical_port: sw02.p36
+  - l2_interface: sw02.p37.l2
+    physical_port: sw02.p37
+  - l2_interface: sw02.p38.l2
+    physical_port: sw02.p38
+  - l2_interface: sw02.p39.l2
+    physical_port: sw02.p39
+  - l2_interface: sw02.p40.l2
+    physical_port: sw02.p40
+  - l2_interface: sw02.p41.l2
+    physical_port: sw02.p41
+  - l2_interface: sw02.p42.l2
+    physical_port: sw02.p42
+  - l2_interface: sw02.p43.l2
+    physical_port: sw02.p43
+  - l2_interface: sw02.p44.l2
+    physical_port: sw02.p44
+  - l2_interface: sw02.p45.l2
+    physical_port: sw02.p45
+  - l2_interface: sw02.p46.l2
+    physical_port: sw02.p46
+  - l2_interface: sw02.p47.l2
+    physical_port: sw02.p47
+  - l2_interface: sw02.p48.l2
+    physical_port: sw02.p48
+  - l2_interface: sw03.p01.l2
+    physical_port: sw03.p01
+  - l2_interface: sw03.p02.l2
+    physical_port: sw03.p02
+  - l2_interface: sw03.p03.l2
+    physical_port: sw03.p03
+  - l2_interface: sw03.p04.l2
+    physical_port: sw03.p04
+  - l2_interface: sw03.p05.l2
+    physical_port: sw03.p05
+  - l2_interface: sw03.p06.l2
+    physical_port: sw03.p06
+  - l2_interface: sw03.p07.l2
+    physical_port: sw03.p07
+  - l2_interface: sw03.p08.l2
+    physical_port: sw03.p08
+  - l2_interface: sw03.p09.l2
+    physical_port: sw03.p09
+  - l2_interface: sw03.p10.l2
+    physical_port: sw03.p10
+  - l2_interface: sw03.p11.l2
+    physical_port: sw03.p11
+  - l2_interface: sw03.p12.l2
+    physical_port: sw03.p12
+  - l2_interface: sw03.p13.l2
+    physical_port: sw03.p13
+  - l2_interface: sw03.p14.l2
+    physical_port: sw03.p14
+  - l2_interface: sw03.p15.l2
+    physical_port: sw03.p15
+  - l2_interface: sw03.p16.l2
+    physical_port: sw03.p16
+  - l2_interface: sw03.p17.l2
+    physical_port: sw03.p17
+  - l2_interface: sw03.p18.l2
+    physical_port: sw03.p18
+  - l2_interface: sw03.p19.l2
+    physical_port: sw03.p19
+  - l2_interface: sw03.p20.l2
+    physical_port: sw03.p20
+  - l2_interface: sw03.p21.l2
+    physical_port: sw03.p21
+  - l2_interface: sw03.p22.l2
+    physical_port: sw03.p22
+  - l2_interface: sw03.p23.l2
+    physical_port: sw03.p23
+  - l2_interface: sw03.p24.l2
+    physical_port: sw03.p24
+  - l2_interface: sw03.p25.l2
+    physical_port: sw03.p25
+  - l2_interface: sw03.p26.l2
+    physical_port: sw03.p26
+  - l2_interface: sw03.p27.l2
+    physical_port: sw03.p27
+  - l2_interface: sw03.p28.l2
+    physical_port: sw03.p28
+  - l2_interface: sw03.p29.l2
+    physical_port: sw03.p29
+  - l2_interface: sw03.p30.l2
+    physical_port: sw03.p30
+  - l2_interface: sw03.p31.l2
+    physical_port: sw03.p31
+  - l2_interface: sw03.p32.l2
+    physical_port: sw03.p32
+  - l2_interface: sw03.p33.l2
+    physical_port: sw03.p33
+  - l2_interface: sw03.p34.l2
+    physical_port: sw03.p34
+  - l2_interface: sw03.p35.l2
+    physical_port: sw03.p35
+  - l2_interface: sw03.p36.l2
+    physical_port: sw03.p36
+  - l2_interface: sw03.p37.l2
+    physical_port: sw03.p37
+  - l2_interface: sw03.p38.l2
+    physical_port: sw03.p38
+  - l2_interface: sw03.p39.l2
+    physical_port: sw03.p39
+  - l2_interface: sw03.p40.l2
+    physical_port: sw03.p40
+  - l2_interface: sw03.p41.l2
+    physical_port: sw03.p41
+  - l2_interface: sw03.p42.l2
+    physical_port: sw03.p42
+  - l2_interface: sw03.p43.l2
+    physical_port: sw03.p43
+  - l2_interface: sw03.p44.l2
+    physical_port: sw03.p44
+  - l2_interface: sw03.p45.l2
+    physical_port: sw03.p45
+  - l2_interface: sw03.p46.l2
+    physical_port: sw03.p46
+  - l2_interface: sw03.p47.l2
+    physical_port: sw03.p47
+  - l2_interface: sw03.p48.l2
+    physical_port: sw03.p48
+  - l2_interface: host01.bond0
+    physical_port: host01.eth0
+  - l2_interface: host01.bond0
+    physical_port: host01.eth1
+  - l2_interface: host01.management
+    physical_port: host01.eth2
+  - l2_interface: host01.business
+    physical_port: host01.eth3
+  - l2_interface: host02.bond0
+    physical_port: host02.eth0
+  - l2_interface: host02.bond0
+    physical_port: host02.eth1
+  - l2_interface: host02.management
+    physical_port: host02.eth2
+  - l2_interface: host02.business
+    physical_port: host02.eth3
+  - l2_interface: host03.bond0
+    physical_port: host03.eth0
+  - l2_interface: host03.bond0
+    physical_port: host03.eth1
+  - l2_interface: host03.management
+    physical_port: host03.eth2
+  - l2_interface: host03.business
+    physical_port: host03.eth3
+  - l2_interface: host04.bond0
+    physical_port: host04.eth0
+  - l2_interface: host04.bond0
+    physical_port: host04.eth1
+  - l2_interface: host04.management
+    physical_port: host04.eth2
+  - l2_interface: host04.business
+    physical_port: host04.eth3
+  - l2_interface: host05.bond0
+    physical_port: host05.eth0
+  - l2_interface: host05.bond0
+    physical_port: host05.eth1
+  - l2_interface: host05.management
+    physical_port: host05.eth2
+  - l2_interface: host05.business
+    physical_port: host05.eth3
+  - l2_interface: host06.bond0
+    physical_port: host06.eth0
+  - l2_interface: host06.bond0
+    physical_port: host06.eth1
+  - l2_interface: host06.management
+    physical_port: host06.eth2
+  - l2_interface: host06.business
+    physical_port: host06.eth3
+  - l2_interface: host07.bond0
+    physical_port: host07.eth0
+  - l2_interface: host07.bond0
+    physical_port: host07.eth1
+  - l2_interface: host07.management
+    physical_port: host07.eth2
+  - l2_interface: host07.business
+    physical_port: host07.eth3
+  - l2_interface: host08.bond0
+    physical_port: host08.eth0
+  - l2_interface: host08.bond0
+    physical_port: host08.eth1
+  - l2_interface: host08.management
+    physical_port: host08.eth2
+  - l2_interface: host08.business
+    physical_port: host08.eth3
+  - l2_interface: host09.bond0
+    physical_port: host09.eth0
+  - l2_interface: host09.bond0
+    physical_port: host09.eth1
+  - l2_interface: host09.management
+    physical_port: host09.eth2
+  - l2_interface: host09.business
+    physical_port: host09.eth3
+  - l2_interface: host10.bond0
+    physical_port: host10.eth0
+  - l2_interface: host10.bond0
+    physical_port: host10.eth1
+  - l2_interface: host10.management
+    physical_port: host10.eth2
+  - l2_interface: host10.business
+    physical_port: host10.eth3
+  - l2_interface: host11.bond0
+    physical_port: host11.eth0
+  - l2_interface: host11.bond0
+    physical_port: host11.eth1
+  - l2_interface: host11.management
+    physical_port: host11.eth2
+  - l2_interface: host11.business
+    physical_port: host11.eth3
+  - l2_interface: host12.bond0
+    physical_port: host12.eth0
+  - l2_interface: host12.bond0
+    physical_port: host12.eth1
+  - l2_interface: host12.management
+    physical_port: host12.eth2
+  - l2_interface: host12.business
+    physical_port: host12.eth3
+  l3_to_l2:
+  - l3_interface: sw01.management
+    l2_interface: sw01.svi1
+    vlan: v1
+  - l3_interface: sw02.management
+    l2_interface: sw02.svi1
+    vlan: v1
+  - l3_interface: sw03.management
+    l2_interface: sw03.svi1
+    vlan: v1
+  - l3_interface: host01.ip100
+    l2_interface: host01.bond0
+    vlan: v100
+  - l3_interface: host01.ip1
+    l2_interface: host01.management
+    vlan: v1
+  - l3_interface: host01.ip200
+    l2_interface: host01.business
+    vlan: v200
+  - l3_interface: host02.ip100
+    l2_interface: host02.bond0
+    vlan: v100
+  - l3_interface: host02.ip1
+    l2_interface: host02.management
+    vlan: v1
+  - l3_interface: host02.ip200
+    l2_interface: host02.business
+    vlan: v200
+  - l3_interface: host03.ip100
+    l2_interface: host03.bond0
+    vlan: v100
+  - l3_interface: host03.ip1
+    l2_interface: host03.management
+    vlan: v1
+  - l3_interface: host03.ip200
+    l2_interface: host03.business
+    vlan: v200
+  - l3_interface: host04.ip100
+    l2_interface: host04.bond0
+    vlan: v100
+  - l3_interface: host04.ip1
+    l2_interface: host04.management
+    vlan: v1
+  - l3_interface: host04.ip200
+    l2_interface: host04.business
+    vlan: v200
+  - l3_interface: host05.ip100
+    l2_interface: host05.bond0
+    vlan: v100
+  - l3_interface: host05.ip1
+    l2_interface: host05.management
+    vlan: v1
+  - l3_interface: host05.ip200
+    l2_interface: host05.business
+    vlan: v200
+  - l3_interface: host06.ip100
+    l2_interface: host06.bond0
+    vlan: v100
+  - l3_interface: host06.ip1
+    l2_interface: host06.management
+    vlan: v1
+  - l3_interface: host06.ip200
+    l2_interface: host06.business
+    vlan: v200
+  - l3_interface: host07.ip100
+    l2_interface: host07.bond0
+    vlan: v100
+  - l3_interface: host07.ip1
+    l2_interface: host07.management
+    vlan: v1
+  - l3_interface: host07.ip200
+    l2_interface: host07.business
+    vlan: v200
+  - l3_interface: host08.ip100
+    l2_interface: host08.bond0
+    vlan: v100
+  - l3_interface: host08.ip1
+    l2_interface: host08.management
+    vlan: v1
+  - l3_interface: host08.ip200
+    l2_interface: host08.business
+    vlan: v200
+  - l3_interface: host09.ip100
+    l2_interface: host09.bond0
+    vlan: v100
+  - l3_interface: host09.ip1
+    l2_interface: host09.management
+    vlan: v1
+  - l3_interface: host09.ip200
+    l2_interface: host09.business
+    vlan: v200
+  - l3_interface: host10.ip100
+    l2_interface: host10.bond0
+    vlan: v100
+  - l3_interface: host10.ip1
+    l2_interface: host10.management
+    vlan: v1
+  - l3_interface: host10.ip200
+    l2_interface: host10.business
+    vlan: v200
+  - l3_interface: host11.ip100
+    l2_interface: host11.bond0
+    vlan: v100
+  - l3_interface: host11.ip1
+    l2_interface: host11.management
+    vlan: v1
+  - l3_interface: host11.ip200
+    l2_interface: host11.business
+    vlan: v200
+  - l3_interface: host12.ip100
+    l2_interface: host12.bond0
+    vlan: v100
+  - l3_interface: host12.ip1
+    l2_interface: host12.management
+    vlan: v1
+  - l3_interface: host12.ip200
+    l2_interface: host12.business
+    vlan: v200
+notes:
+- 48ポート×3台をすべてL1/L2に登録。3台のSVIと接続先ホストも表示。
+- 未使用ポートも保持。VLAN10はスイッチ間trunkのみに定義。LACPや到達性は推定しません。

@@ -1,0 +1,191 @@
+{
+  "note": "Chromium in Docker; API + JSON + DOM + double animation frames; pan/zoom each; 3 runs; no editor debounce",
+  "runs": [
+    {
+      "name": "three-48-switches-12-hosts",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 15,
+        "rows": 414,
+        "connections": 662,
+        "elements": 720,
+        "groups": 10
+      },
+      "api_ms": 248.70000457763672,
+      "svg_dom_paint_ms": 1396.400001525879,
+      "pan_zoom_ms": 56.69999694824219,
+      "total_ms": 1701.8000030517578,
+      "svg_bytes": 1791239,
+      "dom_nodes": 8659
+    },
+    {
+      "name": "three-48-switches-12-hosts",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 15,
+        "rows": 414,
+        "connections": 662,
+        "elements": 720,
+        "groups": 10
+      },
+      "api_ms": 229.1999969482422,
+      "svg_dom_paint_ms": 1337.400001525879,
+      "pan_zoom_ms": 49.19999694824219,
+      "total_ms": 1615.7999954223633,
+      "svg_bytes": 1791239,
+      "dom_nodes": 8659
+    },
+    {
+      "name": "three-48-switches-12-hosts",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 15,
+        "rows": 414,
+        "connections": 662,
+        "elements": 720,
+        "groups": 10
+      },
+      "api_ms": 234,
+      "svg_dom_paint_ms": 1358.7000045776367,
+      "pan_zoom_ms": 71.69999694824219,
+      "total_ms": 1664.400001525879,
+      "svg_bytes": 1791239,
+      "dom_nodes": 8659
+    },
+    {
+      "name": "rows-600",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 224.1999969482422,
+      "svg_dom_paint_ms": 3059.400001525879,
+      "pan_zoom_ms": 56.70000457763672,
+      "total_ms": 3340.300003051758,
+      "svg_bytes": 2903940,
+      "dom_nodes": 13389
+    },
+    {
+      "name": "rows-600",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 227.1999969482422,
+      "svg_dom_paint_ms": 3030,
+      "pan_zoom_ms": 108.4000015258789,
+      "total_ms": 3365.599998474121,
+      "svg_bytes": 2903940,
+      "dom_nodes": 13389
+    },
+    {
+      "name": "rows-600",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 223.5,
+      "svg_dom_paint_ms": 3018.5,
+      "pan_zoom_ms": 82.5999984741211,
+      "total_ms": 3324.599998474121,
+      "svg_bytes": 2903940,
+      "dom_nodes": 13389
+    },
+    {
+      "name": "rows-600-long-ids-and-labels",
+      "repeat": 0,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 398.5,
+      "svg_dom_paint_ms": 4129.600006103516,
+      "pan_zoom_ms": 351.8999938964844,
+      "total_ms": 4880,
+      "svg_bytes": 5519575,
+      "dom_nodes": 22810
+    },
+    {
+      "name": "rows-600-long-ids-and-labels",
+      "repeat": 1,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 409.6999969482422,
+      "svg_dom_paint_ms": 4135.700004577637,
+      "pan_zoom_ms": 263.1999969482422,
+      "total_ms": 4808.599998474121,
+      "svg_bytes": 5519575,
+      "dom_nodes": 22810
+    },
+    {
+      "name": "rows-600-long-ids-and-labels",
+      "repeat": 2,
+      "status": 200,
+      "display": "ready",
+      "counts": {
+        "devices": 20,
+        "rows": 600,
+        "connections": 1010,
+        "elements": 1071,
+        "groups": 41
+      },
+      "api_ms": 434.4000015258789,
+      "svg_dom_paint_ms": 4096.399993896484,
+      "pan_zoom_ms": 320.4000015258789,
+      "total_ms": 4851.199996948242,
+      "svg_bytes": 5519575,
+      "dom_nodes": 22810
+    }
+  ],
+  "parallel": {
+    "wall_ms": 517,
+    "jobs": [
+      {
+        "status": 200,
+        "display": "ready",
+        "ms": 437.7999954223633
+      },
+      {
+        "status": 200,
+        "display": "ready",
+        "ms": 517
+      }
+    ]
+  }
+}

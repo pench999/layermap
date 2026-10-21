@@ -84,9 +84,9 @@ def main():
     if args.example:
         Path(args.example).write_text(encode(make_model(64,4)),encoding='utf-8');return
     cases=[('small',make_model(4,2),{}),('view-24-devices',make_model(24,2),{}),
-           ('view-168-rows',make_model(8,7),{}),('view-216-rows-blocked',make_model(8,9),{}),
+           ('view-168-rows',make_model(8,7),{}),('view-216-rows',make_model(8,9),{}),
            ('dense-64-vlans',make_model(1,4,dense=True),{}),
-           ('dense-over-budget',make_model(1,7,dense=True),{}),
+           ('dense-over-budget',make_model(1,20,dense=True),{}),
            ('dense-focused',make_model(1,7,dense=True),{'trace_root':{'layer':'l1','id':'d000.p00'}}),
            ('large-whole-blocked',make_model(256,7,exact_elements=10000),{}),
            ('large-group',make_model(256,7,exact_elements=10000),{'group':'rack-00'}),

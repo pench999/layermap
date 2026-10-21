@@ -1,0 +1,132 @@
+{
+  "limits": {
+    "yaml_bytes": 2097152,
+    "devices": 256,
+    "elements": 10000,
+    "view_devices": 24,
+    "view_rows": 600,
+    "view_connections": 1200,
+    "view_elements": 1600,
+    "view_groups": 80,
+    "svg_bytes": 8388608,
+    "http_bytes": 8388608,
+    "render_jobs": 2
+  },
+  "candidate": true,
+  "environment": {
+    "cpu_quota": "1 CPU",
+    "memory_limit_mib": 512
+  },
+  "repeats": 3,
+  "cases": [
+    {
+      "name": "rows-600-long-ids-and-labels",
+      "runs": [
+        {
+          "yaml_bytes": 441869,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 115.05,
+          "projection_ms": 0.52,
+          "render_ms": 210.91,
+          "total_ms": 326.47,
+          "svg_bytes": 5519575,
+          "process_rss_mib": 68.23
+        },
+        {
+          "yaml_bytes": 441869,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 67.34,
+          "projection_ms": 0.52,
+          "render_ms": 232.98,
+          "total_ms": 300.84,
+          "svg_bytes": 5519575,
+          "process_rss_mib": 68.25
+        },
+        {
+          "yaml_bytes": 441869,
+          "status": "ready",
+          "devices": 20,
+          "elements": 1071,
+          "display": {
+            "devices": 20,
+            "rows": 600,
+            "connections": 1010,
+            "elements": 1071,
+            "groups": 41
+          },
+          "parse_ms": 66.5,
+          "projection_ms": 0.52,
+          "render_ms": 208.31,
+          "total_ms": 275.33,
+          "svg_bytes": 5519575,
+          "process_rss_mib": 68.27
+        }
+      ],
+      "median_ms": 300.84,
+      "max_ms": 326.47,
+      "max_rss_mib": 68.27
+    }
+  ],
+  "parallel_two": {
+    "wall_ms": 7263.49,
+    "runs": [
+      {
+        "yaml_bytes": 441869,
+        "status": "ready",
+        "devices": 20,
+        "elements": 1071,
+        "display": {
+          "devices": 20,
+          "rows": 600,
+          "connections": 1010,
+          "elements": 1071,
+          "groups": 41
+        },
+        "parse_ms": 723.81,
+        "projection_ms": 50.8,
+        "render_ms": 2208.19,
+        "total_ms": 2982.8,
+        "svg_bytes": 5519575,
+        "process_rss_mib": 68.26
+      },
+      {
+        "yaml_bytes": 441869,
+        "status": "ready",
+        "devices": 20,
+        "elements": 1071,
+        "display": {
+          "devices": 20,
+          "rows": 600,
+          "connections": 1010,
+          "elements": 1071,
+          "groups": 41
+        },
+        "parse_ms": 700.19,
+        "projection_ms": 2.7,
+        "render_ms": 2225.3,
+        "total_ms": 2928.2,
+        "svg_bytes": 5519575,
+        "process_rss_mib": 68.7
+      }
+    ]
+  },
+  "container_peak_mib": 125.41
+}
