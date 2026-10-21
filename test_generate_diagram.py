@@ -212,7 +212,7 @@ class DiagramTests(unittest.TestCase):
                       {s['id']:{i['id'] for i in self.model['l3']['interfaces'] if i['subnet']==s['id']} for s in self.model['l3']['subnets']})
             if layer=='l2':
                 expected.update({b['id']:set(b['members']) for b in self.model['l2']['bridges']})
-            groups=[e for e in root.iter() if 'data-network-id' in e.attrib]
+            groups=[e for e in root.iter() if 'network-group' in e.attrib.get('class','').split()]
             self.assertEqual({e.attrib['data-network-id'] for e in groups},set(expected))
             for group in groups:
                 identity=group.attrib['data-network-id']

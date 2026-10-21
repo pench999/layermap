@@ -28,7 +28,7 @@ export function targetForElement(element:Element|null,canvas:Element|null):Sourc
  const row=element.closest<SVGGElement>('.interface-row');if(row){const layer=row.closest('[data-layer]')?.getAttribute('data-layer');return {section:layer==='l1'?'l1.ports':layer+'.interfaces',id:row.dataset.elementId!};}
  const cable=element.closest<SVGGElement>('[data-cable-id]');if(cable)return {section:'l1.links',id:cable.dataset.cableId!};
  const connection=element.closest<SVGGElement>('[data-connection-id]');if(connection)return {section:'l1.connections',id:connection.dataset.connectionId!};
- const network=element.closest<SVGGElement>('.network-group');if(network)return {section:({subnet:'l3.subnets',vlan:'l2.vlans',bridge:'l2.bridges'} as Record<string,string>)[network.dataset.networkKind!],id:network.dataset.networkId!};
+ const network=element.closest<SVGGElement>('.network-group,.switch-vlan-group');if(network)return {section:({subnet:'l3.subnets',vlan:'l2.vlans',bridge:'l2.bridges'} as Record<string,string>)[network.dataset.networkKind!],id:network.dataset.networkId!};
  const device=element.closest<SVGGElement>('[data-device]');return device?{section:'devices',id:device.dataset.device!}:null;
 }
 function editorLocations(source:string,locations:SourceLocation[]){

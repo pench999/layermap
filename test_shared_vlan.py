@@ -11,7 +11,7 @@ class SharedVlanTests(unittest.TestCase):
 
     def test_shared_frames_keep_device_rows_trunks_and_binding_endpoints(self):
         root = ET.fromstring(render(self.model))
-        networks = [e for e in root.iter() if e.get('data-network-kind') == 'vlan']
+        networks = [e for e in root.iter() if e.get('data-network-kind') == 'vlan' and 'network-group' in e.get('class','').split()]
         self.assertEqual({e.get('data-network-id') for e in networks}, {'vlan-office', 'vlan-guest'})
         self.assertEqual(len(networks), 2)
         for net in networks:
@@ -36,7 +36,7 @@ class SharedVlanTests(unittest.TestCase):
         self.model['l2']['vlans'][1]['tag'] = 10
         self.model['l2']['vlans'].append({'id':'empty<&', 'tag':10, 'label':'未接続<&'})
         root = ET.fromstring(render(self.model, layers=['l2'], show_bindings=False))
-        nets = [e for e in root.iter() if e.get('data-network-kind') == 'vlan']
+        nets = [e for e in root.iter() if e.get('data-network-kind') == 'vlan' and 'network-group' in e.get('class','').split()]
         self.assertEqual(len(nets),3)
         empty = next(e for e in nets if e.get('data-network-id') == 'empty<&')
         self.assertIn('所属インターフェースなし', ''.join(empty.itertext()))

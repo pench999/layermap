@@ -351,6 +351,27 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 detail_lines=[part for detail in details for part in wrap_label(detail,46)]
                 height=24*len(title_lines)+18*(len(detail_lines)+sum(len(wrap_label(net['number']+' / '+net['id'],46)) for net in memberships.get((layer,item['id']),[]))+sum(len(wrap_label(binding_badge(b,layer),46)) for b in row_bindings.get((layer,item['id']),[])))+18
                 rows.append((item,title_lines,detail_lines,height))
+            # The L2-only overview groups switch access ports by VLAN definition.
+            # Full multilayer tracing retains the original individual rows.
+            if wanted==('l2',) and ('switch' in d.get('role','') or d.get('kind')=='stack'):
+                compact=[]; grouped={}
+                for item,titles,details,h in rows:
+                    if item['mode']!='access' or item.get('aggregation'):
+                        compact.append((item,titles,details,h));continue
+                    vlan=item['untagged_vlan']
+                    if vlan not in grouped:
+                        summary=dict(item);summary['_compact_members']=[]
+                        grouped[vlan]=summary;compact.append(summary)
+                    grouped[vlan]['_compact_members'].append(item)
+                rows=[]
+                for entry in compact:
+                    if isinstance(entry,tuple):rows.append(entry);continue
+                    members=entry['_compact_members'];vlan=entry['untagged_vlan']
+                    net=next(n for n in networks['l2'] if n['kind']=='vlan' and n['id']==vlan)
+                    titles=wrap_label('VLAN '+str(ix['l2.vlans'][vlan]['tag']),30)
+                    details=wrap_label(vlan+' / access / '+str(len(members))+'ポート',44)
+                    h=24*len(titles)+18*len(details)+28*((len(members)+1)//2)+32
+                    rows.append((entry,titles,details,h))
             height=header+sum(row[3] for row in rows)+12+(sum(ghost_height(c) for i,j,c in ghosts[device]) if layer=='l1' else 0)
             if not rows:
                 height+=44
@@ -416,6 +437,37 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             lines_at(left+16,baseline,metadata,12,'#526980',18)
             row_top=card_top+header
             for item,title_lines,detail_lines,row_height in rows:
+                if '_compact_members' in item:
+                    members=item['_compact_members'];vlan=item['untagged_vlan']
+                    net=next(n for n in networks[layer] if n['kind']=='vlan' and n['id']==vlan)
+                    color=net['color'];key=net['key']
+                    svg.append(f'<g class="switch-vlan-group network-{key} member-{key}" data-network-id="{escape(vlan)}" data-network-kind="vlan" data-vlan-device="{escape(device)}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(device+" / VLAN "+str(ix["l2.vlans"][vlan]["tag"])+" / "+str(len(members))+" accessポート")}">')
+                    rect(left+5,row_top+3,card_width-10,row_height-6,'#f7fcf9',color,'switch-vlan-frame')
+                    lines_at(left+14,row_top+24,title_lines,18,color,24)
+                    lines_at(left+14,row_top+24+24*len(title_lines),detail_lines,11,'#60788e')
+                    chips_top=row_top+24*len(title_lines)+18*len(detail_lines)+14
+                    for index,member in enumerate(members):
+                        chip_x=left+12+(index%2)*158;chip_y=chips_top+(index//2)*28
+                        related=memberships.get((layer,member['id']),[])
+                        classes=' '.join('member-'+n['key'] for n in related)
+                        ports=[ix['l1.ports'][b['physical_port']] for b in model['bindings']['l2_to_l1'] if b['l2_interface']==member['id']]
+                        name=' / '.join(p.get('name') or p['id'].split('.')[-1] for p in ports) or member['id'].split('.')[-1]
+                        label=name if len(name)<=20 else name[:17]+'…'
+                        desc=member['id']+' / '+name+' / VLAN '+str(ix['l2.vlans'][vlan]['tag'])+' / access / 層間対応を追跡'
+                        svg.append(f'<g class="interface-row compact-port {classes}" data-element-id="{escape(member["id"])}" data-owner="{escape(device)}" data-interface-mode="access" data-anchor-x="{chip_x+74}" data-anchor-y="{chip_y+10}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape(desc)}">')
+                        rect(chip_x,chip_y-2,150,23,'white','#c8d9d0','interface-hit')
+                        rect(chip_x,chip_y-2,150,23,'#e8f3ee',color,'binding-row-highlight')
+                        svg.append(f'<title>{escape(desc)}</title>')
+                        text(chip_x+5,chip_y+13,label,11)
+                        svg.append('</g>')
+                        nodes[(layer,member['id'])]={'left':left,'right':right,'anchor_x':chip_x+74,'y':chip_y+10,'device':device,'side':1,'slot':index}
+                        for related_index,related_net in enumerate(related):
+                            member_y=row_top+row_height-10-related_index*7
+                            membership_anchors[(layer,related_net['key'],member['id'])]=(right,member_y)
+                            svg.append(f'<circle class="membership-anchor member-{related_net["key"]}" data-membership-network="{escape(related_net["id"])}" data-membership-interface="{escape(member["id"])}" cx="{right}" cy="{member_y}" r="3" fill="white" stroke="{related_net["color"]}"/>')
+                    svg.append('</g>')
+                    row_top+=row_height
+                    continue
                 anchor=row_top+row_height/2
                 side=port_sides.get(item['id'],1) if layer=='l1' else 1
                 anchor_x=right if side==1 else left
@@ -530,8 +582,10 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     departures[node['device']].append((sy,net['key'],member))
             lanes={}
             for device,entries in departures.items():
-                for rank,(sy,key,member) in enumerate(sorted(entries,reverse=True)):
-                    lanes[(key,member)]=lefts[device]+card_width+18+rank*10
+                tracks={}
+                for sy,key,member in sorted(entries,reverse=True):
+                    tracks.setdefault((sy,key),len(tracks))
+                    lanes[(key,member)]=lefts[device]+card_width+18+tracks[(sy,key)]*10
             text(heading_x,top+51,'V＝VLAN定義IDごとに一枠（所属を表示・疎通は別途確認） / S＝サブネット / B＝機器内ブリッジ',10,'#60788e')
             for by,labels,net in bus_layout:
                 key,color=net['key'],net['color']
@@ -550,10 +604,14 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     edge(points,color,css,attrs+' stroke-linejoin="round"')
                 if xs:
                     logical_edge([(min(xs)-7,by),(max(xs)+7,by)],'relation-bus')
+                drawn=set()
                 for member in net['members']:
                     x,sy=membership_anchors[(layer,key,member)]
                     lane=lanes[(key,member)]
-                    attrs=f'data-endpoint="{escape(member)}" data-network="{escape(net["id"])}"'
+                    if (x,sy,lane) in drawn:continue
+                    drawn.add((x,sy,lane))
+                    shared=[m for m in net['members'] if membership_anchors[(layer,key,m)]==(x,sy)]
+                    attrs=f'data-endpoint="{escape(member)}" data-endpoints="{escape(json.dumps(shared))}" data-network="{escape(net["id"])}"'
                     logical_edge([(x,sy),(lane,sy),(lane,by)],'relation-branch',attrs)
                     svg.append(f'<circle class="network-junction" cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
                 lines_at(48 if net['kind']=='vlan' else 40,by-(24 if net['kind']=='vlan' else 10)-18*(len(labels)-1),labels,14 if net['kind']=='vlan' else 12,color)
@@ -566,6 +624,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 persistent=f'svg:has(.network-{key}.yaml-linked)'
                 trigger=f':is({persistent},{transient})'
                 network_styles.append(f'{trigger} {scope} .network-{key} .network-frame'+'{stroke-width:3}')
+                network_styles.append(f'{trigger} {scope} .switch-vlan-group.member-{key} .switch-vlan-frame'+'{stroke-width:3}')
                 network_styles.append(f'{trigger} {scope} .interface-row.member-{key} .binding-row-highlight'+'{display:block;fill:#e8f3ee;stroke:#48794b;stroke-width:2}')
                 network_styles.append(f'{trigger} {scope} .network-group:not(.network-{key})'+'{opacity:.15}')
                 network_styles.append(f'{trigger} {scope} .interface-row:not(.member-{key})'+'{opacity:.22}')

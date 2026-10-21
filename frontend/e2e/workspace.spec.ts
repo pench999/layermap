@@ -246,22 +246,22 @@ test('logical networks highlight exactly their member interfaces from bus and ba
     await expect(page.locator('[data-layer]')).toHaveCount(1);
     await expect(page.getByLabel('検証結果')).toContainText('検証済み');
     await expect(panel).toHaveCount(1);
-    const group=panel.locator('[data-network-id="'+network+'"]');
+    const group=panel.locator('.network-group[data-network-id="'+network+'"]');
     await expect(group).toHaveAttribute('aria-label',new RegExp(member.replace('.','\\.')));
     await group.focus();
-    await expect(panel.locator('[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
+    await expect(panel.locator('.network-group[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
     await expect(panel.locator('[data-element-id="'+nonmember+'"]')).toHaveCSS('opacity','0.22');
     await expect(panel.locator('[data-element-id="'+member+'"]')).toHaveCSS('opacity','1');
     const badge=panel.locator('[data-element-id="'+member+'"] .membership-label').filter({hasText:prefix}).first();
     await expect(badge).toHaveCSS('font-weight','700');
     await badge.focus();
-    const otherGroup=panel.locator('[data-network-id="'+other+'"]');
+    const otherGroup=panel.locator('.network-group[data-network-id="'+other+'"]');
     await otherGroup.locator('text').first().hover();
     await expect(otherGroup).toHaveCSS('opacity','1');
     await expect(group).toHaveCSS('opacity','0.15');
     await page.getByRole('tab',{name:tab}).hover();
     await expect(group.locator('.relation-bus')).toHaveCSS('stroke-width','3px');
-    await expect(panel.locator('[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
+    await expect(panel.locator('.network-group[data-network-id="'+other+'"]')).toHaveCSS('opacity','0.15');
     await page.screenshot({path:(process.env.QA_ARTIFACTS||'test-results')+'/logical-'+layer+'.png',fullPage:true});
   }
 });

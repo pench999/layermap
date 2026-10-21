@@ -76,7 +76,7 @@ function App() {
   const clearBinding = () => {
     setSelectedExtra(null);setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint,.equipment-domain'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.unknown-peer,.unresolved-endpoint,.equipment-domain'))focused.blur();
   };
   const invalidate = () => { clearBinding(); setSelected(''); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
@@ -316,7 +316,7 @@ function App() {
     if(extra){
       setSelected('');setSelectedExtra(same?null:extra);
       // Keep Escape/Space available after clearBinding blurs the old selection.
-      if(!same)element?.closest<SVGGElement>('.network-group')?.focus({preventScroll:true});
+      if(!same)element?.closest<SVGGElement>('.network-group,.switch-vlan-group')?.focus({preventScroll:true});
     }
     else if(!reference)setSelected('');
   };
@@ -325,7 +325,7 @@ function App() {
     selectedVpn?{section:'vpn_connections',id:selectedVpn.id}:selected?{section:'devices',id:selected}:selectedExtra;
   const sourceLink=useSourceHighlight(editor,source,sourceTarget,phase==='valid'&&resultSource.current===source);
   useEffect(()=>{
-    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.unknown-peer,.unresolved-endpoint,.equipment-domain').forEach(group=>{
+    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.unknown-peer,.unresolved-endpoint,.equipment-domain').forEach(group=>{
       const active=!!selectedExtra&&JSON.stringify(targetForElement(group,canvas.current))===JSON.stringify(selectedExtra);
       group.setAttribute('role','button');group.setAttribute('tabindex',phase==='valid'?'0':'-1');group.setAttribute('aria-pressed',String(active));group.setAttribute('aria-disabled',String(phase!=='valid'));group.classList.toggle('yaml-linked',active);
     });
