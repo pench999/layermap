@@ -367,9 +367,9 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         cursor=bus_top
         for network in networks[layer]:
             labels=wrap_label(network['number']+' / '+network['label'],44)
-            by=cursor+18*len(labels)+10
+            by=cursor+18*len(labels)+(30 if network['kind']=='vlan' else 10)
             bus_layout.append((by,labels,network))
-            cursor=by+38
+            cursor=by+(42 if network['kind']=='vlan' else 38)
         unknown_connections=[(i,c,j) for i,c in enumerate(extra_connections) for j,e in enumerate(c['endpoints']) if 'unknown' in e] if layer=='l1' else []
         unknown_layout=[];unknown_cursor=bottom+32
         for i,c,j in unknown_connections:
@@ -532,12 +532,17 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             for device,entries in departures.items():
                 for rank,(sy,key,member) in enumerate(sorted(entries,reverse=True)):
                     lanes[(key,member)]=lefts[device]+card_width+18+rank*10
-            text(heading_x,top+51,'V＝VLAN / S＝サブネット / B＝機器内ブリッジ（VLAN別に転送）',10,'#60788e')
+            text(heading_x,top+51,'V＝VLAN定義IDごとに一枠（所属を表示・疎通は別途確認） / S＝サブネット / B＝機器内ブリッジ',10,'#60788e')
             for by,labels,net in bus_layout:
                 key,color=net['key'],net['color']
                 description=net['number']+' / '+net['label']+' / 所属：'+(', '.join(net['members']) or 'なし')
                 svg.append(f'<g class="network-group network-{key} {" ".join("vpn-network-"+str(n) for n in vpn_networks.get(net["id"],[])) if layer=="l3" else ""}" data-network-id="{escape(net["id"])}" data-network-kind="{net["kind"]}" tabindex="0" role="img" aria-label="{escape(description)}">')
                 svg.append(f'<title>{escape(description)}</title>')
+                if net['kind']=='vlan':
+                    # One shared frame per definition ID, across all devices.
+                    # Equal numeric tags do not merge distinct definitions.
+                    frame_top=by-18*len(labels)-24
+                    rect(32,frame_top,width-64,by-frame_top+24,'white',color,'network-frame vlan-frame')
                 xs=[lanes[(key,member)] for member in net['members']]
                 def logical_edge(points,css,attrs=''):
                     # A background casing makes unavoidable crossings non-junctions.
@@ -551,13 +556,17 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     attrs=f'data-endpoint="{escape(member)}" data-network="{escape(net["id"])}"'
                     logical_edge([(x,sy),(lane,sy),(lane,by)],'relation-branch',attrs)
                     svg.append(f'<circle class="network-junction" cx="{lane}" cy="{by}" r="2.8" fill="{color}"/>')
-                lines_at(40,by-10-18*(len(labels)-1),labels,12,color)
+                lines_at(48 if net['kind']=='vlan' else 40,by-(24 if net['kind']=='vlan' else 10)-18*(len(labels)-1),labels,14 if net['kind']=='vlan' else 12,color)
                 if not net['members']:
                     text(40,by+16,'所属インターフェースなし',11,'#8192a5')
                 svg.append('</g>')
                 active=f':is(.network-{key},.membership-label.member-{key},.membership-anchor.member-{key}):is(:hover,:focus)'
                 scope=f'[data-layer="{layer}"]'
-                trigger=f'svg:has({active}):not(:has({scope} :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-{key}):not(.member-{key})))'
+                transient=f'svg:not(.trace-active):not(:has(.selected-binding)):has({active}):not(:has({scope} :is(.network-group,.membership-label,.membership-anchor):hover:not(.network-{key}):not(.member-{key})))'
+                persistent=f'svg:has(.network-{key}.yaml-linked)'
+                trigger=f':is({persistent},{transient})'
+                network_styles.append(f'{trigger} {scope} .network-{key} .network-frame'+'{stroke-width:3}')
+                network_styles.append(f'{trigger} {scope} .interface-row.member-{key} .binding-row-highlight'+'{display:block;fill:#e8f3ee;stroke:#48794b;stroke-width:2}')
                 network_styles.append(f'{trigger} {scope} .network-group:not(.network-{key})'+'{opacity:.15}')
                 network_styles.append(f'{trigger} {scope} .interface-row:not(.member-{key})'+'{opacity:.22}')
                 network_styles.append(f'{trigger} {scope} .membership-label.member-{key}'+'{font-weight:bold}')

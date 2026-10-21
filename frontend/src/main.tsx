@@ -313,7 +313,11 @@ function App() {
     const extra=reference&&['mlag_domains','l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets'].includes(reference.section)?reference:null;
     const same=JSON.stringify(extra)===JSON.stringify(selectedExtra);
     selectDiagramElement(target);
-    if(extra){setSelected('');setSelectedExtra(same?null:extra);}
+    if(extra){
+      setSelected('');setSelectedExtra(same?null:extra);
+      // Keep Escape/Space available after clearBinding blurs the old selection.
+      if(!same)element?.closest<SVGGElement>('.network-group')?.focus({preventScroll:true});
+    }
     else if(!reference)setSelected('');
   };
   const sourceTarget:SourceTarget|null=selectedTrace?{section:selectedTrace.root.layer==='l1'?'l1.ports':selectedTrace.root.layer+'.interfaces',id:selectedTrace.root.id}:
