@@ -1,4 +1,4 @@
-import {useEffect,useRef} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {type Limits,sizeLabel} from './scope';
 export type Sample = {id:string;title:string;description:string;filename:string};
 type Props = {limits:Limits;samples:Sample[];loading:boolean;error:string;onClose:()=>void;onLoadSample:(id:string)=>Promise<boolean>};
@@ -30,6 +30,28 @@ const deviceFields:[string,string][] = [
 ];
 function Fields({rows}:{rows:[string,string][]}){return <div className="help-table-wrap"><table className="help-table"><thead><tr><th>項目</th><th>意味</th></tr></thead><tbody>{rows.map(([key,value])=><tr key={key}><td><code>{key}</code></td><td>{value}</td></tr>)}</tbody></table></div>;}
 function Code({lines}:{lines:string[]}){return <pre className="help-code"><code>{lines.join(String.fromCharCode(10))}</code></pre>;}
+function AIDocument({id,title}:{id:string;title:string}){
+ const [open,setOpen]=useState(false),[content,setContent]=useState<string|null>(null),[error,setError]=useState(''),[retry,setRetry]=useState(0);
+ useEffect(()=>{
+  if(!open||content!==null)return;
+  const controller=new AbortController();setError('');
+  fetch('/api/ai-docs/'+id,{signal:controller.signal}).then(async response=>{
+   if(!response.ok)throw new Error();
+   const document=await response.json();
+   if(typeof document.content!=='string')throw new Error();
+   if(!controller.signal.aborted)setContent(document.content);
+  }).catch(()=>{if(!controller.signal.aborted)setError('資料を読み込めませんでした。もう一度お試しください。');});
+  return ()=>controller.abort();
+ },[open,content,id,retry]);
+ return <article className="ai-document" aria-label={title}>
+  <h4>{title}</h4>
+  <div className="ai-document-actions"><button type="button" aria-expanded={open} aria-controls={'ai-document-'+id} onClick={()=>setOpen(value=>!value)}>{title}を{open?'閉じる':'表示'}</button><a href={'/api/ai-docs/'+id+'/download'} download>{title}をダウンロード</a></div>
+  {open&&<div id={'ai-document-'+id} className="ai-document-content">
+   {content!==null?<pre tabIndex={0} aria-label={title+'の全文'}>{content}</pre>:error?<div role="alert"><p>{error}</p><button type="button" onClick={()=>setRetry(value=>value+1)}>資料の読み込みを再試行</button></div>:<p role="status">資料を読み込んでいます…</p>}
+  </div>}
+ </article>;
+}
+
 export function Help({limits,samples,loading,error,onClose,onLoadSample}:Props){
  const dialog=useRef<HTMLDialogElement>(null);
  useEffect(()=>{dialog.current?.showModal();},[]);
@@ -37,8 +59,9 @@ export function Help({limits,samples,loading,error,onClose,onLoadSample}:Props){
  const load=async(id:string)=>{if(await onLoadSample(id))dialog.current?.close();};
  return <dialog ref={dialog} className="help-dialog" aria-labelledby="help-title" onClose={onClose} onClick={e=>{const modal=dialog.current;if(modal&&e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}}}>
  <header className="help-header"><div><div className="eyebrow">LAYERMAP GUIDE</div><h2 id="help-title">YAMLの書き方と構成の追加</h2><p>機器・接続・レイヤーの対応を、ひとつずつ。</p></div><button autoFocus className="help-close" aria-label="ヘルプを閉じる" onClick={()=>dialog.current?.close()}>×</button></header>
- <nav className="help-nav" aria-label="ヘルプの目次"><button onClick={()=>move('help-aggregation')}>Bond・LAG・STACK・MLAG</button><button onClick={()=>move('help-new')}>新規作成</button><button onClick={()=>move('help-input-support')}>フォーム入力</button><button onClick={()=>move('help-merge')}>複数YAMLの統合</button><button onClick={()=>move('help-source')}>図面とYAMLの対応</button><button onClick={()=>move('help-vpn')}>拠点間VPN</button><button onClick={()=>move('help-svi')}>管理SVI</button><button onClick={()=>move('help-fields')}>項目の意味</button><button onClick={()=>move('help-pc')}>機器を追加</button><button onClick={()=>move('help-vlan')}>VLANを追加</button><button onClick={()=>move('help-connections')}>有線・Wi-Fi</button><button onClick={()=>move('help-scope')}>表示範囲</button><button onClick={()=>move('help-rules')}>入力ルール</button></nav>
+ <nav className="help-nav" aria-label="ヘルプの目次"><button onClick={()=>move('help-ai')}>AIでYAMLを作成</button><button onClick={()=>move('help-aggregation')}>Bond・LAG・STACK・MLAG</button><button onClick={()=>move('help-new')}>新規作成</button><button onClick={()=>move('help-input-support')}>フォーム入力</button><button onClick={()=>move('help-merge')}>複数YAMLの統合</button><button onClick={()=>move('help-source')}>図面とYAMLの対応</button><button onClick={()=>move('help-vpn')}>拠点間VPN</button><button onClick={()=>move('help-svi')}>管理SVI</button><button onClick={()=>move('help-fields')}>項目の意味</button><button onClick={()=>move('help-pc')}>機器を追加</button><button onClick={()=>move('help-vlan')}>VLANを追加</button><button onClick={()=>move('help-connections')}>有線・Wi-Fi</button><button onClick={()=>move('help-scope')}>表示範囲</button><button onClick={()=>move('help-rules')}>入力ルール</button></nav>
  <div className="help-body"><p className="help-lead">まず業務LANへPCを1台追加し、次にそのPCを新しいVLANへ移すと、各項目の関係を確認できます。図面への入力は実機の設定を変更しません。</p>
+ <section id="help-ai"><h3>AIでYAMLを作成する</h3><p>別のAIへ渡すための資料です。AI向け指示書を添付し、開始プロンプトと構成情報をチャットへ入力してください。既存構成の修正では、そのYAMLも一緒に渡します。生成されたYAMLは最後にLayerMapで検証してください。</p><p>資料は画面内で参照でき、Markdown形式でも保存できます。確認日：2026-11-05。サブネット表示グループ、SVI、bond・LAG、STACK・MLAG、VPNの記述に対応しています。</p><AIDocument id="instructions" title="AI向け指示書"/><AIDocument id="starter" title="使い方と開始プロンプト"/></section>
  <section id="help-aggregation"><h3>Bond・Team・LAG・STACK・MLAGを記述する</h3><p>サンプル「Bond・Team・LAG・STACK・MLAG」で、物理7台と論理STACK1台を比較できます。物理ポートとケーブルはL1に残し、L2の集約IFから各物理ポートへ層間対応を1件ずつ定義します。集約IFやそのIPを選ぶと、複数メンバーへの対応をまとめて追跡できます。ケーブル・VLAN・MLAGの関係を通って別の機器へ通信経路を追跡する機能ではありません。</p><Fields rows={[
  ['l2.interfaces[].aggregation','kindはbond / team / lag、modeはlacp / static / active_backup。access / trunkのVLAN設定、またはVLANを持たないroutedと併用します。SVIには指定しません。'],
  ['bindings.l2_to_l1','同じ集約L2 IFを複数回指定し、physical_portを1本ずつ対応付けます。物理ポートは同じ機器、または所属STACKの物理筐体で、有線かつ集約専用である必要があります。'],

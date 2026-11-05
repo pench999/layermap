@@ -12,6 +12,7 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 COPY generate_diagram.py network_model.py view_model.py bench_scale.py bench_48port.py input_support.py merge_model.py vpn_model.py source_map.py redundancy.py web_app.py test_*.py lan-sample.yaml ./
 COPY samples/ ./samples/
+COPY docs/ai/ ./docs/ai/
 COPY --from=frontend /frontend/dist ./frontend/dist
 USER 1000:1000
 EXPOSE 8000

@@ -30,3 +30,8 @@ frontend/playwright-report/
 !redundancy.py
 
 !bench_48port.py
+
+!docs/
+!docs/ai/
+!docs/ai/instructions.md
+!docs/ai/starter.md

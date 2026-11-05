@@ -79,6 +79,33 @@ async def request_error(request, exc):
     return JSONResponse({'errors':[{'message':'リクエストの形式が不正です','path':'.'.join(map(str,e['loc'])), 'line':None,'column':None} for e in exc.errors()]},status_code=422)
 
 
+# Only these bundled AI documents are exposed; never accept a filesystem path.
+AI_DOCUMENTS = {
+    'instructions': {'title':'AI向け指示書', 'filename':'LayerMap-YAML作成指示書.md', 'file':ROOT/'docs'/'ai'/'instructions.md'},
+    'starter': {'title':'使い方と開始プロンプト', 'filename':'使い方と開始プロンプト.md', 'file':ROOT/'docs'/'ai'/'starter.md'},
+}
+
+
+def ai_document(document_id):
+    document = AI_DOCUMENTS.get(document_id)
+    if document is None:
+        raise HTTPException(status_code=404, detail='資料が見つかりません')
+    return document
+
+
+@app.get('/api/ai-docs/{document_id}')
+def read_ai_document(document_id: str):
+    document = ai_document(document_id)
+    return {'id':document_id, 'title':document['title'], 'filename':document['filename'],
+            'content':document['file'].read_text(encoding='utf-8')}
+
+
+@app.get('/api/ai-docs/{document_id}/download')
+def download_ai_document(document_id: str):
+    document = ai_document(document_id)
+    return FileResponse(document['file'], media_type='text/markdown', filename=document['filename'])
+
+
 @app.get('/api/limits')
 def get_limits():
     return limits()
