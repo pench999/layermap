@@ -40,7 +40,7 @@ def limits():
 def element_count(model):
     return (len(model['devices'])+sum(len(model[layer][key]) for layer,keys in
             [('l1',['ports','links']),('l2',['vlans','interfaces','bridges']),('l3',['subnets','interfaces'])] for key in keys)
-            +len(model.get('mlag_domains',[]))+sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in model['devices'])+sum(len(d['peers'])+len(d.get('peer_links',[]))+sum(len(pair) for pair in d.get('interface_pairs',[])) for d in model.get('mlag_domains',[]))+len(model.get('vpn_connections',[]))+len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
+            +len(model['l3'].get('subnet_groups',[]))+sum(len(g['members']) for g in model['l3'].get('subnet_groups',[]))+len(model.get('mlag_domains',[]))+sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in model['devices'])+sum(len(d['peers'])+len(d.get('peer_links',[]))+sum(len(pair) for pair in d.get('interface_pairs',[])) for d in model.get('mlag_domains',[]))+len(model.get('vpn_connections',[]))+len(model['l1'].get('connections',[]))+len(model['l3'].get('routes',[]))+sum(len(v) for v in model['bindings'].values()))
 
 
 def display_stats(model, layers=None, show_bindings=True):
@@ -60,7 +60,9 @@ def display_stats(model, layers=None, show_bindings=True):
     if 'l3' in wanted:
         vpns=model.get('vpn_connections',[])
         rows+=2*len(vpns);connections+=len(vpns);elements+=3*len(vpns)
-        groups+=len(model['l3']['subnets'])
+        subnet_groups=model['l3'].get('subnet_groups',[])
+        groups+=len(model['l3']['subnets'])-sum(len(g['members'])-1 for g in subnet_groups)
+        elements+=len(subnet_groups)+sum(len(g['members']) for g in subnet_groups)
         connections+=len(model['l3']['interfaces'])
         elements+=len(model['l3']['interfaces'])+len(model['l3']['subnets'])+len(model['l3'].get('routes',[]))
     if show_bindings:
@@ -183,6 +185,8 @@ def prepare_view(model, ix, scope=None, layers=None, show_bindings=True):
        'bindings':{'l2_to_l1':[b for b in model['bindings']['l2_to_l1'] if b['l2_interface'] in l2_ids and b['physical_port'] in port_ids],
                    'l3_to_l2':[b for b in model['bindings']['l3_to_l2'] if b['l3_interface'] in l3_ids and b['l2_interface'] in l2_ids]},
        'notes':list(model.get('notes',[]))}
+    visible_subnet_ids={s['id'] for s in projected['l3']['subnets']}
+    projected['l3']['subnet_groups']=[dict(g,members=[m for m in g['members'] if m in visible_subnet_ids]) for g in ix['l3.subnet_groups'].values() if not scoped or any(m in subnet_ids for m in g['members'])]
     link_ids={l['id'] for l in links}
     projected['devices']=[dict(d,stack_links=[lid for lid in d.get('stack_links',[]) if lid in link_ids]) for d in chosen]
     projected['mlag_domains']=[]

@@ -158,11 +158,14 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
     specs = [spec for spec in specs if spec[0] in wanted]
     palette = ['#1676b5','#b56316','#18856c','#af3982','#5e56ba']
     colors = {v:palette[n%len(palette)] for n,v in enumerate(ix['l2.vlans'])}
+    subnet_groups=list(ix['l3.subnet_groups'].values())
+    subnet_owner={m:g['id'] for g in subnet_groups for m in g['members']}
+    subnet_order=[m for g in subnet_groups for m in g['members']]+[m for m in ix['l3.subnets'] if m not in subnet_owner]
     relations = {}
     for layer, group, _, _ in specs:
         items = list(ix[group].values())
         if layer == 'l3':
-            relations[layer] = [(s['id']+' / '+s['cidr'],[i['id'] for i in items if i['subnet']==s['id']],palette[n%len(palette)]) for n,s in enumerate(ix['l3.subnets'].values())]
+            relations[layer] = [(s['id']+' / '+s['cidr'],[i['id'] for i in items if i['subnet']==s['id']],palette[n%len(palette)]) for n,s in enumerate(ix['l3.subnets'][sid] for sid in subnet_order)]
         elif layer == 'l2':
             relations[layer] = [(v['id']+' / VLAN '+str(v['tag'])+' / '+v.get('label',''),
                                  [i['id'] for i in items if v['id'] in interface_vlans(i)],colors[v['id']]) for v in ix['l2.vlans'].values()]
@@ -173,7 +176,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
     networks = {}
     memberships = {}
     for layer, group, _, _ in specs:
-        ids = (list(ix['l3.subnets']) if layer=='l3' else
+        ids = (subnet_order if layer=='l3' else
                list(ix['l2.vlans'])+list(ix['l2.bridges']) if layer=='l2' else [])
         networks[layer] = []
         for n,((label,members,color),identity) in enumerate(zip(relations[layer],ids)):
@@ -386,11 +389,19 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
         bus_top=bottom+45
         bus_layout=[]
         cursor=bus_top
+        group_layout={}
         for network in networks[layer]:
+            group_id=subnet_owner.get(network['id']) if layer=='l3' else None
+            if group_id and group_id not in group_layout:
+                group=ix['l3.subnet_groups'][group_id]
+                group_labels=wrap_label((group.get('label') or group_id)+' / '+group_id+' / 表示グループ（通信・経路の集約ではありません）',70)
+                group_layout[group_id]=[cursor,group_labels,cursor,group]
+                cursor+=24+18*len(group_labels)
             labels=wrap_label(network['number']+' / '+network['label'],44)
             by=cursor+18*len(labels)+(30 if network['kind']=='vlan' else 10)
             bus_layout.append((by,labels,network))
             cursor=by+(42 if network['kind']=='vlan' else 38)
+            if group_id:group_layout[group_id][2]=cursor
         unknown_connections=[(i,c,j) for i,c in enumerate(extra_connections) for j,e in enumerate(c['endpoints']) if 'unknown' in e] if layer=='l1' else []
         unknown_layout=[];unknown_cursor=bottom+32
         for i,c,j in unknown_connections:
@@ -587,6 +598,21 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                     tracks.setdefault((sy,key),len(tracks))
                     lanes[(key,member)]=lefts[device]+card_width+18+tracks[(sy,key)]*10
             text(heading_x,top+51,'V＝VLAN定義IDごとに一枠（所属を表示・疎通は別途確認） / S＝サブネット / B＝機器内ブリッジ',10,'#60788e')
+            for group_index,(group_id,(gy,group_labels,gb,group)) in enumerate(group_layout.items()):
+                css='subnet-display-'+str(group_index)
+                svg.append(f'<g class="subnet-display-group {css}" data-subnet-group-id="{escape(group_id)}" data-subnet-ids="{escape(json.dumps(group["members"]))}" tabindex="0" role="button" aria-pressed="false" aria-label="{escape((group.get("label") or group_id)+" / "+group_id+" / "+", ".join(group["members"]))}">')
+                rect(30,gy,width-60,gb-gy-4,'#f7fbff','#6c91b3','subnet-display-frame')
+                lines_at(44,gy+24,group_labels,14,'#315a80')
+                svg.append('</g>')
+                group_nets=[n for n in networks[layer] if n['id'] in group['members']]
+                selected_rows=','.join('.member-'+n['key'] for n in group_nets)
+                selected_nets=','.join('.network-'+n['key'] for n in group_nets)
+                trigger=f'svg:not(.trace-active):not(:has(.selected-binding)):has(.{css}:is(:hover,:focus,.yaml-linked))'
+                network_styles.append(f'{trigger} [data-layer="l3"] .interface-row:not(:is({selected_rows}))'+'{opacity:.22}')
+                network_styles.append(f'{trigger} [data-layer="l3"] .network-group:not(:is({selected_nets}))'+'{opacity:.15}')
+                network_styles.append(f'{trigger} [data-layer="l3"] :is({selected_rows}) .binding-row-highlight'+'{display:block;fill:#e5f1fc;stroke:#4c82b4;stroke-width:2}')
+                network_styles.append(f'{trigger} .{css} .subnet-display-frame'+'{stroke-width:3}')
+                network_styles.append(f'{trigger} :is({selected_nets}) :is(.relation-bus,.relation-branch)'+'{stroke-width:3}')
             for by,labels,net in bus_layout:
                 key,color=net['key'],net['color']
                 description=net['number']+' / '+net['label']+' / 所属：'+(', '.join(net['members']) or 'なし')

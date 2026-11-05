@@ -12,7 +12,7 @@ from view_model import element_count
 MAX_MERGE_FILES=16
 MAX_ISSUES=200
 MAX_ISSUE_ITEMS=30
-SECTIONS=[('mlag_domains',),('devices',),('l1','ports'),('l1','links'),('l1','connections'),('l2','vlans'),('l2','interfaces'),('l2','bridges'),('l3','subnets'),('l3','interfaces')]
+SECTIONS=[('mlag_domains',),('devices',),('l1','ports'),('l1','links'),('l1','connections'),('l2','vlans'),('l2','interfaces'),('l2','bridges'),('l3','subnets'),('l3','interfaces'),('l3','subnet_groups')]
 
 class MergeSource(Record):
     site_id: str = Field(min_length=1,max_length=32)
@@ -47,7 +47,7 @@ def merge_preview(request):
         inputs.append((source,model))
     merged={'schema':'lan-example/v1','name':'複数拠点の統合構成','scope':'拠点ごとの構成を並列に保持。拠点間接続は別の接続定義で指定。','devices':[],'mlag_domains':[],
             'l1':{'ports':[],'links':[],'connections':[]},'l2':{'vlans':[],'interfaces':[],'bridges':[]},
-            'l3':{'subnets':[],'interfaces':[],'routes':[]},'bindings':{'l2_to_l1':[],'l3_to_l2':[]},
+            'l3':{'subnets':[],'interfaces':[],'subnet_groups':[],'routes':[]},'bindings':{'l2_to_l1':[],'l3_to_l2':[]},
             'notes':['拠点ID::元IDで識別。元ファイルのコメント・書式は統合元ダウンロードで保持します。','拠点間接続は自動追加しません。同じVLAN番号・IP・サブネットでも拠点ごとの定義を維持します。']}
     mapping=[];summaries=[];header=['# LayerMap 統合結果（元ファイルを変更しない独立した構成）']
     addresses=defaultdict(list);serials=defaultdict(list);names=defaultdict(list);vlan_tags=defaultdict(list);original_ids=defaultdict(list);subnets=[]
@@ -94,6 +94,7 @@ def merge_preview(request):
                 if item.get(key):item[key]=rename(item[key])
             if 'tagged_vlans' in item:item['tagged_vlans']=[rename(v) for v in item['tagged_vlans']]
         for bridge in model['l2']['bridges']:bridge['members']=[rename(m) for m in bridge['members']]
+        for group in model['l3'].get('subnet_groups',[]):group['members']=[rename(m) for m in group['members']]
         for item in model['l3']['interfaces']:
             item['subnet']=rename(item['subnet'])
             addresses[str(ipaddress.ip_interface(item['address']).ip)].append(dict(site_id=site,filename=source.filename,id=item['id'],address=item['address']))

@@ -76,7 +76,7 @@ function App() {
   const clearBinding = () => {
     setSelectedExtra(null);setSelectedVpn(null);setSelectedBinding(null);setSelectedTrace(null);pendingTrace.current=null;traceJumpPending.current=false;
     const focused=document.activeElement as HTMLElement|null;
-    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.unknown-peer,.unresolved-endpoint,.equipment-domain'))focused.blur();
+    if(focused && canvas.current?.contains(focused) && focused.closest('.binding-group,.binding-badge,.interface-row,.vpn-group,.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.subnet-display-group,.unknown-peer,.unresolved-endpoint,.equipment-domain'))focused.blur();
   };
   const invalidate = () => { clearBinding(); setSelected(''); sequence.current++; currentController.current?.abort(); setPhase('pending'); };
   const changeSource = (value:string, user=true) => {
@@ -310,13 +310,13 @@ function App() {
     if(phase!=='valid'||resultSource.current!==sourceRef.current){setNotice('現在のYAMLの検証・描画が完了してから選択してください。');return;}
     const element=target as Element|null;
     const reference=targetForElement(element,canvas.current);
-    const extra=reference&&['mlag_domains','l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets'].includes(reference.section)?reference:null;
+    const extra=reference&&['mlag_domains','l1.links','l1.connections','l2.vlans','l2.bridges','l3.subnets','l3.subnet_groups'].includes(reference.section)?reference:null;
     const same=JSON.stringify(extra)===JSON.stringify(selectedExtra);
     selectDiagramElement(target);
     if(extra){
       setSelected('');setSelectedExtra(same?null:extra);
       // Keep Escape/Space available after clearBinding blurs the old selection.
-      if(!same)element?.closest<SVGGElement>('.network-group,.switch-vlan-group')?.focus({preventScroll:true});
+      if(!same)element?.closest<SVGGElement>('.network-group,.switch-vlan-group,.subnet-display-group')?.focus({preventScroll:true});
     }
     else if(!reference)setSelected('');
   };
@@ -325,7 +325,7 @@ function App() {
     selectedVpn?{section:'vpn_connections',id:selectedVpn.id}:selected?{section:'devices',id:selected}:selectedExtra;
   const sourceLink=useSourceHighlight(editor,source,sourceTarget,phase==='valid'&&resultSource.current===source);
   useEffect(()=>{
-    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.unknown-peer,.unresolved-endpoint,.equipment-domain').forEach(group=>{
+    canvas.current?.querySelectorAll<SVGGElement>('.physical-cable-group,.l1-connection,.network-group,.switch-vlan-group,.subnet-display-group,.unknown-peer,.unresolved-endpoint,.equipment-domain').forEach(group=>{
       const active=!!selectedExtra&&JSON.stringify(targetForElement(group,canvas.current))===JSON.stringify(selectedExtra);
       group.setAttribute('role','button');group.setAttribute('tabindex',phase==='valid'?'0':'-1');group.setAttribute('aria-pressed',String(active));group.setAttribute('aria-disabled',String(phase!=='valid'));group.classList.toggle('yaml-linked',active);
     });

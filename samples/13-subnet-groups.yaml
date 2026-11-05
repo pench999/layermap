@@ -1,0 +1,51 @@
+# 表示用グループ。各CIDRとIFの所属は個別に保持します。
+schema: "lan-example/v1"
+name: "L3サブネットの表示グループ"
+scope: "架空構成。表示上のグループと通信可能性は別です。"
+devices:
+  - {"id":"app-a","name":"app-a","role":"endpoint","location":{"site":"サンプル拠点"}}
+  - {"id":"app-b","name":"app-b","role":"endpoint","location":{"site":"サンプル拠点"}}
+  - {"id":"app-v6","name":"app-v6","role":"endpoint","location":{"site":"サンプル拠点"}}
+  - {"id":"admin","name":"admin","role":"endpoint","location":{"site":"サンプル拠点"}}
+l1:
+  ports:
+    - {"id":"app-a.eth0","device":"app-a","name":"eth0"}
+    - {"id":"app-b.eth0","device":"app-b","name":"eth0"}
+    - {"id":"app-v6.eth0","device":"app-v6","name":"eth0"}
+    - {"id":"admin.eth0","device":"admin","name":"eth0"}
+  links: []
+l2:
+  vlans:
+    - {"id":"v100","tag":100,"label":"サービス"}
+    - {"id":"v99","tag":99,"label":"管理"}
+  interfaces:
+    - {"id":"app-a.l2","device":"app-a","mode":"access","untagged_vlan":"v100"}
+    - {"id":"app-b.l2","device":"app-b","mode":"access","untagged_vlan":"v100"}
+    - {"id":"app-v6.l2","device":"app-v6","mode":"access","untagged_vlan":"v100"}
+    - {"id":"admin.l2","device":"admin","mode":"access","untagged_vlan":"v99"}
+  bridges: []
+l3:
+  subnets:
+    - {"id":"service-a","cidr":"192.0.2.0/24"}
+    - {"id":"service-b","cidr":"198.51.100.0/24"}
+    - {"id":"service-v6","cidr":"2001:db8:100::/64"}
+    - {"id":"management","cidr":"203.0.113.0/24"}
+  subnet_groups:
+    - {"id":"service-networks","label":"サービスNW（IPv4・IPv6）","members":["service-a","service-b","service-v6"]}
+  interfaces:
+    - {"id":"app-a.ip","device":"app-a","address":"192.0.2.10/24","subnet":"service-a"}
+    - {"id":"app-b.ip","device":"app-b","address":"198.51.100.10/24","subnet":"service-b"}
+    - {"id":"app-v6.ip","device":"app-v6","address":"2001:db8:100::10/64","subnet":"service-v6"}
+    - {"id":"admin.ip","device":"admin","address":"203.0.113.10/24","subnet":"management"}
+  routes: []
+bindings:
+  l2_to_l1:
+    - {"l2_interface":"app-a.l2","physical_port":"app-a.eth0"}
+    - {"l2_interface":"app-b.l2","physical_port":"app-b.eth0"}
+    - {"l2_interface":"app-v6.l2","physical_port":"app-v6.eth0"}
+    - {"l2_interface":"admin.l2","physical_port":"admin.eth0"}
+  l3_to_l2:
+    - {"l3_interface":"app-a.ip","l2_interface":"app-a.l2","vlan":"v100"}
+    - {"l3_interface":"app-b.ip","l2_interface":"app-b.l2","vlan":"v100"}
+    - {"l3_interface":"app-v6.ip","l2_interface":"app-v6.l2","vlan":"v100"}
+    - {"l3_interface":"admin.ip","l2_interface":"admin.l2","vlan":"v99"}

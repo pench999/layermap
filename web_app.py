@@ -104,6 +104,7 @@ SAMPLES = {
     'management-svi': {'id':'management-svi','title':'L2スイッチの管理SVI','description':'4台・3 VLAN。VLAN 99の管理IPを物理ポートと独立して表示します。','filename':'05-management-svi.yaml','file':ROOT/'samples'/'05-management-svi.yaml'},
     'aggregation-stack-mlag': {'id':'aggregation-stack-mlag','title':'Bond・Team・LAG・STACK・MLAG','description':'物理7台＋論理STACK1台。LACP・active-backup・独立MLAGを比較。','filename':'11-aggregation-stack-mlag.yaml','file':ROOT/'samples'/'11-aggregation-stack-mlag.yaml'},
     'three-48port': {'id':'three-48port','title':'48ポートスイッチ3台＋12ホスト','description':'15機器・414行・50ケーブル。全48ポートと接続先、SVI、bondingを確認できます。','filename':'12-three-48port-switches.yaml','file':ROOT/'samples'/'12-three-48port-switches.yaml'},
+    'subnet-groups': {'id':'subnet-groups','title':'L3サブネットの表示グループ','description':'3つのIPv4/IPv6ネットワークを一枠へ集約。管理NWは独立表示。','filename':'13-subnet-groups.yaml','file':ROOT/'samples'/'13-subnet-groups.yaml'},
 }
 
 

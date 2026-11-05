@@ -133,6 +133,12 @@ class Subnet(Record):
     cidr: Text
 
 
+class SubnetGroup(Record):
+    id: Id
+    label: Text | None = None
+    members: list[Id] = Field(min_length=1, max_length=128)
+
+
 class L3Interface(Record):
     id: Id
     device: Id
@@ -149,6 +155,7 @@ class Route(Record):
 
 class L3(Record):
     subnets: list[Subnet]
+    subnet_groups: list[SubnetGroup] = Field(default_factory=list, max_length=128)
     interfaces: list[L3Interface]
     routes: list[Route] = Field(default_factory=list)
 
@@ -213,10 +220,11 @@ def validate(data):
         error = exc.errors(include_input=False)[0]
         raise ModelError(error['msg'], model_path(error['loc'])) from None
     groups = {'devices': data['devices'], 'vpn_connections': data['vpn_connections'], 'mlag_domains':data['mlag_domains']}
-    for layer, names in [('l1', ['ports', 'links', 'connections']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces'])]:
+    for layer, names in [('l1', ['ports', 'links', 'connections']), ('l2', ['vlans', 'interfaces', 'bridges']), ('l3', ['subnets', 'interfaces', 'subnet_groups'])]:
         groups.update({f'{layer}.{n}': data[layer][n] for n in names})
     count = sum(len(v) for v in groups.values()) + len(data['l3']['routes']) + sum(len(v) for v in data['bindings'].values())
     count += sum(len(d.get('members',[]))+len(d.get('stack_links',[])) for d in data['devices'])+sum(len(d['peers'])+len(d['peer_links'])+sum(len(pair) for pair in d['interface_pairs']) for d in data['mlag_domains'])
+    count += sum(len(g['members']) for g in data['l3']['subnet_groups'])
     if count > MAX_ELEMENTS:
         raise ModelError(f'要素数は合計{MAX_ELEMENTS}以下にしてください')
     ix, positions = {}, {}
@@ -319,6 +327,14 @@ def validate(data):
         domain=(memberships[0]['id'],item['vlan'])
         if domain in svi_domains:raise ModelError('同じbridge・VLANのSVIが重複しています',p)
         svi_domains.add(domain)
+    grouped_subnets=set()
+    for n, group in enumerate(data['l3']['subnet_groups']):
+        for j, member in enumerate(group['members']):
+            p=f'l3.subnet_groups[{n}].members[{j}]'
+            ref(member,'l3.subnets',p)
+            if member in grouped_subnets:
+                raise ModelError('同じサブネットは一つの表示グループに一度だけ指定してください',p)
+            grouped_subnets.add(member)
     nets = {}
     for n, subnet in enumerate(data['l3']['subnets']):
         try:

@@ -4,9 +4,9 @@ from typing import Literal
 from pydantic import Field
 from network_model import Record, Id, ModelError, MAX_YAML_BYTES, BoundedLoader, load_model
 
-Section=Literal['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
+Section=Literal['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.subnet_groups','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
 MAX_SOURCE_LOCATIONS=1000
-SECTIONS=['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
+SECTIONS=['mlag_domains','devices','l1.ports','l1.links','l1.connections','l2.vlans','l2.interfaces','l2.bridges','l3.subnets','l3.subnet_groups','l3.interfaces','bindings.l2_to_l1','bindings.l3_to_l2','vpn_connections']
 class SourceTarget(Record):
     section: Section
     id: Id | None = None
@@ -79,6 +79,7 @@ def locate_source(request):
             for field in ['vlan','untagged_vlan']:scalar(entry,field,'l2.vlans')
             sequence(entry,'tagged_vlans','l2.vlans')
         if section=='l2.bridges':sequence(entry,'members','l2.interfaces')
+        if section=='l3.subnet_groups':sequence(entry,'members','l3.subnets')
         if section=='l3.interfaces':scalar(entry,'subnet','l3.subnets')
         if section=='bindings.l2_to_l1':
             scalar(entry,'l2_interface','l2.interfaces');scalar(entry,'physical_port','l1.ports')
