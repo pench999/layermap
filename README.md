@@ -1,34 +1,127 @@
 # LayerMap
 
-YAMLで社内LANのL1・L2・L3と層間の対応を記述し、ブラウザーで編集・確認できるWebアプリです。CLIでも同じ検証・描画処理を利用できます。
-データ形式は独自の `lan-example/v1` です。サンプルの機器情報はすべて架空です。
+**顧客ごとにバラバラなネットワーク図を、YAMLで統一する。**
 
-## Web版の起動
+LayerMap は、社内LANの構成を **L1（物理）・L2（VLAN）・L3（IP）** に分けてYAMLで記述し、
+層と層の対応（bindings）まで含めて検証・描画する、Network Diagram as Code のツールです。
 
-正本はDebianの `/home/kudo/layermap`。Docker EngineとDocker Composeを使います。PythonやNode.jsをホストに追加する必要はありません。
+- 書く人によって表記が違う、物理図と論理図が混ざった図を読む苦労をなくす
+- 図を「絵」ではなく「コード」にするので、Gitで差分管理・レビューができる
+- IDの重複、参照先の間違い、VLANとIPの不整合を、描画前に検証で弾く
+
+![LayerMapで生成した社内LAN構成図のサンプル](lan-sample.svg)
+
+> [要差し替え] ここにWeb編集画面のスクリーンショット（YAML編集＋図が並んだ画面）を1枚追加すると、
+> 初見の人が「ブラウザで触れる」ことが一目で伝わります。
+
+> **English:** LayerMap is a network diagram as code tool for office LANs.
+> Describe L1 cabling, L2 VLANs and L3 IP addressing in separate YAML layers,
+> bind them together explicitly, and LayerMap validates the model and renders it
+> as an SVG diagram or in a live web editor.
+
+## 30秒で試す（Web版）
+
+前提は Docker Engine と Docker Compose だけです。PythonやNode.jsをホストに入れる必要はありません。
 
 ```sh
-cd /home/kudo/layermap
-git status --short --branch
-docker-compose ps
+git clone https://github.com/pench999/layermap.git
+cd layermap
 docker compose up -d --build web
-docker compose ps
 ```
 
-既定の待ち受けはDebian自身の `127.0.0.1:18085` です。別のPCからはSSHトンネルを使用します。
+ブラウザーで <http://localhost:18085> を開いてください。
+
+- 既定の待ち受けは `127.0.0.1:18085`（ループバックのみ）です。
+  認証・TLS・共同編集機能はないため、LANへ公開する場合は
+  `LAYERMAP_BIND` と `LAYERMAP_PORT` を明示的に変更し、自己責任で公開してください。
+- 停止： `docker compose stop web`
+
+画面では、サンプル構成を読み込んでYAMLを書き換えると、約500ミリ秒で図が再描画されます。
+まず触ってみたい人は、画面内ヘルプのサンプルから始めるのがおすすめです。
+
+## CLIでSVGを生成する
 
 ```sh
-ssh -N -L 18085:127.0.0.1:18085 kudo@<Debianのホスト名またはIP>
+docker compose run --rm generate
+# 出力: artifacts/lan-sample.svg
+
+docker compose run --rm generate python generate_diagram.py your-network.yaml -o /output/your-network.svg
 ```
 
-ブラウザーで <http://localhost:18085> を開きます。PuTTYを使う場合も、ローカル18085番からDebianの127.0.0.1:18085へのトンネルを設定できます。
-明示的にLANへ公開する場合だけ `LAYERMAP_BIND` と `LAYERMAP_PORT` を変更してください。初期版には認証・TLS・共同編集機能がないため、既定はループバックです。
+Web版とCLIは、同じ検証・描画処理を使います。
 
-停止：
+## 何が書けるか（サンプル抜粋）
 
-```sh
-docker compose stop web
+データ形式は独自の `lan-example/v1` です。機器・L1ポートとケーブル・L2のVLAN・L3のサブネットとIPを分け、
+最後に `bindings` で「どのL2インターフェースがどの物理ポートを使い、どのL3インターフェースがどのVLANに対応するか」を結びます。
+
+```yaml
+schema: lan-example/v1
+name: 社内LANのレイヤー別構成例
+
+devices:
+  - id: sw01
+    role: l2-switch
+    label: 社内スイッチ
+    name: HQ-SW-01
+    location: {site: 本社, room: サーバー室, rack: R01, rack_unit: 12}
+
+l1:
+  ports:
+    - {id: sw01.p1, device: sw01}
+  links:
+    - {id: cable-a, endpoints: [pc-a.eth0, sw01.p1], medium: copper, speed: 1Gbps}
+
+l2:
+  vlans:
+    - {id: vlan-office, tag: 10, label: 業務LAN}
+  interfaces:
+    - {id: sw01.access1, device: sw01, mode: access, untagged_vlan: vlan-office}
+
+l3:
+  subnets:
+    - {id: net-office, cidr: 192.168.10.0/24}
+  interfaces:
+    - {id: gw01.v10, device: gw01, address: 192.168.10.1/24, subnet: net-office}
+
+bindings:
+  l2_to_l1:
+    - {l2_interface: sw01.access1, physical_port: sw01.p1}
+  l3_to_l2:
+    - {l3_interface: gw01.v10, l2_interface: gw01.trunk, vlan: vlan-office}
 ```
+
+完全なサンプルは `lan-sample.yaml` と `samples/`（全13件）にあります。機器情報はすべて架空です。
+
+## できること
+
+- **レイヤー分離と層間追跡** — 全レイヤー／L1／L2／L3の切り替え。機器やポートを選ぶと、対応する各層の要素とYAMLの定義位置が強調表示される
+- **厳密な検証** — ID重複・未定義参照・VLAN整合性・IPプレフィックスとサブネット・経路の次ホップなどを検証し、エラーの行・列・項目パスを表示
+- **現場の不確実さも表現** — 有線／Wi-Fi、両端確認済み／ポート未確認／相手未確認（`status`）を区別して描く
+- **規模への対応** — 拠点・機器群・機器での表示範囲の絞り込み、拠点別YAMLの統合（最大16ファイル）、拠点間VPN、L2スイッチの管理SVI、Bond/LAG/STACK/MLAG、48ポートスイッチの表示
+- **入力サポート** — 機器追加・接続追加のフォームが、既存YAMLの書式を壊さず追記差分だけを返す
+
+これは構成図ツールであり、到達性やファイアウォールポリシーを判定するシミュレーターではありません。
+
+## 他の作図方法との違い
+
+| | Excel / Visio等（手描き） | 汎用作図・Diagram as Code一般 | LayerMap |
+|---|---|---|---|
+| 表記の統一 | 書く人次第 | 図の見た目は統一できる | レイヤー構造と検証ルールで統一 |
+| L1/L2/L3の分離 | 混在しがち | 1枚の図に混在しがち | 層を分けて記述し、対応を明示 |
+| 整合性チェック | 目視 | 基本的になし | VLAN・IP・参照・経路を自動検証 |
+| 差分管理 | バイナリで困難 | テキストなら可能 | YAMLなのでGit差分・レビュー可能 |
+| 未確認接続の表現 | 備考欄頼み | 表現しづらい | 確認状況（status）として記述可能 |
+
+## データの扱い
+
+- YAMLは描画のため同じサーバーへ送信されますが、サーバーは永続保存せず、本文をログへ記録しません
+- フロントエンドとAPIは同一オリジンで提供し、CDNや外部フォントは使いません
+- 構成の保持上限は YAML 2 MiB・機器256台・全要素10,000件です（詳細は後述の「データの扱いと上限」）
+
+## ライセンス
+
+MIT License（`LICENSE` ファイル参照）
 
 ## ブラウザーでできること
 
