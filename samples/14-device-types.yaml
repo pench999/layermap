@@ -1,0 +1,59 @@
+# 四種別の比較用。すべて架空のネットワーク。
+schema: lan-example/v1
+name: 4種類の機器を見分ける
+devices:
+  - {id: pc01, role: endpoint, name: PC-01}
+  - {id: sw01, role: l2-switch, name: SW-01}
+  - {id: core01, role: l3-switch, name: CORE-01}
+  - {id: rt01, role: router, name: RT-01}
+l1:
+  ports:
+    - {id: pc01.eth0, device: pc01}
+    - {id: sw01.p1, device: sw01}
+    - {id: sw01.p2, device: sw01}
+    - {id: core01.p1, device: core01}
+    - {id: core01.p2, device: core01}
+    - {id: rt01.lan, device: rt01}
+  links:
+    - {id: pc-access, endpoints: [pc01.eth0, sw01.p1]}
+    - {id: access-core, endpoints: [sw01.p2, core01.p1]}
+    - {id: core-router, endpoints: [core01.p2, rt01.lan]}
+l2:
+  vlans:
+    - {id: office, tag: 10, label: 業務LAN}
+  interfaces:
+    - {id: pc01.access, device: pc01, mode: access, untagged_vlan: office}
+    - {id: sw01.access, device: sw01, mode: access, untagged_vlan: office}
+    - {id: sw01.uplink, device: sw01, mode: trunk, tagged_vlans: [office]}
+    - {id: sw01.svi, device: sw01, mode: svi, vlan: office}
+    - {id: core01.trunk, device: core01, mode: trunk, tagged_vlans: [office]}
+    - {id: core01.svi, device: core01, mode: svi, vlan: office}
+    - {id: core01.routed, device: core01, mode: routed}
+    - {id: rt01.routed, device: rt01, mode: routed}
+  bridges:
+    - {id: sw01.bridge, device: sw01, members: [sw01.access, sw01.uplink, sw01.svi]}
+    - {id: core01.bridge, device: core01, members: [core01.trunk, core01.svi]}
+l3:
+  subnets:
+    - {id: office-net, cidr: 192.0.2.0/24}
+    - {id: transit-net, cidr: 198.51.100.0/30}
+  interfaces:
+    - {id: pc01.ip, device: pc01, address: 192.0.2.10/24, subnet: office-net}
+    - {id: sw01.ip, device: sw01, address: 192.0.2.2/24, subnet: office-net}
+    - {id: core01.ip, device: core01, address: 192.0.2.1/24, subnet: office-net}
+    - {id: core01.transit, device: core01, address: 198.51.100.1/30, subnet: transit-net}
+    - {id: rt01.ip, device: rt01, address: 198.51.100.2/30, subnet: transit-net}
+bindings:
+  l2_to_l1:
+    - {l2_interface: pc01.access, physical_port: pc01.eth0}
+    - {l2_interface: sw01.access, physical_port: sw01.p1}
+    - {l2_interface: sw01.uplink, physical_port: sw01.p2}
+    - {l2_interface: core01.trunk, physical_port: core01.p1}
+    - {l2_interface: core01.routed, physical_port: core01.p2}
+    - {l2_interface: rt01.routed, physical_port: rt01.lan}
+  l3_to_l2:
+    - {l3_interface: pc01.ip, l2_interface: pc01.access, vlan: office}
+    - {l3_interface: sw01.ip, l2_interface: sw01.svi, vlan: office}
+    - {l3_interface: core01.ip, l2_interface: core01.svi, vlan: office}
+    - {l3_interface: core01.transit, l2_interface: core01.routed}
+    - {l3_interface: rt01.ip, l2_interface: rt01.routed}

@@ -21,7 +21,7 @@ const fields:[string,string][] = [
 ];
 const deviceFields:[string,string][] = [
  ['id','他の項目から参照する固定ID。機器同士で重複させません。'],
- ['role','endpoint、l2-switch、internet-gatewayなどの役割。指定しただけではポートや接続は作られません。'],
+ ['role','機器枠の見出しは endpoint / host＝ホスト、l2-switch＝L2スイッチ、l3-switch＝L3スイッチ、router＝ルーター。internet-gatewayは用途として「インターネット出口」と表示し、その他の役割は汎用アイコンと元の役割名で表示します。管理IPやSVIから種別を推定しません。サンプル「ホスト・スイッチ・ルーターの見分け方」で比較できます。'],
  ['label / name','補足名称 / 運用上の機器名。現在の図では主にnameを表示します。'],
  ['manufacturer / model','メーカー / 型番。'],
  ['serial_number','シリアルNo。数字だけでも引用符で囲み、文字列にします。'],

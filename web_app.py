@@ -132,6 +132,7 @@ SAMPLES = {
     'aggregation-stack-mlag': {'id':'aggregation-stack-mlag','title':'Bond・Team・LAG・STACK・MLAG','description':'物理7台＋論理STACK1台。LACP・active-backup・独立MLAGを比較。','filename':'11-aggregation-stack-mlag.yaml','file':ROOT/'samples'/'11-aggregation-stack-mlag.yaml'},
     'three-48port': {'id':'three-48port','title':'48ポートスイッチ3台＋12ホスト','description':'15機器・414行・50ケーブル。全48ポートと接続先、SVI、bondingを確認できます。','filename':'12-three-48port-switches.yaml','file':ROOT/'samples'/'12-three-48port-switches.yaml'},
     'subnet-groups': {'id':'subnet-groups','title':'L3サブネットの表示グループ','description':'3つのIPv4/IPv6ネットワークを一枠へ集約。管理NWは独立表示。','filename':'13-subnet-groups.yaml','file':ROOT/'samples'/'13-subnet-groups.yaml'},
+    'device-types': {'id':'device-types','title':'ホスト・スイッチ・ルーターの見分け方','description':'4種別をL1・L2・L3で比較。L2スイッチに管理SVIがあっても種別は変わりません。','filename':'14-device-types.yaml','file':ROOT/'samples'/'14-device-types.yaml'},
 }
 
 

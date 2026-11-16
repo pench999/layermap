@@ -15,6 +15,30 @@ from network_model import interface_vlans, ModelError, validate, load_model, end
 from view_model import require_display_budget, prepare_view, ViewScope, TraceRoot
 
 
+DEVICE_ROLE_TYPES = {
+    'endpoint': 'host', 'host': 'host',
+    'l2-switch': 'l2-switch', 'l3-switch': 'l3-switch', 'router': 'router',
+}
+# The silhouettes differ as well as the labels so color is only a cue.
+DEVICE_BADGES = {
+    'host': ('ホスト', '#174b77', '#eaf3fb', 'M3 4h18v12H3z M12 16v4 M7 20h10'),
+    'l2-switch': ('L2スイッチ', '#146450', '#e7f5ef', 'M2 7h20v10H2z M6 12h2m3 0h2m3 0h2'),
+    'l3-switch': ('L3スイッチ', '#5b3c83', '#f2ecfa', 'M2 10h20v10H2z M6 15h2m3 0h2m3 0h2 M12 8V2m-3 3 3-3 3 3'),
+    'router': ('ルーター', '#874517', '#fdf0e4', 'M12 3l9 9-9 9-9-9z M7 12h10m-2-2 2 2-2 2m-6 0-2-2 2-2'),
+    'device': ('機器', '#46566d', '#edf1f5', 'M4 5h16v14H4z M7 15h2m3 0h5'),
+    'internet-gateway': ('インターネット出口', '#46566d', '#edf1f5', 'M4 5h16v14H4z M7 15h2m3 0h5'),
+    'stack': ('STACK', '#46566d', '#edf1f5', 'M3 4h18v6H3z M3 14h18v6H3z M7 7h2m-2 10h2'),
+}
+BADGE_HEIGHT = 42
+
+
+def device_badge_kind(device):
+    if device.get('kind')=='stack':
+        return 'stack'
+    role=device.get('role','device').strip().lower()
+    return DEVICE_ROLE_TYPES.get(role, 'internet-gateway' if role=='internet-gateway' else 'device')
+
+
 def wrap_label(value, columns=44):
     """Wrap by approximate glyph width, including Japanese and unbroken IDs."""
     lines, current, used = [], '', 0
@@ -324,7 +348,7 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
                 loc_labels={'site':'拠点','room':'部屋','position':'位置','rack':'ラック','rack_unit':'U'}
                 for key,value in d.get('location',{}).items():
                     metadata += wrap_label(loc_labels.get(key,key)+'：'+str(value),44)
-            header = 22+len(title)*21+len(identity)*17+(len(metadata)*18+12 if metadata else 0)+14
+            header = BADGE_HEIGHT+22+len(title)*21+len(identity)*17+(len(metadata)*18+12 if metadata else 0)+14
             rows = []
             for item in ix[group].values():
                 if item['device']!=device:
@@ -440,7 +464,14 @@ def render(model, layers=None, show_bindings=True, context_notes=None):
             name=ix['devices'][device].get('name',device)
             svg.append(f'<g class="device-card" data-vpn-device="{" ".join(str(n) for n in vpn_devices.get(device,[]))}" data-device="{escape(device)}" data-device-layer="{layer}" data-stack-id="{escape(device if ix['devices'][device].get('kind')=='stack' else chassis_stacks.get(device,''))}" tabindex="0" role="button" aria-label="{escape(name)} / {layer.upper()}">')
             rect(left,card_top,card_width,height,css='device-frame')
-            baseline=card_top+26
+            kind=device_badge_kind(ix['devices'][device])
+            label,ink,tint,icon=DEVICE_BADGES[kind]
+            badge_width=54+len(label)*18
+            svg.append(f'<g class="device-type" data-device-type="{kind}">')
+            rect(left+12,card_top+9,badge_width,34,tint,tint,'device-type-background')
+            svg.append(f'<path class="device-type-icon" d="{icon}" transform="translate({left+20} {card_top+14})" fill="none" stroke="{ink}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"/>')
+            svg.append(f'<text class="device-type-label" x="{left+52}" y="{card_top+32}" font-size="17" font-weight="700" fill="{ink}">{escape(label)}</text></g>')
+            baseline=card_top+26+BADGE_HEIGHT
             lines_at(left+16,baseline,title,16,step=21)
             baseline+=21*len(title)
             lines_at(left+16,baseline,identity,11,'#72869b',17)
