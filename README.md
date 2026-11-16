@@ -9,6 +9,9 @@ LayerMap は、社内LANの構成を **L1（物理）・L2（VLAN）・L3（IP�
 - 図を「絵」ではなく「コード」にするので、Gitで差分管理・レビューができる
 - IDの重複、参照先の間違い、VLANとIPの不整合を、描画前に検証で弾く
 
+**▶ デモ： https://layermap.pench999.com/**
+ブラウザだけで触れます（インストール不要）。公開デモですので、実在のネットワーク構成は入力しないでください。入力したYAMLはサーバーに保存されません。
+
 ![LayerMapで生成した社内LAN構成図のサンプル](lan-sample.svg)
 
 ![Web編集画面：左でYAMLを編集し、右にレイヤー別の図が表示される](docs/images/web-editor.png)
@@ -22,7 +25,8 @@ Web編集画面。左のYAMLを編集すると検証され、右の図（L3／L2
 
 ## 30秒で試す（Web版）
 
-前提は Docker Engine と Docker Compose だけです。PythonやNode.jsをホストに入れる必要はありません。
+試すだけなら、上記のデモ（ https://layermap.pench999.com/ ）が一番早いです。
+手元で動かす場合は、Docker Engine と Docker Compose だけが必要です。PythonやNode.jsをホストに入れる必要はありません。
 
 ```sh
 git clone https://github.com/pench999/layermap.git
