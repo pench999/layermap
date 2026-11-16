@@ -11,8 +11,9 @@ LayerMap は、社内LANの構成を **L1（物理）・L2（VLAN）・L3（IP�
 
 ![LayerMapで生成した社内LAN構成図のサンプル](lan-sample.svg)
 
-> [要差し替え] ここにWeb編集画面のスクリーンショット（YAML編集＋図が並んだ画面）を1枚追加すると、
-> 初見の人が「ブラウザで触れる」ことが一目で伝わります。
+![Web編集画面：左でYAMLを編集し、右にレイヤー別の図が表示される](docs/images/web-editor.png)
+
+Web編集画面。左のYAMLを編集すると検証され、右の図（L3／L2／L1と紫破線の層間対応）が自動で再描画されます。
 
 > **English:** LayerMap is a network diagram as code tool for office LANs.
 > Describe L1 cabling, L2 VLANs and L3 IP addressing in separate YAML layers,
